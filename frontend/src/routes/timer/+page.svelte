@@ -307,9 +307,9 @@
                     <button on:click={() => removeStage(index)} class="text-white text-opacity-60 hover:text-white"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
                   </div>
                   <div class="flex items-center gap-3 pl-2">
-                    <div class="flex items-center gap-1 bg-black bg-opacity-20 rounded-md px-2 py-0.5">
-                      <input type="number" min="1" max="120" value={stage.duration} on:input={(e) => updateStage(index, { ...stage, duration: parseInt(e.target.value) || 1 })} class="w-10 bg-transparent text-center text-white text-xs focus:outline-none" />
-                      <span class="text-[10px] text-white text-opacity-60">мин</span>
+                    <div class="flex items-center gap-1 bg-white rounded-lg px-2 py-1 shadow-sm">
+                      <input type="number" min="1" max="120" value={stage.duration} on:input={(e) => updateStage(index, { ...stage, duration: parseInt(e.target.value) || 1 })} class="w-10 bg-transparent text-center text-gray-800 text-sm font-semibold focus:outline-none" />
+                      <span class="text-[10px] text-gray-500 font-medium">мин</span>
                     </div>
                     <div class="flex gap-1 flex-1 overflow-x-auto">
                       {#each COLORS as c}
@@ -435,10 +435,10 @@
                   <button on:click={() => removeStage(index)} class="text-white text-opacity-60 hover:text-white transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
                 </div>
                 <div class="flex items-center gap-4 pl-6">
-                  <div class="flex items-center gap-1 bg-black bg-opacity-20 rounded-md px-2 py-1">
-                    <svg class="w-3.5 h-3.5 text-white text-opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    <input type="number" min="1" max="120" value={stage.duration} on:input={(e) => updateStage(index, { ...stage, duration: parseInt(e.target.value) || 1 })} class="w-12 bg-transparent text-center text-white text-sm focus:outline-none" />
-                    <span class="text-xs text-white text-opacity-60">мин</span>
+                  <div class="flex items-center gap-1 bg-white rounded-lg px-2 py-1 shadow-sm">
+                    <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <input type="number" min="1" max="120" value={stage.duration} on:input={(e) => updateStage(index, { ...stage, duration: parseInt(e.target.value) || 1 })} class="w-12 bg-transparent text-center text-gray-800 text-sm font-semibold focus:outline-none" />
+                    <span class="text-xs text-gray-500 font-medium">мин</span>
                   </div>
                   <div class="flex gap-1 flex-1 overflow-x-auto pb-1">
                     {#each COLORS as c}

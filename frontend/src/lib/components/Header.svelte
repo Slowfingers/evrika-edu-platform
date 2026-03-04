@@ -16,13 +16,13 @@
   }[currentPath] || null;
 </script>
 
-<header class="sticky top-0 z-50 backdrop-blur-xl" style="background: rgba(255,255,255,0.6); border-bottom: 1px solid rgba(255,255,255,0.3);">
+<header class="sticky top-0 z-50 backdrop-blur-2xl backdrop-saturate-150" style="background: rgba(255,255,255,0.72); border-bottom: 1px solid rgba(0,0,0,0.06); box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
   <div class="max-w-7xl mx-auto px-4 md:px-6">
-    <div class="flex items-center justify-between h-14 md:h-16">
+    <div class="flex items-center justify-between h-12 md:h-14">
 
       <!-- Мобильный: логотип (на главной/инструментах) или назад (карточка) -->
       {#if isCardDetail}
-        <a href="/" class="md:hidden flex items-center gap-1.5 text-gray-700 -ml-1">
+        <a href="/" class="md:hidden flex items-center gap-1 text-gray-600 hover:text-gray-900 transition-colors -ml-1">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
           </svg>
@@ -30,11 +30,7 @@
         </a>
       {:else}
         <a href="/" class="md:hidden flex items-center gap-2">
-          <div class="w-7 h-7 bg-gray-900 rounded-lg flex items-center justify-center flex-shrink-0">
-            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-            </svg>
-          </div>
+          <img src="/logo.png" alt="EvrikaEdu" class="w-7 h-7 rounded-lg object-cover" />
           {#if mobileTitle}
             <span class="text-sm font-semibold text-gray-900 truncate">{mobileTitle}</span>
           {:else}
@@ -44,27 +40,27 @@
       {/if}
 
       <!-- Десктоп: логотип -->
-      <a href="/" class="hidden md:flex items-center gap-2">
-        <div class="w-8 h-8 bg-gray-900 rounded-lg flex items-center justify-center">
-          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-          </svg>
-        </div>
+      <a href="/" class="hidden md:flex items-center gap-2.5 group">
+        <img src="/logo.png" alt="EvrikaEdu" class="w-8 h-8 rounded-xl object-cover shadow-sm group-hover:shadow-md transition-shadow" />
         <span class="text-lg font-semibold text-gray-900">EvrikaEdu</span>
       </a>
 
-      <!-- Десктоп: навигация -->
-      <nav class="hidden md:flex items-center gap-1">
-        <a href="/" class="nav-link {currentPath === '/' ? 'active' : ''}">Каталог</a>
-        <a href="/constructor" class="nav-link {currentPath === '/constructor' ? 'active' : ''}">Конструктор</a>
-        <div class="w-px h-4 bg-gray-200 mx-1"></div>
-        <a href="/timer" class="nav-link {currentPath === '/timer' ? 'active' : ''}">Таймер</a>
-        <a href="/noisemeter" class="nav-link {currentPath === '/noisemeter' ? 'active' : ''}">Шумометр</a>
-        <a href="/classroom" class="nav-link {currentPath === '/classroom' ? 'active' : ''}">Классы</a>
+      <!-- Десктоп: навигация (pill-style) -->
+      <nav class="hidden md:flex items-center">
+        <div class="flex items-center gap-0.5 p-1 rounded-full bg-gray-100/80">
+          <a href="/" class="px-4 py-1.5 rounded-full text-sm font-medium transition-all {currentPath === '/' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-600 hover:text-gray-900'}">Каталог</a>
+          <a href="/constructor" class="px-4 py-1.5 rounded-full text-sm font-medium transition-all {currentPath === '/constructor' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-600 hover:text-gray-900'}">Конструктор</a>
+        </div>
+        <div class="w-px h-5 bg-gray-200 mx-3"></div>
+        <div class="flex items-center gap-0.5 p-1 rounded-full bg-gray-100/80">
+          <a href="/timer" class="px-3 py-1.5 rounded-full text-sm font-medium transition-all {currentPath === '/timer' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500 hover:text-gray-900'}">Таймер</a>
+          <a href="/noisemeter" class="px-3 py-1.5 rounded-full text-sm font-medium transition-all {currentPath === '/noisemeter' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500 hover:text-gray-900'}">Шум</a>
+          <a href="/classroom" class="px-3 py-1.5 rounded-full text-sm font-medium transition-all {currentPath === '/classroom' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500 hover:text-gray-900'}">Класс</a>
+        </div>
       </nav>
 
       <!-- Правая часть (мобильный баланс) -->
-      <div class="md:hidden w-16"></div>
+      <div class="md:hidden w-12"></div>
     </div>
   </div>
 </header>

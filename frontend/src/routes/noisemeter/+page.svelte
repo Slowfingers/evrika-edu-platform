@@ -244,58 +244,86 @@
 </svelte:head>
 
 {#if mode === 'choose'}
-  <!-- Экран выбора режима -->
-  <div class="h-[calc(100vh-3.5rem-4rem)] md:h-[calc(100vh-4rem)] flex items-center justify-center p-4 overflow-hidden">
-    <div class="max-w-lg w-full">
-      <div class="text-center mb-8">
-        <div class="w-20 h-20 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-purple-400 via-pink-300 to-orange-300 flex items-center justify-center shadow-lg">
-          <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m-4 0h8m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
-          </svg>
+  <!-- Экран выбора режима — яркий и эффектный -->
+  <div class="h-[calc(100vh-3.5rem-4rem)] md:h-[calc(100vh-4rem)] flex items-center justify-center p-4 overflow-hidden relative">
+    <!-- Анимированный градиентный фон -->
+    <div class="absolute inset-0 -z-10 bg-gradient-to-br from-violet-500 via-purple-500 to-fuchsia-500 animate-gradient-slow"></div>
+    <div class="absolute inset-0 -z-10 opacity-30">
+      <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-pink-400 rounded-full blur-3xl animate-pulse"></div>
+      <div class="absolute bottom-1/4 right-1/4 w-80 h-80 bg-cyan-400 rounded-full blur-3xl animate-pulse" style="animation-delay: 1s;"></div>
+      <div class="absolute top-1/2 right-1/3 w-48 h-48 bg-yellow-300 rounded-full blur-3xl animate-pulse" style="animation-delay: 2s;"></div>
+    </div>
+
+    <div class="max-w-lg w-full relative z-10">
+      <!-- Заголовок -->
+      <div class="text-center mb-10">
+        <div class="relative w-28 h-28 mx-auto mb-6">
+          <!-- Пульсирующие кольца -->
+          <div class="absolute inset-0 rounded-full bg-white/20 animate-ping" style="animation-duration: 2s;"></div>
+          <div class="absolute inset-2 rounded-full bg-white/30 animate-ping" style="animation-duration: 2.5s;"></div>
+          <div class="absolute inset-4 rounded-full bg-white/40 animate-ping" style="animation-duration: 3s;"></div>
+          <!-- Центральная иконка -->
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="w-20 h-20 rounded-full bg-white/90 backdrop-blur-xl shadow-2xl flex items-center justify-center">
+              <svg class="w-10 h-10 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m-4 0h8m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+              </svg>
+            </div>
+          </div>
         </div>
-        <h1 class="text-3xl font-bold text-gray-800 mb-2">Шумомер</h1>
-        <p class="text-gray-500">Измеряйте уровень шума в классе в реальном времени</p>
+        <h1 class="text-4xl md:text-5xl font-black text-white mb-3 drop-shadow-lg">Шумомер</h1>
+        <p class="text-white/80 text-lg">Измеряйте уровень шума в классе</p>
       </div>
 
+      <!-- Кнопки выбора -->
       <div class="space-y-4">
         <!-- Локальный микрофон -->
         <button
           on:click={chooseLocal}
-          class="w-full p-6 rounded-2xl bg-white bg-opacity-70 backdrop-blur-xl shadow-lg hover:shadow-xl transition-all text-left group"
-          style="border: 1px solid rgba(255,255,255,0.3);"
+          class="w-full p-5 rounded-3xl bg-white/20 backdrop-blur-2xl border border-white/30 shadow-xl hover:bg-white/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 text-left group"
         >
           <div class="flex items-center gap-4">
-            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center shadow-md">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-400 to-green-500 flex items-center justify-center shadow-lg group-hover:shadow-emerald-500/50 transition-shadow">
               <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m-4 0h8m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
               </svg>
             </div>
-            <div>
-              <h3 class="text-lg font-bold text-gray-800 group-hover:text-green-600 transition-colors">Микрофон этого устройства</h3>
-              <p class="text-sm text-gray-500">Использовать встроенный микрофон компьютера или доски</p>
+            <div class="flex-1">
+              <h3 class="text-lg font-bold text-white group-hover:text-emerald-200 transition-colors">Микрофон устройства</h3>
+              <p class="text-sm text-white/60">Встроенный микрофон компьютера</p>
             </div>
+            <svg class="w-5 h-5 text-white/40 group-hover:text-white group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
           </div>
         </button>
 
         <!-- Удалённый телефон -->
         <button
           on:click={chooseRemote}
-          class="w-full p-6 rounded-2xl bg-white bg-opacity-70 backdrop-blur-xl shadow-lg hover:shadow-xl transition-all text-left group"
-          style="border: 1px solid rgba(255,255,255,0.3);"
+          class="w-full p-5 rounded-3xl bg-white/20 backdrop-blur-2xl border border-white/30 shadow-xl hover:bg-white/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 text-left group"
         >
           <div class="flex items-center gap-4">
-            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center shadow-md">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center shadow-lg group-hover:shadow-blue-500/50 transition-shadow">
               <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
               </svg>
             </div>
-            <div>
-              <h3 class="text-lg font-bold text-gray-800 group-hover:text-blue-600 transition-colors">Подключить телефон</h3>
-              <p class="text-sm text-gray-500">Нет микрофона? Подключите телефон по коду через PWA</p>
+            <div class="flex-1">
+              <h3 class="text-lg font-bold text-white group-hover:text-blue-200 transition-colors">Подключить телефон</h3>
+              <p class="text-sm text-white/60">Используйте телефон как микрофон</p>
             </div>
+            <svg class="w-5 h-5 text-white/40 group-hover:text-white group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
           </div>
         </button>
       </div>
+
+      <!-- Подсказка внизу -->
+      <p class="text-center text-white/50 text-xs mt-8">
+        Выберите источник звука для измерения уровня шума
+      </p>
     </div>
   </div>
 
