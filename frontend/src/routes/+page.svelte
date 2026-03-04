@@ -88,34 +88,12 @@
     error = null;
 
     try {
-      // Преобразуем русские ID в английские для backend
-      const englishAgeGroupIds = selectedAgeGroups && selectedAgeGroups.length > 0 ? selectedAgeGroups.map(id => {
-        const englishId = convertRussianToEnglishId(id, 'ageGroups');
-        return englishId;
-      }) : undefined;
-      
-      const englishSkillIds = selectedSkills && selectedSkills.length > 0 ? selectedSkills.map(id => {
-        const englishId = convertRussianToEnglishId(id, 'skills');
-        return englishId;
-      }) : undefined;
-      
-      const englishStageIds = selectedStages && selectedStages.length > 0 ? selectedStages.map(id => {
-        const englishId = convertRussianToEnglishId(id, 'stages');
-        console.log(`  ${id} → ${englishId}`);
-        return englishId;
-      }) : undefined;
-      
-      const englishTypeIds = selectedTypes && selectedTypes.length > 0 ? selectedTypes.map(id => {
-        const englishId = convertRussianToEnglishId(id, 'types');
-        console.log(`  ${id} → ${englishId}`);
-        return englishId;
-      }) : undefined;
-      
+      // Отправляем фильтры как есть — в базе уже русские значения
       const filters = {
-        ageGroupIds: englishAgeGroupIds && englishAgeGroupIds.length > 0 ? englishAgeGroupIds : undefined,
-        skillIds: englishSkillIds && englishSkillIds.length > 0 ? englishSkillIds : undefined,
-        stageIds: englishStageIds && englishStageIds.length > 0 ? englishStageIds : undefined,
-        typeIds: englishTypeIds && englishTypeIds.length > 0 ? englishTypeIds : undefined,
+        ageGroupIds: selectedAgeGroups && selectedAgeGroups.length > 0 ? selectedAgeGroups : undefined,
+        skillIds: selectedSkills && selectedSkills.length > 0 ? selectedSkills : undefined,
+        stageIds: selectedStages && selectedStages.length > 0 ? selectedStages : undefined,
+        typeIds: selectedTypes && selectedTypes.length > 0 ? selectedTypes : undefined,
         timeRange: selectedTimeRange || undefined,
         search: searchQuery || undefined,
         limit: cardsPerPage,
@@ -138,10 +116,23 @@
   }
 
   // Обработчики для поиска и очистки фильтров
+  let searchTimeout;
 
   function handleSearch() {
     currentPage = 1;
     loadCards();
+  }
+
+  // Реактивный поиск с debounce
+  $: {
+    if (searchTimeout) clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+      if (ageGroups.length > 0) {
+        currentPage = 1;
+        loadCards();
+      }
+    }, 300);
+    searchQuery;
   }
 
   function clearFilters() {
@@ -165,13 +156,13 @@
     !!searchQuery;
 
   $: {
-    // Перезагружаем карточки при любом изменении фильтров
+    // Перезагружаем карточки при любом изменении фильтров (кроме поиска)
     if (ageGroups.length > 0) {
       currentPage = 1;
       loadCards();
     }
     // Зависимости для реактивности
-    selectedAgeGroups; selectedSkills; selectedStages; selectedTypes; selectedTimeRange; searchQuery;
+    selectedAgeGroups; selectedSkills; selectedStages; selectedTypes; selectedTimeRange;
   }
 
   // Пагинация
