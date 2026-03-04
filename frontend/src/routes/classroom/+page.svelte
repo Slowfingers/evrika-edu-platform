@@ -437,39 +437,45 @@
 <div class="h-[calc(100vh-3.5rem-4rem)] md:h-[calc(100vh-4rem)] flex flex-col overflow-hidden relative">
 
   <!-- ===== TOOLBAR ===== -->
-  <div class="flex-shrink-0 backdrop-blur-xl px-2 md:px-3 py-1.5 md:py-2 flex items-center gap-1.5 md:gap-2 overflow-x-auto" style="background:rgba(255,255,255,0.7); border-bottom:1px solid rgba(255,255,255,0.3); scrollbar-width:none; -webkit-overflow-scrolling:touch;">
+  <div class="flex-shrink-0 backdrop-blur-xl px-2 md:px-3 py-1.5 md:py-2 flex flex-wrap md:flex-nowrap items-center gap-1 md:gap-2" style="background:rgba(255,255,255,0.7); border-bottom:1px solid rgba(255,255,255,0.3);">
 
     <!-- Mode tabs -->
     <div class="flex bg-white bg-opacity-60 rounded-lg p-0.5 flex-shrink-0">
+      {#each [['edit','✏️'],['seat','🪑'],['groups','👥']] as [m, icon]}
+        <button on:click={() => { mode = m; mobileSelectedStudent = null; }} class="px-2.5 py-1.5 rounded-md text-sm md:text-xs font-medium transition-all md:hidden {mode === m ? 'bg-white shadow' : ''}" title={m === 'edit' ? 'Редактор' : m === 'seat' ? 'Рассадка' : 'Группы'}>
+          {icon}
+        </button>
+      {/each}
       {#each [['edit','Редактор'],['seat','Рассадка'],['groups','Группы']] as [m, label]}
-        <button on:click={() => { mode = m; mobileSelectedStudent = null; }} class="px-2 md:px-3 py-1 md:py-1.5 rounded-md text-[11px] md:text-xs font-medium transition-all {mode === m ? 'bg-white shadow text-gray-900' : 'text-gray-500'}">
+        <button on:click={() => { mode = m; mobileSelectedStudent = null; }} class="hidden md:block px-3 py-1.5 rounded-md text-xs font-medium transition-all {mode === m ? 'bg-white shadow text-gray-900' : 'text-gray-500'}">
           {label}
         </button>
       {/each}
     </div>
 
-    <div class="w-px h-5 bg-white bg-opacity-40 flex-shrink-0"></div>
+    <div class="hidden md:block w-px h-5 bg-white bg-opacity-40 flex-shrink-0"></div>
 
     {#if mode === 'edit'}
-      <!-- Desk type picker (scrollable on mobile) -->
-      {#each Object.entries(DESK_TYPES) as [key, dt]}
-        <button on:click={() => selectedTool = key} class="px-1.5 md:px-2 py-1 md:py-1.5 rounded-lg text-[10px] md:text-xs font-medium transition-all flex items-center gap-1 flex-shrink-0 whitespace-nowrap {selectedTool === key ? 'bg-white shadow text-gray-900 ring-1 ring-indigo-200' : 'text-gray-600'}">
-          <div class="w-2.5 h-2.5 md:w-3 md:h-3 rounded" style="background:{dt.color};"></div>
-          <span class="hidden sm:inline">{dt.label}</span>
-          <span class="sm:hidden">{dt.label.split(' ')[0]}</span>
+      <!-- Desk type picker -->
+      <div class="flex items-center gap-1 overflow-x-auto flex-1 md:flex-none" style="scrollbar-width:none;">
+        {#each Object.entries(DESK_TYPES).slice(0, isMobile ? 4 : 7) as [key, dt]}
+          <button on:click={() => selectedTool = key} class="px-2 py-1.5 rounded-lg text-[10px] md:text-xs font-medium transition-all flex items-center gap-1 flex-shrink-0 {selectedTool === key ? 'bg-white shadow text-gray-900' : 'text-gray-600'}">
+            <div class="w-2.5 h-2.5 rounded" style="background:{dt.color};"></div>
+            <span class="hidden md:inline">{dt.label}</span>
+          </button>
+        {/each}
+        <button on:click={addDesk} class="p-1.5 md:px-3 md:py-1.5 rounded-lg text-xs font-medium bg-indigo-500 text-white hover:bg-indigo-600 transition-all flex items-center gap-1 flex-shrink-0">
+          <svg class="w-4 h-4 md:w-3.5 md:h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+          <span class="hidden md:inline">Добавить</span>
         </button>
-      {/each}
-      <button on:click={addDesk} class="px-2 md:px-3 py-1 md:py-1.5 rounded-lg text-[10px] md:text-xs font-medium bg-indigo-500 text-white hover:bg-indigo-600 transition-all flex items-center gap-1 flex-shrink-0">
-        <svg class="w-3 h-3 md:w-3.5 md:h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-        <span class="hidden sm:inline">Добавить</span>
-      </button>
+      </div>
       <div class="relative flex-shrink-0 z-50">
-        <button on:click={() => showTemplates = !showTemplates} class="px-2 py-1 md:py-1.5 rounded-lg text-[10px] md:text-xs font-medium text-gray-600 hover:bg-white hover:bg-opacity-50 transition-all flex items-center gap-1">
-          <svg class="w-3 h-3 md:w-3.5 md:h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/></svg>
-          Шаблоны
+        <button on:click={() => showTemplates = !showTemplates} class="p-1.5 md:px-2 md:py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:bg-white hover:bg-opacity-50 transition-all flex items-center gap-1">
+          <svg class="w-4 h-4 md:w-3.5 md:h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/></svg>
+          <span class="hidden md:inline">Шаблоны</span>
         </button>
         {#if showTemplates}
-          <div class="absolute top-full left-0 mt-1 z-50 bg-white rounded-xl shadow-xl border border-gray-200 p-1 w-36">
+          <div class="absolute top-full right-0 md:left-0 mt-1 z-50 bg-white rounded-xl shadow-xl border border-gray-200 p-1 w-36">
             {#each TEMPLATES as t}
               <button on:click={() => applyTemplate(t.id)} class="w-full px-3 py-2 text-left text-xs text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 rounded-lg">{t.label}</button>
             {/each}
@@ -479,27 +485,27 @@
     {/if}
 
     {#if mode === 'seat'}
-      <button on:click={autoSeatRandom} class="px-2 py-1 md:py-1.5 rounded-lg text-[10px] md:text-xs font-medium bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-all flex items-center gap-1 flex-shrink-0" title="Рассадить всех случайно по свободным местам">Случайно</button>
-      <button on:click={autoSeatBalanced} class="px-2 py-1 md:py-1.5 rounded-lg text-[10px] md:text-xs font-medium bg-purple-50 text-purple-600 hover:bg-purple-100 transition-all flex items-center gap-1 flex-shrink-0" title="Сильные и слабые за одной партой, конфликтные разведены">Баланс</button>
-      <button on:click={shuffleAll} class="px-2 py-1 md:py-1.5 rounded-lg text-[10px] md:text-xs font-medium bg-orange-50 text-orange-600 hover:bg-orange-100 transition-all flex items-center gap-1 flex-shrink-0">Встряхнуть</button>
-      <button on:click={clearSeating} class="px-2 py-1 md:py-1.5 rounded-lg text-[10px] md:text-xs font-medium text-gray-500 hover:bg-white hover:bg-opacity-50 transition-all flex-shrink-0">Очистить</button>
+      <div class="flex items-center gap-1 flex-1 md:flex-none">
+        <button on:click={autoSeatRandom} class="px-2 py-1.5 rounded-lg text-[10px] md:text-xs font-medium bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-all flex-shrink-0" title="Случайно">🎲 <span class="hidden md:inline">Случайно</span></button>
+        <button on:click={autoSeatBalanced} class="px-2 py-1.5 rounded-lg text-[10px] md:text-xs font-medium bg-purple-50 text-purple-600 hover:bg-purple-100 transition-all flex-shrink-0" title="Баланс">⚖️ <span class="hidden md:inline">Баланс</span></button>
+        <button on:click={shuffleAll} class="px-2 py-1.5 rounded-lg text-[10px] md:text-xs font-medium bg-orange-50 text-orange-600 hover:bg-orange-100 transition-all flex-shrink-0" title="Встряхнуть">🔀</button>
+        <button on:click={clearSeating} class="px-2 py-1.5 rounded-lg text-[10px] md:text-xs font-medium text-gray-500 hover:bg-white hover:bg-opacity-50 transition-all flex-shrink-0" title="Очистить">✕</button>
+      </div>
     {/if}
 
     {#if mode === 'groups'}
-      <span class="text-[10px] md:text-xs text-gray-500 flex-shrink-0">Чел. в группе:</span>
-      {#each [2,3,4,5,6] as sz}
-        <button on:click={() => groupSize = sz} class="w-6 h-6 md:w-7 md:h-7 rounded-lg text-[10px] md:text-xs font-bold transition-all flex-shrink-0 flex items-center justify-center {groupSize === sz ? 'bg-indigo-500 text-white shadow' : 'bg-white bg-opacity-60 text-gray-600 hover:bg-white'}">{sz}</button>
-      {/each}
-      <button on:click={generateGroups} class="px-2 md:px-3 py-1 md:py-1.5 rounded-lg text-[10px] md:text-xs font-medium bg-indigo-500 text-white hover:bg-indigo-600 transition-all flex-shrink-0">Разделить</button>
-      {#if groups.length > 0}
-        <div class="w-px h-5 bg-white bg-opacity-40 flex-shrink-0"></div>
-        <span class="text-[10px] md:text-xs text-gray-500 flex-shrink-0">{groups.length} гр.</span>
-        <button on:click={seatGroupsOnDesks} class="px-2 md:px-3 py-1 md:py-1.5 rounded-lg text-[10px] md:text-xs font-medium bg-green-500 text-white hover:bg-green-600 transition-all flex items-center gap-1 flex-shrink-0">
-          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-          За столы
-        </button>
-        <button on:click={clearGroups} class="px-2 py-1 rounded-lg text-[10px] md:text-xs font-medium text-red-400 hover:text-red-600 hover:bg-red-50 transition-all flex-shrink-0">Сбросить</button>
-      {/if}
+      <div class="flex items-center gap-1 flex-1 md:flex-none">
+        <span class="hidden md:inline text-xs text-gray-500">Чел.:</span>
+        {#each [2,3,4,5,6] as sz}
+          <button on:click={() => groupSize = sz} class="w-7 h-7 rounded-lg text-xs font-bold transition-all flex-shrink-0 flex items-center justify-center {groupSize === sz ? 'bg-indigo-500 text-white shadow' : 'bg-white bg-opacity-60 text-gray-600'}">{sz}</button>
+        {/each}
+        <button on:click={generateGroups} class="px-2 py-1.5 rounded-lg text-xs font-medium bg-indigo-500 text-white hover:bg-indigo-600 transition-all flex-shrink-0">Разделить</button>
+        {#if groups.length > 0}
+          <span class="text-xs text-gray-500">{groups.length}гр</span>
+          <button on:click={seatGroupsOnDesks} class="px-2 py-1.5 rounded-lg text-xs font-medium bg-green-500 text-white hover:bg-green-600 transition-all flex-shrink-0">За столы</button>
+          <button on:click={clearGroups} class="p-1.5 rounded-lg text-red-400 hover:text-red-600 hover:bg-red-50 transition-all flex-shrink-0">✕</button>
+        {/if}
+      </div>
     {/if}
 
     <div class="flex-1"></div>
