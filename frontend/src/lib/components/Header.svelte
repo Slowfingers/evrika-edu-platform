@@ -1,8 +1,8 @@
 <script>
   import { page } from '$app/stores';
 
-  const toolRoutes = ['/timer', '/noisemeter', '/classroom'];
-  const navRoutes = ['/', '/constructor', '/timer', '/noisemeter', '/classroom'];
+  const toolRoutes = ['/timer', '/noisemeter', '/classroom', '/target'];
+  const navRoutes = ['/', '/constructor', '/timer', '/noisemeter', '/classroom', '/target'];
 
   $: currentPath = $page.url.pathname;
   $: isCardDetail = currentPath.match(/^\/\d+$/);
@@ -12,7 +12,8 @@
     '/timer': 'Таймер урока',
     '/noisemeter': 'Шумометр',
     '/classroom': 'Управление классом',
-    '/constructor': 'Конструктор урока'
+    '/constructor': 'Конструктор урока',
+    '/target': 'Мишень рефлексии'
   }[currentPath] || null;
 </script>
 
@@ -56,6 +57,7 @@
           <a href="/timer" class="px-3 py-1.5 rounded-full text-sm font-medium transition-all {currentPath === '/timer' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500 hover:text-gray-900'}">Таймер</a>
           <a href="/noisemeter" class="px-3 py-1.5 rounded-full text-sm font-medium transition-all {currentPath === '/noisemeter' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500 hover:text-gray-900'}">Шум</a>
           <a href="/classroom" class="px-3 py-1.5 rounded-full text-sm font-medium transition-all {currentPath === '/classroom' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500 hover:text-gray-900'}">Класс</a>
+          <a href="/target" class="px-3 py-1.5 rounded-full text-sm font-medium transition-all {currentPath === '/target' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500 hover:text-gray-900'}">Мишень</a>
         </div>
       </nav>
 
