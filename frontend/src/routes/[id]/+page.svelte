@@ -189,7 +189,7 @@
         </div>
         <div class="min-w-0">
           <p class="text-[10px] text-gray-400 uppercase tracking-wide">Возраст</p>
-          <p class="text-xs text-gray-800 font-medium leading-tight truncate">{getAgeGroupNames(card.age_groups)}</p>
+          <p class="text-xs text-gray-800 font-medium leading-snug">{getAgeGroupNames(card.age_groups)}</p>
         </div>
       </div>
       <!-- Навыки -->
@@ -201,7 +201,7 @@
         </div>
         <div class="min-w-0">
           <p class="text-[10px] text-gray-400 uppercase tracking-wide">Навыки</p>
-          <p class="text-xs text-gray-800 font-medium leading-tight truncate">{getSkillNames(card.skills)}</p>
+          <p class="text-xs text-gray-800 font-medium leading-snug">{getSkillNames(card.skills)}</p>
         </div>
       </div>
       <!-- Этап урока -->
@@ -213,7 +213,7 @@
         </div>
         <div class="min-w-0">
           <p class="text-[10px] text-gray-400 uppercase tracking-wide">Этап</p>
-          <p class="text-xs text-gray-800 font-medium leading-tight truncate">{getStageNames(card.stages)}</p>
+          <p class="text-xs text-gray-800 font-medium leading-snug">{getStageNames(card.stages)}</p>
         </div>
       </div>
       <!-- Тип работы -->
@@ -225,18 +225,18 @@
         </div>
         <div class="min-w-0">
           <p class="text-[10px] text-gray-400 uppercase tracking-wide">Тип</p>
-          <p class="text-xs text-gray-800 font-medium leading-tight truncate">{getTypeNames(card.types)}</p>
+          <p class="text-xs text-gray-800 font-medium leading-snug">{getTypeNames(card.types)}</p>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Содержание приёма -->
-  <div class="card">
+  <div class="card overflow-hidden">
     <h2 class="text-lg font-bold mb-4 text-gray-900">Содержание приёма</h2>
 
     {#if card.content}
-      <div class="text-gray-700 leading-relaxed whitespace-pre-wrap text-sm md:text-base">
+      <div class="text-gray-700 leading-relaxed whitespace-pre-wrap text-sm md:text-base overflow-hidden break-words max-w-full">
         {card.content}
       </div>
     {:else}
