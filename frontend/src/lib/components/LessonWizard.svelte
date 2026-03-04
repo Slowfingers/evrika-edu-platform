@@ -540,7 +540,7 @@
       </div>
 
       <!-- Фиксированная панель навигации на мобильных -->
-      <div class="md:hidden fixed bottom-0 left-0 right-0 z-50 p-3 backdrop-blur-xl" style="background: rgba(255,255,255,0.9); border-top: 1px solid rgba(0,0,0,0.08);">
+      <div class="md:hidden fixed bottom-0 left-0 right-0 z-[60] p-3 backdrop-blur-xl" style="background: rgba(255,255,255,0.9); border-top: 1px solid rgba(0,0,0,0.08);">
         <div class="flex items-center justify-between gap-2 max-w-lg mx-auto">
           <button class="btn btn-secondary !py-2.5 flex-1" on:click={prevStep}>
             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

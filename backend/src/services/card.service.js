@@ -105,10 +105,10 @@ class CardService {
         }
       }
 
-      // Поиск по названию
+      // Поиск по названию (регистронезависимый)
       if (filters.search) {
-        conditions.push(`(title LIKE ? OR description LIKE ?)`);
-        params.push(`%${filters.search}%`, `%${filters.search}%`);
+        conditions.push(`(LOWER(title) LIKE LOWER(?) OR LOWER(description) LIKE LOWER(?) OR LOWER(content) LIKE LOWER(?))`);
+        params.push(`%${filters.search}%`, `%${filters.search}%`, `%${filters.search}%`);
       }
 
       if (conditions.length > 0) {
