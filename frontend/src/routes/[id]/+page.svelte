@@ -179,7 +179,7 @@
 
   <!-- Метаданные — компактные табы -->
   <div class="card mb-4 !p-4">
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5">
       <!-- Возраст -->
       <div class="flex items-start gap-2">
         <div class="w-8 h-8 rounded-xl bg-blue-100 flex items-center justify-center flex-shrink-0">
