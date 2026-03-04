@@ -1,0 +1,240 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Glassmorphism базовые стили */
+@layer base {
+  * {
+    @apply border-transparent;
+  }
+  
+  body {
+    background: linear-gradient(135deg, 
+      #e0c3fc 0%, 
+      #8ec5fc 25%, 
+      #a8edea 50%, 
+      #fed6e3 75%, 
+      #e0c3fc 100%
+    );
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    @apply font-sans antialiased min-h-screen;
+  }
+  
+  html {
+    @apply scroll-smooth;
+  }
+  
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+}
+
+@layer components {
+  /* Glassmorphism кнопки */
+  .btn {
+    @apply inline-flex items-center justify-center px-6 py-2.5 rounded-full font-medium transition-all duration-300 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  
+  .btn-primary {
+    @apply bg-gray-900 text-white hover:bg-gray-800 shadow-lg hover:shadow-xl;
+  }
+  
+  .btn-secondary {
+    @apply bg-white/80 backdrop-blur-md text-gray-900 border border-gray-200/50 hover:bg-white shadow-md hover:shadow-lg;
+  }
+  
+  .btn-ghost {
+    @apply bg-transparent text-gray-700 hover:bg-white/50 backdrop-blur-sm;
+  }
+  
+  /* Glassmorphism карточки */
+  .card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+    @apply rounded-3xl p-6 transition-all duration-300 hover:shadow-2xl hover:scale-[1.02];
+  }
+  
+  .card-glass {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    @apply rounded-3xl shadow-lg;
+  }
+  
+  /* Glassmorphism инпуты */
+  .input {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    @apply w-full px-4 py-3 rounded-2xl transition-all duration-300 focus:ring-2 focus:ring-gray-400/30 focus:bg-white/80;
+  }
+  
+  /* Pill бейджи */
+  .badge {
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    @apply inline-flex items-center px-4 py-1.5 rounded-full text-xs font-medium border border-white/30;
+  }
+  
+  .badge-count {
+    @apply bg-gray-600/60 text-white px-3 py-1 rounded-full text-xs font-semibold;
+  }
+  
+  /* Минималистичная навигация */
+  .nav-link {
+    @apply relative px-4 py-2 rounded-full font-medium text-gray-700 transition-all duration-300 hover:bg-white/40 hover:backdrop-blur-md;
+  }
+  
+  .nav-link.active {
+    @apply bg-white/60 backdrop-blur-md shadow-sm;
+  }
+  
+  /* Мобильная навигация */
+  .mobile-nav-link {
+    @apply w-full px-4 py-3 rounded-2xl font-medium transition-all duration-300 text-gray-700 hover:bg-white/40;
+  }
+  
+  .mobile-nav-link.active {
+    @apply bg-white/60 backdrop-blur-md;
+  }
+  
+  /* Анимации загрузки */
+  .loading-dots {
+    @apply inline-flex space-x-1;
+  }
+  
+  .loading-dots > div {
+    @apply w-2 h-2 bg-primary-500 rounded-full animate-bounce;
+  }
+  
+  .loading-dots > div:nth-child(2) {
+    animation-delay: 0.1s;
+  }
+  
+  .loading-dots > div:nth-child(3) {
+    animation-delay: 0.2s;
+  }
+  
+  /* Современные чекбоксы */
+  .checkbox-modern {
+    @apply w-5 h-5 rounded-md border-2 border-secondary-300 bg-white transition-all duration-200 focus:ring-4 focus:ring-primary-500/20 checked:bg-gradient-to-r checked:from-primary-500 checked:to-primary-600 checked:border-primary-500;
+  }
+  
+  /* Эффекты наведения для карточек */
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.02];
+  }
+  
+  /* Современные разделители */
+  .divider {
+    @apply relative flex items-center justify-center my-8;
+  }
+  
+  .divider::before {
+    @apply absolute inset-0 flex items-center;
+    content: '';
+  }
+  
+  .divider::before {
+    @apply w-full h-px bg-gradient-to-r from-transparent via-secondary-300 to-transparent;
+  }
+  
+  /* Современные карточки с градиентами */
+  .card-modern {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+    @apply rounded-3xl p-6 transition-all duration-300 hover:shadow-2xl hover:scale-[1.02];
+  }
+  
+  /* Иконки в карточках */
+  .icon-box {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    @apply w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200 hover:scale-110;
+  }
+  
+  /* Кнопка сердечка */
+  .heart-btn {
+    @apply p-2 rounded-full hover:bg-white/40 transition-all duration-200;
+  }
+  
+  /* Мобильная оптимизация */
+  @media (max-width: 768px) {
+    .btn {
+      @apply px-4 py-2.5 text-sm min-h-[44px];
+    }
+    
+    .card, .card-modern {
+      @apply p-4 rounded-2xl;
+    }
+    
+    .input {
+      @apply py-2.5 text-base min-h-[44px];
+    }
+    
+    /* Увеличенные touch targets для мобильных */
+    a, button {
+      @apply min-h-[44px] min-w-[44px];
+    }
+  }
+  
+  /* Touch-friendly стили */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px] flex items-center justify-center;
+  }
+  
+  /* Безопасная зона для iOS */
+  @supports (padding: max(0px)) {
+    body {
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
+    }
+    
+    header {
+      padding-left: max(1.5rem, env(safe-area-inset-left));
+      padding-right: max(1.5rem, env(safe-area-inset-right));
+    }
+  }
+  
+  /* Оптимизация для landscape на мобильных */
+  @media (max-height: 500px) and (orientation: landscape) {
+    header {
+      @apply h-14;
+    }
+    
+    .mobile-nav-link {
+      @apply py-2;
+    }
+  }
+  
+  /* Предотвращение выделения текста при долгом нажатии */
+  .no-select {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Плавная прокрутка с инерцией на iOS */
+  .smooth-scroll {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+}
