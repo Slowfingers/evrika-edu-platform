@@ -540,19 +540,19 @@
       </div>
 
       <!-- Фиксированная панель навигации на мобильных -->
-      <div class="md:hidden fixed bottom-20 left-3 right-3 z-[60] p-3 rounded-2xl" style="background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); box-shadow: 0 4px 30px rgba(200,168,233,0.15);">
-        <div class="flex items-center justify-between gap-3">
-          <button class="btn btn-secondary !py-2.5 flex-1 text-sm" on:click={prevStep}>
-            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+      <div class="md:hidden fixed bottom-20 left-3 right-3 z-[60] p-2.5 rounded-2xl" style="background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); box-shadow: 0 4px 30px rgba(200,168,233,0.15);">
+        <div class="flex items-center justify-between gap-2">
+          <button class="btn btn-secondary !px-4 !py-2 text-sm" on:click={prevStep}>
+            <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
             </svg>
             Назад
           </button>
-          <button class="btn btn-primary !py-2.5 flex-1 text-sm" disabled={!step2ButtonEnabled} on:click={nextStep}>
+          <button class="btn btn-primary flex-1 !py-2 text-sm" disabled={!step2ButtonEnabled} on:click={nextStep}>
             Далее
             <span class="ml-1 px-1.5 py-0.5 rounded-full text-[10px] bg-white/20">{lessonData.selectedCards.length}</span>
-            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            <svg class="w-3.5 h-3.5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
             </svg>
           </button>
         </div>

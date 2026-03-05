@@ -200,9 +200,19 @@
           />
         </div>
       </div>
-      <div class="p-4 flex gap-3 border-t border-purple-100/50" style="background: rgba(255,255,255,0.9);">
-        <button on:click={() => { clearFilters(); filtersExpanded = false; }} class="btn btn-secondary flex-1 !py-2.5 text-sm">Сбросить</button>
-        <button on:click={() => filtersExpanded = false} class="btn btn-primary flex-1 !py-2.5 text-sm">Применить</button>
+      <div class="p-3 flex gap-2 border-t border-purple-100/50" style="background: rgba(255,255,255,0.9);">
+        <button on:click={() => { clearFilters(); filtersExpanded = false; }} class="btn btn-secondary !px-4 !py-2 text-sm">
+          <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+          Сбросить
+        </button>
+        <button on:click={() => filtersExpanded = false} class="btn btn-primary flex-1 !py-2 text-sm">
+          <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+          </svg>
+          Применить
+        </button>
       </div>
     </div>
   </div>
