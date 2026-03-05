@@ -210,11 +210,11 @@
 
   <!-- Сайдбар с фильтрами (только десктоп) -->
   <aside class="hidden md:flex flex-col gap-4 w-64 flex-shrink-0 sticky top-24">
-    <div class="card !p-5 bg-white border border-gray-200">
+    <div class="card-modern !p-5">
       <div class="flex items-center justify-between mb-4">
-        <h2 class="font-bold text-gray-900">Фильтры</h2>
+        <h2 class="font-bold text-purple-900">Фильтры</h2>
         {#if hasActiveFilters}
-          <button on:click={clearFilters} class="text-xs text-gray-700 font-bold hover:text-indigo-600 transition-colors">
+          <button on:click={clearFilters} class="text-xs text-purple-700 font-bold hover:text-purple-900 transition-colors">
           Сбросить
         </button>
         {/if}
