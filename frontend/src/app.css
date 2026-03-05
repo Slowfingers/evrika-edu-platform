@@ -11,11 +11,11 @@
   
   body {
     background: linear-gradient(160deg, 
-      #965DE9 0%, 
-      #8B52E0 30%, 
-      #A76BE5 55%, 
-      #C48AD0 75%, 
-      #F2A74C 100%
+      #f6bcba 0%, 
+      #f0c4d8 25%, 
+      #e8d0e8 50%, 
+      #d8c8e9 75%, 
+      #c8a8e9 100%
     );
     background-attachment: fixed;
     min-height: 100vh;
@@ -53,17 +53,17 @@
   }
   
   .blob-1 {
-    @apply w-[500px] h-[500px] bg-purple-400/60 top-[-10%] left-[-10%];
+    @apply w-[500px] h-[500px] bg-pink-200/40 top-[-10%] left-[-10%];
     animation-delay: 0s;
   }
   
   .blob-2 {
-    @apply w-[600px] h-[600px] bg-pink-400/50 top-[20%] right-[-20%];
+    @apply w-[600px] h-[600px] bg-purple-200/35 top-[20%] right-[-20%];
     animation-delay: -5s;
   }
   
   .blob-3 {
-    @apply w-[400px] h-[400px] bg-indigo-400/50 bottom-[-10%] left-[20%];
+    @apply w-[400px] h-[400px] bg-blue-200/30 bottom-[-10%] left-[20%];
     animation-delay: -10s;
   }
 
@@ -93,20 +93,20 @@
   
   /* Glassmorphism карточки */
   .card {
-    background: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(40px);
     -webkit-backdrop-filter: blur(40px);
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
-    @apply rounded-[2.5rem] p-6 transition-all duration-300 hover:shadow-2xl hover:bg-white/50;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 8px 32px 0 rgba(200, 168, 233, 0.1);
+    @apply rounded-[2.5rem] p-6 transition-all duration-300 hover:shadow-2xl hover:bg-white/60;
   }
   
   .card-glass {
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.4);
     backdrop-filter: blur(30px);
     -webkit-backdrop-filter: blur(30px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    @apply rounded-[2rem] shadow-[0_8px_32px_rgba(31,38,135,0.05)];
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    @apply rounded-[2rem] shadow-[0_8px_32px_rgba(200,168,233,0.08)];
   }
   
   /* Glassmorphism инпуты */
@@ -200,11 +200,11 @@
   
   /* Современные карточки с градиентами */
   .card-modern {
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.55);
     backdrop-filter: blur(40px);
     -webkit-backdrop-filter: blur(40px);
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    box-shadow: 0 8px 32px 0 rgba(200, 168, 233, 0.08);
     @apply rounded-[2.5rem] p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:bg-white/70;
   }
   
