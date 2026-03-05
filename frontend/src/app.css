@@ -25,6 +25,13 @@
   
   html {
     @apply scroll-smooth;
+    scroll-behavior: smooth;
+  }
+  
+  /* GPU acceleration для плавности */
+  *, *::before, *::after {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   
   /* Анимация градиента */
@@ -49,7 +56,11 @@
   }
   
   .blob {
-    @apply absolute rounded-full mix-blend-multiply filter blur-[80px] opacity-60 animate-[float_20s_infinite];
+    @apply absolute rounded-full mix-blend-multiply filter blur-[80px] opacity-60;
+    animation: float 25s ease-in-out infinite;
+    will-change: transform;
+    contain: layout style;
+    transform: translateZ(0);
   }
   
   .blob-1 {
@@ -93,19 +104,23 @@
   
   /* Glassmorphism карточки */
   .card {
-    background: rgba(255, 255, 255, 0.5);
-    backdrop-filter: blur(40px);
-    -webkit-backdrop-filter: blur(40px);
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.8);
     box-shadow: 0 8px 32px 0 rgba(200, 168, 233, 0.1);
-    @apply rounded-[2.5rem] p-6 transition-all duration-300 hover:shadow-2xl hover:bg-white/60;
+    transform: translateZ(0);
+    will-change: transform, box-shadow;
+    contain: layout style paint;
+    @apply rounded-[2.5rem] p-6 transition-transform transition-shadow duration-200 ease-out hover:shadow-2xl hover:bg-white/70;
   }
   
   .card-glass {
-    background: rgba(255, 255, 255, 0.4);
-    backdrop-filter: blur(30px);
-    -webkit-backdrop-filter: blur(30px);
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.7);
+    transform: translateZ(0);
     @apply rounded-[2rem] shadow-[0_8px_32px_rgba(200,168,233,0.08)];
   }
   
@@ -141,11 +156,13 @@
   
   /* Мобильная навигация */
   .mobile-nav {
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(40px);
-    -webkit-backdrop-filter: blur(40px);
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.8);
     box-shadow: 0 20px 40px rgba(31, 38, 135, 0.1);
+    transform: translateZ(0);
+    will-change: transform;
     @apply fixed bottom-6 left-4 right-4 z-50 md:hidden rounded-[2rem] p-2 flex items-center justify-around;
   }
 
@@ -200,12 +217,15 @@
   
   /* Современные карточки с градиентами */
   .card-modern {
-    background: rgba(255, 255, 255, 0.55);
-    backdrop-filter: blur(40px);
-    -webkit-backdrop-filter: blur(40px);
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.85);
     box-shadow: 0 8px 32px 0 rgba(200, 168, 233, 0.08);
-    @apply rounded-[2.5rem] p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:bg-white/70;
+    transform: translateZ(0);
+    will-change: transform, box-shadow;
+    contain: layout style paint;
+    @apply rounded-[2.5rem] p-6 transition-transform transition-shadow duration-200 ease-out hover:shadow-xl hover:-translate-y-1 hover:bg-white/75;
   }
   
   /* Иконки в карточках */
@@ -285,5 +305,33 @@
   .smooth-scroll {
     -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
+  }
+  
+  /* Отключение тяжёлых эффектов на слабых устройствах */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+    .blob {
+      display: none;
+    }
+  }
+  
+  /* Уменьшение blur на мобильных для производительности */
+  @media (max-width: 768px) {
+    .card, .card-modern, .card-glass {
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .mobile-nav {
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+    .blob {
+      filter: blur(60px);
+      opacity: 0.4;
+    }
   }
 }
