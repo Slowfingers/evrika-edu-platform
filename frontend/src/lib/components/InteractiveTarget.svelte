@@ -21,12 +21,15 @@
         total: 0,
         byRing: [],
         bySector: [],
+        sectorScores: [],
         avgScore: 0,
-        understanding: 'Нет данных'
+        understanding: 'Нет данных',
+        strongTopics: [],
+        weakTopics: []
       };
     }
     
-    // Распределение по кольцам
+    // Распределение по кольцам (общее)
     const byRing = Array(rings).fill(0);
     markersList.forEach(m => {
       if (m.ring !== undefined && m.ring < rings) {
@@ -34,7 +37,7 @@
       }
     });
     
-    // Распределение по секторам
+    // Распределение по секторам (количество отметок)
     const bySector = Array(criteria.length).fill(0);
     markersList.forEach(m => {
       if (m.sector !== undefined && m.sector < criteria.length) {
@@ -42,12 +45,38 @@
       }
     });
     
-    // Средний балл (центр = 100%, внешнее = 0%)
+    // КЛЮЧЕВОЕ: Средний балл ПО КАЖДОЙ ТЕМЕ
+    // ring 0 = внешний (сложно) = 0 баллов
+    // ring (rings-1) = центр (легко) = 100 баллов
+    const sectorScores = criteria.map((_, sectorIndex) => {
+      const sectorMarkers = markersList.filter(m => m.sector === sectorIndex);
+      if (sectorMarkers.length === 0) return { count: 0, avgScore: 0, level: 'Нет данных' };
+      
+      let totalScore = 0;
+      sectorMarkers.forEach(m => {
+        if (m.ring !== undefined) {
+          // Инвертируем: центр = высокий балл
+          const score = ((rings - 1 - m.ring) / (rings - 1)) * 100;
+          totalScore += score;
+        }
+      });
+      const avgScore = Math.round(totalScore / sectorMarkers.length);
+      
+      let level = 'Нет данных';
+      if (avgScore >= 80) level = 'Отлично';
+      else if (avgScore >= 60) level = 'Хорошо';
+      else if (avgScore >= 40) level = 'Средне';
+      else if (avgScore >= 20) level = 'Слабо';
+      else level = 'Сложно';
+      
+      return { count: sectorMarkers.length, avgScore, level };
+    });
+    
+    // Общий средний балл
     let totalScore = 0;
     let validMarkers = 0;
     markersList.forEach(m => {
       if (m.ring !== undefined) {
-        // Инвертируем: ring 0 (внешний) = низкий балл, ring (rings-1) = высокий
         const score = ((rings - 1 - m.ring) / (rings - 1)) * 100;
         totalScore += score;
         validMarkers++;
@@ -63,12 +92,24 @@
     else if (avgScore >= 20) understanding = 'Требует внимания ⚠️';
     else if (avgScore > 0) understanding = 'Сложно 🔴';
     
+    // Сильные и слабые темы
+    const scoredTopics = sectorScores
+      .map((s, i) => ({ index: i, name: criteria[i], ...s }))
+      .filter(s => s.count > 0)
+      .sort((a, b) => b.avgScore - a.avgScore);
+    
+    const strongTopics = scoredTopics.filter(t => t.avgScore >= 60);
+    const weakTopics = scoredTopics.filter(t => t.avgScore < 40);
+    
     return {
       total: markersList.length,
       byRing,
       bySector,
+      sectorScores,
       avgScore,
-      understanding
+      understanding,
+      strongTopics,
+      weakTopics
     };
   }
   
@@ -514,6 +555,12 @@
         <span class="text-sm font-medium">Ответов: {markers.length}</span>
       </div>
       
+      <!-- Подсказка -->
+      <div class="absolute bottom-4 left-1/2 -translate-x-1/2 px-6 py-3 rounded-xl bg-white/10 backdrop-blur-xl text-white z-10 text-center max-w-md">
+        <p class="text-sm font-medium">Каждый ученик ставит отметку в <span class="text-amber-300">КАЖДЫЙ сектор</span></p>
+        <p class="text-xs text-white/60 mt-1">Ближе к центру = понял хорошо, ближе к краю = было сложно</p>
+      </div>
+      
       <!-- Мишень -->
       <div class="flex-1 flex items-center justify-center p-8">
         <canvas bind:this={presentationCanvas} width={canvasSize} height={canvasSize} 
@@ -587,45 +634,105 @@
             </div>
           </div>
           
-          <!-- Распределение по темам -->
+          <!-- Анализ понимания по темам -->
           <div class="bg-white/10 backdrop-blur-xl rounded-2xl p-6 mb-6">
-            <h3 class="text-lg font-bold text-white mb-4">📚 Распределение по темам</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <h3 class="text-lg font-bold text-white mb-4">📚 Понимание по темам</h3>
+            <p class="text-white/60 text-sm mb-4">Средний балл понимания каждой темы (ближе к центру = лучше поняли)</p>
+            <div class="space-y-3">
               {#each criteria as criterion, i}
-                {@const count = stats.bySector[i] || 0}
-                {@const percent = stats.total > 0 ? Math.round((count / stats.total) * 100) : 0}
-                <div class="flex items-center gap-3 bg-white/5 rounded-xl p-3">
-                  <div class="w-4 h-4 rounded" style="background: {sectorColors[i % sectorColors.length]}"></div>
-                  <span class="text-white/80 text-sm flex-1 truncate">{criterion}</span>
-                  <span class="text-white font-bold">{count}</span>
-                  <span class="text-white/40 text-sm">({percent}%)</span>
+                {@const sectorData = stats.sectorScores[i] || { count: 0, avgScore: 0, level: 'Нет данных' }}
+                {@const isStrong = sectorData.avgScore >= 60}
+                {@const isWeak = sectorData.avgScore < 40 && sectorData.count > 0}
+                <div class="bg-white/5 rounded-xl p-4">
+                  <div class="flex items-center justify-between mb-2">
+                    <div class="flex items-center gap-2">
+                      <div class="w-4 h-4 rounded" style="background: {sectorColors[i % sectorColors.length]}"></div>
+                      <span class="text-white font-medium">{criterion}</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <span class="text-white/60 text-sm">{sectorData.count} отв.</span>
+                      <span class="px-2 py-0.5 rounded-full text-xs font-bold
+                        {isStrong ? 'bg-green-500/30 text-green-300' : isWeak ? 'bg-red-500/30 text-red-300' : 'bg-amber-500/30 text-amber-300'}">
+                        {sectorData.level}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="h-3 bg-white/10 rounded-full overflow-hidden">
+                    <div class="h-full rounded-full transition-all duration-500
+                      {isStrong ? 'bg-green-500' : isWeak ? 'bg-red-500' : 'bg-amber-500'}"
+                      style="width: {Math.max(sectorData.avgScore, 3)}%">
+                    </div>
+                  </div>
+                  <div class="flex justify-between mt-1">
+                    <span class="text-white/40 text-xs">Сложно</span>
+                    <span class="text-white font-bold text-sm">{sectorData.avgScore}%</span>
+                    <span class="text-white/40 text-xs">Легко</span>
+                  </div>
                 </div>
               {/each}
             </div>
           </div>
           
-          <!-- Интерпретация -->
+          <!-- Сильные и слабые темы -->
+          {#if stats.strongTopics.length > 0 || stats.weakTopics.length > 0}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              {#if stats.strongTopics.length > 0}
+                <div class="bg-green-500/20 backdrop-blur-xl rounded-2xl p-5">
+                  <h4 class="text-green-300 font-bold mb-3 flex items-center gap-2">
+                    <span>✅</span> Сильные темы
+                  </h4>
+                  <div class="space-y-2">
+                    {#each stats.strongTopics as topic}
+                      <div class="flex items-center justify-between text-white/80">
+                        <span class="text-sm">{topic.name}</span>
+                        <span class="text-green-300 font-bold">{topic.avgScore}%</span>
+                      </div>
+                    {/each}
+                  </div>
+                </div>
+              {/if}
+              
+              {#if stats.weakTopics.length > 0}
+                <div class="bg-red-500/20 backdrop-blur-xl rounded-2xl p-5">
+                  <h4 class="text-red-300 font-bold mb-3 flex items-center gap-2">
+                    <span>⚠️</span> Требуют внимания
+                  </h4>
+                  <div class="space-y-2">
+                    {#each stats.weakTopics as topic}
+                      <div class="flex items-center justify-between text-white/80">
+                        <span class="text-sm">{topic.name}</span>
+                        <span class="text-red-300 font-bold">{topic.avgScore}%</span>
+                      </div>
+                    {/each}
+                  </div>
+                </div>
+              {/if}
+            </div>
+          {/if}
+          
+          <!-- Рекомендации -->
           <div class="bg-white/10 backdrop-blur-xl rounded-2xl p-6">
             <h3 class="text-lg font-bold text-white mb-4">💡 Рекомендации</h3>
             <div class="space-y-3 text-white/80">
-              {#if stats.avgScore >= 80}
-                <p>✅ Отличный результат! Ученики хорошо усвоили материал.</p>
+              {#if stats.total === 0}
+                <p>📝 Нет данных для анализа.</p>
+                <p class="text-white/60 text-sm">Попросите каждого ученика поставить отметку в КАЖДЫЙ сектор на том уровне, насколько он понял эту тему.</p>
+              {:else if stats.avgScore >= 80}
+                <p>✅ Отличный результат! Ученики хорошо усвоили все темы урока.</p>
               {:else if stats.avgScore >= 60}
-                <p>👍 Хороший результат. Большинство учеников поняли материал.</p>
+                <p>👍 Хороший результат. Большинство тем усвоены хорошо.</p>
               {:else if stats.avgScore >= 40}
-                <p>📊 Средний результат. Рекомендуется повторить сложные моменты.</p>
-              {:else if stats.avgScore > 0}
-                <p>⚠️ Материал вызвал затруднения. Рекомендуется дополнительное объяснение.</p>
+                <p>📊 Средний результат. Рекомендуется повторить сложные темы.</p>
               {:else}
-                <p>📝 Нет данных для анализа. Попросите учеников отметить свои ответы на мишени.</p>
+                <p>⚠️ Материал вызвал затруднения. Рекомендуется дополнительное объяснение.</p>
               {/if}
               
-              {#if stats.total > 0}
-                {@const maxSectorIndex = stats.bySector.indexOf(Math.max(...stats.bySector))}
-                {@const minRingIndex = stats.byRing.indexOf(Math.max(...stats.byRing))}
-                {#if stats.bySector[maxSectorIndex] > stats.total / criteria.length * 1.5}
-                  <p>📌 Тема «{criteria[maxSectorIndex]}» получила больше всего отметок.</p>
-                {/if}
+              {#if stats.weakTopics.length > 0}
+                <p class="text-amber-300">🔄 Рекомендуется повторить: {stats.weakTopics.map(t => t.name).join(', ')}</p>
+              {/if}
+              
+              {#if stats.strongTopics.length > 0 && stats.weakTopics.length > 0}
+                <p class="text-white/60 text-sm">💡 Можно использовать сильные темы как опору для объяснения слабых.</p>
               {/if}
             </div>
           </div>
