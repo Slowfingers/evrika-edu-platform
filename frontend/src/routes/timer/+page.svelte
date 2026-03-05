@@ -175,7 +175,7 @@
 
 {#if isFinished}
   <!-- Экран завершения урока -->
-  <div class="fixed inset-0 z-10 flex flex-col items-center justify-center p-6 text-center text-white font-sans transition-colors duration-[1500ms]" style="background-color: {backgroundColor};">
+  <div class="fixed inset-0 z-[100] flex flex-col items-center justify-center p-6 text-center text-white font-sans transition-colors duration-[1500ms]" style="background-color: {backgroundColor};">
     <div class="absolute inset-0 bg-gradient-to-br from-transparent to-black/20 pointer-events-none"></div>
     <div class="relative bg-white bg-opacity-10 backdrop-blur-xl p-10 rounded-3xl border border-white border-opacity-20 shadow-2xl max-w-md w-full">
       <h1 class="text-4xl md:text-5xl font-bold mb-4">Урок завершен!</h1>
