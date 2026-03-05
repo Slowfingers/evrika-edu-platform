@@ -277,9 +277,8 @@
 
     <!-- Мобильный bottom sheet: этапы -->
     {#if showMobileStages}
-      <div class="fixed inset-0 z-50 flex flex-col justify-end" on:click={() => showMobileStages = false}>
-        <div class="absolute inset-0 bg-black bg-opacity-40 backdrop-blur-sm"></div>
-        <div class="relative bg-black bg-opacity-80 backdrop-blur-2xl rounded-t-3xl max-h-[75vh] flex flex-col overflow-hidden" on:click|stopPropagation>
+      <div class="modal-overlay flex flex-col justify-end" on:click={() => showMobileStages = false}>
+        <div class="modal-content bg-black bg-opacity-80 backdrop-blur-2xl rounded-t-3xl max-h-[75vh] flex flex-col overflow-hidden" on:click|stopPropagation>
           <!-- Handle -->
           <div class="flex items-center justify-center py-2 flex-shrink-0">
             <div class="w-10 h-1 rounded-full bg-white bg-opacity-30"></div>
