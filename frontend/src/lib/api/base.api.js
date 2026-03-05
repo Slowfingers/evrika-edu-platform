@@ -1,11 +1,32 @@
 const isDev = typeof window !== 'undefined' && window.location.hostname === 'localhost';
 const API_BASE_URL = isDev ? 'http://localhost:10000/api' : '';
 
+// Маппинги русских ID → английских для сопоставления с данными в БД
+const RU_TO_EN = {
+  ageGroups: { 'начальные-классы': 'primary', 'старшие-классы': 'secondary' },
+  skills: { 'критическое-мышление': 'critical', 'командная-работа': 'teamwork', 'рефлексия': 'reflection', 'креативное-мышление': 'creative', 'систематизация': 'systematization', 'систематизация-материала': 'systematization', 'коммуникация': 'communication' },
+  stages: { 'начало-урока': 'начало-урока', 'объяснение-нового-материала': 'объяснение-нового-материала', 'закрепление': 'закрепление', 'конец-урока': 'конец-урока' },
+  types: { 'индивидуальная': 'individual', 'парная': 'pair', 'командная': 'team', 'фронтальная': 'frontal' }
+};
+
+// Проверяет, содержит ли массив данных карточки хотя бы одно значение из фильтра
+// Учитывает и русские, и английские ID
+function matchesFilter(cardValues, filterValues, mappingType) {
+  if (!cardValues || !filterValues || filterValues.length === 0) return true;
+  const mapping = RU_TO_EN[mappingType] || {};
+  // Для каждого значения фильтра проверяем прямое совпадение и совпадение через маппинг
+  return filterValues.some(filterVal => {
+    const englishVal = mapping[filterVal];
+    return cardValues.some(cv => cv === filterVal || cv === englishVal);
+  });
+}
+
 export class BaseApi {
   constructor(customFetch = null) {
     this.baseUrl = API_BASE_URL;
     this.fetch = customFetch || (typeof window !== 'undefined' ? window.fetch.bind(window) : fetch);
     this.useStaticData = !isDev;
+    this._staticCardsCache = null;
   }
 
   async request(endpoint, options = {}) {
@@ -46,38 +67,41 @@ export class BaseApi {
     }
   }
 
+  async loadStaticCards() {
+    if (this._staticCardsCache) return this._staticCardsCache;
+    const response = await this.fetch('/data/cards.json');
+    if (!response.ok) {
+      throw new Error(`Failed to load static data: ${response.status}`);
+    }
+    this._staticCardsCache = await response.json();
+    return this._staticCardsCache;
+  }
+
   async fetchStaticCards(endpoint) {
     try {
-      const response = await this.fetch('/data/cards.json');
-      if (!response.ok) {
-        throw new Error(`Failed to load static data: ${response.status}`);
-      }
+      const cards = await this.loadStaticCards();
       
-      let cards = await response.json();
-      
-      // Проверяем, это запрос на получение одной карточки по ID
-      const cardIdMatch = endpoint.match(/\/cards\/([^?]+)/);
-      if (cardIdMatch && !endpoint.includes('?')) {
-        const cardId = cardIdMatch[1];
+      // Запрос на одну карточку: /cards/20
+      const cardIdMatch = endpoint.match(/\/cards\/(\d+)$/);
+      if (cardIdMatch) {
+        const cardId = parseInt(cardIdMatch[1], 10);
         const card = cards.find(c => c.id === cardId);
-        return {
-          success: true,
-          data: card || null
-        };
+        return { success: true, data: card || null };
       }
       
-      // Парсим query параметры из endpoint
+      // Парсим query параметры
       const url = new URL(`http://dummy${endpoint}`);
       const limit = parseInt(url.searchParams.get('limit')) || cards.length;
-      const page = parseInt(url.searchParams.get('page')) || 1;
+      const offset = parseInt(url.searchParams.get('offset')) || 0;
       const search = url.searchParams.get('search') || '';
-      const ageGroups = url.searchParams.get('ageGroups') || '';
-      const skills = url.searchParams.get('skills') || '';
-      const stages = url.searchParams.get('stages') || '';
-      const types = url.searchParams.get('types') || '';
       const timeRange = url.searchParams.get('timeRange') || '';
       
-      // Применяем фильтры
+      // getAll() для множественных параметров (ageGroupIds=a&ageGroupIds=b)
+      const ageGroupIds = url.searchParams.getAll('ageGroupIds');
+      const skillIds = url.searchParams.getAll('skillIds');
+      const stageIds = url.searchParams.getAll('stageIds');
+      const typeIds = url.searchParams.getAll('typeIds');
+      
       let filteredCards = cards;
       
       // Поиск по тексту
@@ -90,66 +114,44 @@ export class BaseApi {
         );
       }
       
-      // Фильтр по возрастным группам
-      if (ageGroups) {
-        const ageGroupsArray = ageGroups.split(',');
-        filteredCards = filteredCards.filter(card => 
-          card.age_groups?.some(ag => ageGroupsArray.includes(ag))
-        );
+      // Фильтры с учётом русских и английских ID
+      if (ageGroupIds.length > 0) {
+        filteredCards = filteredCards.filter(card => matchesFilter(card.age_groups, ageGroupIds, 'ageGroups'));
+      }
+      if (skillIds.length > 0) {
+        filteredCards = filteredCards.filter(card => matchesFilter(card.skills, skillIds, 'skills'));
+      }
+      if (stageIds.length > 0) {
+        filteredCards = filteredCards.filter(card => matchesFilter(card.stages, stageIds, 'stages'));
+      }
+      if (typeIds.length > 0) {
+        filteredCards = filteredCards.filter(card => matchesFilter(card.types, typeIds, 'types'));
       }
       
-      // Фильтр по навыкам
-      if (skills) {
-        const skillsArray = skills.split(',');
-        filteredCards = filteredCards.filter(card => 
-          card.skills?.some(s => skillsArray.includes(s))
-        );
-      }
-      
-      // Фильтр по этапам урока
-      if (stages) {
-        const stagesArray = stages.split(',');
-        filteredCards = filteredCards.filter(card => 
-          card.stages?.some(st => stagesArray.includes(st))
-        );
-      }
-      
-      // Фильтр по типам работы
-      if (types) {
-        const typesArray = types.split(',');
-        filteredCards = filteredCards.filter(card => 
-          card.types?.some(t => typesArray.includes(t))
-        );
-      }
-      
-      // Фильтр по времени
+      // Фильтр по времени — значения из фронтенда
       if (timeRange) {
         filteredCards = filteredCards.filter(card => {
-          const time = card.time_minutes || 0;
+          const t = card.time_minutes || 0;
           switch (timeRange) {
-            case '0-5': return time <= 5;
-            case '5-10': return time > 5 && time <= 10;
-            case '10-15': return time > 10 && time <= 15;
-            case '15-20': return time > 15 && time <= 20;
-            case '20-30': return time > 20 && time <= 30;
-            case '30+': return time > 30;
+            case 'up-to-2': return t <= 2;
+            case '3-5': return t >= 3 && t <= 5;
+            case '5-10': return t >= 5 && t <= 10;
+            case '15-20': return t >= 15 && t <= 20;
+            case '25-30': return t >= 25 && t <= 30;
+            case 'full-lesson': return t > 30;
             default: return true;
           }
         });
       }
       
       const total = filteredCards.length;
-      const offset = (page - 1) * limit;
-      
-      // Применяем пагинацию
       const paginatedCards = filteredCards.slice(offset, offset + limit);
       
       return {
         success: true,
         data: paginatedCards,
         total: total,
-        page: page,
-        limit: limit
+        count: paginatedCards.length
       };
     } catch (error) {
       console.error('Static data error:', error);

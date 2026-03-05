@@ -7,16 +7,29 @@
   let catalogCards = [];
   let isLoading = true;
 
+  // Маппинги английских ID → русских для нормализации данных из БД
+  const EN_TO_RU = {
+    ageGroups: { 'primary': 'начальные-классы', 'secondary': 'старшие-классы' },
+    skills: { 'critical': 'критическое-мышление', 'teamwork': 'командная-работа', 'reflection': 'рефлексия', 'creative': 'креативное-мышление', 'systematization': 'систематизация', 'communication': 'коммуникация' },
+    types: { 'individual': 'индивидуальная', 'pair': 'парная', 'team': 'командная', 'frontal': 'фронтальная' }
+  };
+
+  function normalizeIds(ids, mapping) {
+    if (!ids || !Array.isArray(ids)) return [];
+    return ids.map(id => mapping[id] || id);
+  }
+
   // Функция для преобразования данных карточки из API формата в frontend формат
   function transformCardData(apiCard) {
     return {
       ...apiCard,
       // Преобразуем snake_case в camelCase для совместимости с frontend компонентами
       timeMinutes: apiCard.time_minutes,
-      ageGroups: apiCard.age_groups || [],
-      skillIds: apiCard.skills || [],
+      // Нормализуем ID: английские → русские для единообразия с фильтрами
+      ageGroups: normalizeIds(apiCard.age_groups, EN_TO_RU.ageGroups),
+      skillIds: normalizeIds(apiCard.skills, EN_TO_RU.skills),
       stageIds: apiCard.stages || [],
-      typeIds: apiCard.types || [],
+      typeIds: normalizeIds(apiCard.types, EN_TO_RU.types),
       aimIds: apiCard.aims || [],
       fileUrl: apiCard.file_url,
       createdAt: apiCard.created_at,
