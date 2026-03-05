@@ -2,7 +2,7 @@
   import { onMount, tick, afterUpdate } from 'svelte';
   
   // Режимы работы
-  let mode = 'setup'; // setup | presentation
+  let mode = 'setup'; // setup | presentation | stats
   
   // Настройки мишени
   let criteria = ['Тема 1', 'Тема 2', 'Тема 3', 'Тема 4'];
@@ -11,6 +11,66 @@
   
   // Данные взаимодействия
   let markers = []; // {x, y, sector, ring, timestamp}
+  
+  // Статистика (вычисляемая)
+  $: stats = calculateStats(markers);
+  
+  function calculateStats(markersList) {
+    if (markersList.length === 0) {
+      return {
+        total: 0,
+        byRing: [],
+        bySector: [],
+        avgScore: 0,
+        understanding: 'Нет данных'
+      };
+    }
+    
+    // Распределение по кольцам
+    const byRing = Array(rings).fill(0);
+    markersList.forEach(m => {
+      if (m.ring !== undefined && m.ring < rings) {
+        byRing[m.ring]++;
+      }
+    });
+    
+    // Распределение по секторам
+    const bySector = Array(criteria.length).fill(0);
+    markersList.forEach(m => {
+      if (m.sector !== undefined && m.sector < criteria.length) {
+        bySector[m.sector]++;
+      }
+    });
+    
+    // Средний балл (центр = 100%, внешнее = 0%)
+    let totalScore = 0;
+    let validMarkers = 0;
+    markersList.forEach(m => {
+      if (m.ring !== undefined) {
+        // Инвертируем: ring 0 (внешний) = низкий балл, ring (rings-1) = высокий
+        const score = ((rings - 1 - m.ring) / (rings - 1)) * 100;
+        totalScore += score;
+        validMarkers++;
+      }
+    });
+    const avgScore = validMarkers > 0 ? Math.round(totalScore / validMarkers) : 0;
+    
+    // Уровень понимания
+    let understanding = 'Нет данных';
+    if (avgScore >= 80) understanding = 'Отлично! 🎉';
+    else if (avgScore >= 60) understanding = 'Хорошо 👍';
+    else if (avgScore >= 40) understanding = 'Средне 📊';
+    else if (avgScore >= 20) understanding = 'Требует внимания ⚠️';
+    else if (avgScore > 0) understanding = 'Сложно 🔴';
+    
+    return {
+      total: markersList.length,
+      byRing,
+      bySector,
+      avgScore,
+      understanding
+    };
+  }
   
   // Canvas элементы (отдельные для каждого режима)
   let previewCanvas;
@@ -223,10 +283,18 @@
     const maxRadius = canvasSize / 2 - 40;
     
     if (distance <= maxRadius) {
-      // Добавляем маркер
+      // Определяем сектор и кольцо
+      const angle = Math.atan2(dy, dx) + Math.PI / 2;
+      const normalizedAngle = angle < 0 ? angle + 2 * Math.PI : angle;
+      const sectorIndex = Math.floor((normalizedAngle / (2 * Math.PI)) * criteria.length) % criteria.length;
+      const ringIndex = Math.min(Math.floor((distance / maxRadius) * rings), rings - 1);
+      
+      // Добавляем маркер с информацией о секторе и кольце
       markers = [...markers, {
         x,
         y,
+        sector: sectorIndex,
+        ring: ringIndex,
         timestamp: Date.now()
       }];
       
@@ -234,7 +302,6 @@
       drawPresentation();
       
       // Эффект для центра (яблочко)
-      const ringIndex = Math.floor((distance / maxRadius) * rings);
       if (ringIndex >= rings - 1) {
         animateBullseye(x, y);
       }
@@ -288,6 +355,23 @@
     if (document.fullscreenElement) {
       document.exitFullscreen();
     }
+  }
+  
+  // Показать статистику
+  function showStats() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    }
+    mode = 'stats';
+  }
+  
+  // Вернуться к презентации
+  async function backToPresentation() {
+    mode = 'presentation';
+    await tick();
+    setTimeout(() => {
+      drawPresentation();
+    }, 100);
   }
   
   // Очистка маркеров
@@ -411,6 +495,9 @@
       
       <!-- Управление -->
       <div class="absolute top-4 right-4 flex gap-2 z-10">
+        <button on:click={showStats} class="px-4 py-2 rounded-xl bg-green-500/80 backdrop-blur-xl text-white hover:bg-green-500 transition-all">
+          📊 Статистика
+        </button>
         <button on:click={clearMarkers} class="px-4 py-2 rounded-xl bg-white/10 backdrop-blur-xl text-white hover:bg-white/20 transition-all">
           Очистить
         </button>
@@ -433,6 +520,117 @@
           on:click={handleCanvasClick}
           on:touchstart|preventDefault={handleCanvasClick}
           class="max-w-full max-h-full cursor-crosshair rounded-2xl shadow-2xl"></canvas>
+      </div>
+      
+    </div>
+    
+  {:else if mode === 'stats'}
+    <!-- Режим статистики -->
+    <div class="fixed inset-0 z-50 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col overflow-y-auto">
+      
+      <!-- Управление -->
+      <div class="absolute top-4 right-4 flex gap-2 z-10">
+        <button on:click={backToPresentation} class="px-4 py-2 rounded-xl bg-indigo-500/80 backdrop-blur-xl text-white hover:bg-indigo-500 transition-all">
+          ← Назад к мишени
+        </button>
+        <button on:click={exitPresentation} class="px-4 py-2 rounded-xl bg-red-500/80 backdrop-blur-xl text-white hover:bg-red-500 transition-all">
+          Завершить
+        </button>
+      </div>
+      
+      <div class="flex-1 p-6 md:p-10 pt-20">
+        <div class="max-w-4xl mx-auto">
+          
+          <!-- Заголовок -->
+          <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-white mb-2">Результаты рефлексии</h1>
+            <p class="text-white/60">Анализ ответов учеников</p>
+          </div>
+          
+          <!-- Главные метрики -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white/10 backdrop-blur-xl rounded-2xl p-5 text-center">
+              <p class="text-4xl font-bold text-white mb-1">{stats.total}</p>
+              <p class="text-white/60 text-sm">Всего ответов</p>
+            </div>
+            <div class="bg-white/10 backdrop-blur-xl rounded-2xl p-5 text-center">
+              <p class="text-4xl font-bold text-white mb-1">{stats.avgScore}%</p>
+              <p class="text-white/60 text-sm">Средний балл</p>
+            </div>
+            <div class="bg-white/10 backdrop-blur-xl rounded-2xl p-5 text-center col-span-2">
+              <p class="text-2xl font-bold text-white mb-1">{stats.understanding}</p>
+              <p class="text-white/60 text-sm">Уровень понимания</p>
+            </div>
+          </div>
+          
+          <!-- Распределение по кольцам (уровень понимания) -->
+          <div class="bg-white/10 backdrop-blur-xl rounded-2xl p-6 mb-6">
+            <h3 class="text-lg font-bold text-white mb-4">📊 Распределение по уровням</h3>
+            <div class="space-y-3">
+              {#each ringLabels as label, i}
+                {@const count = stats.byRing[i] || 0}
+                {@const percent = stats.total > 0 ? Math.round((count / stats.total) * 100) : 0}
+                {@const isGood = i >= rings - 1}
+                {@const isBad = i === 0}
+                <div class="flex items-center gap-3">
+                  <span class="text-white/80 text-sm w-32 truncate">{label}</span>
+                  <div class="flex-1 h-8 bg-white/10 rounded-full overflow-hidden">
+                    <div class="h-full rounded-full transition-all duration-500 flex items-center justify-end pr-3
+                      {isGood ? 'bg-green-500' : isBad ? 'bg-red-500' : 'bg-amber-500'}"
+                      style="width: {Math.max(percent, 5)}%">
+                      <span class="text-white text-sm font-bold">{count}</span>
+                    </div>
+                  </div>
+                  <span class="text-white/60 text-sm w-12 text-right">{percent}%</span>
+                </div>
+              {/each}
+            </div>
+          </div>
+          
+          <!-- Распределение по темам -->
+          <div class="bg-white/10 backdrop-blur-xl rounded-2xl p-6 mb-6">
+            <h3 class="text-lg font-bold text-white mb-4">📚 Распределение по темам</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {#each criteria as criterion, i}
+                {@const count = stats.bySector[i] || 0}
+                {@const percent = stats.total > 0 ? Math.round((count / stats.total) * 100) : 0}
+                <div class="flex items-center gap-3 bg-white/5 rounded-xl p-3">
+                  <div class="w-4 h-4 rounded" style="background: {sectorColors[i % sectorColors.length]}"></div>
+                  <span class="text-white/80 text-sm flex-1 truncate">{criterion}</span>
+                  <span class="text-white font-bold">{count}</span>
+                  <span class="text-white/40 text-sm">({percent}%)</span>
+                </div>
+              {/each}
+            </div>
+          </div>
+          
+          <!-- Интерпретация -->
+          <div class="bg-white/10 backdrop-blur-xl rounded-2xl p-6">
+            <h3 class="text-lg font-bold text-white mb-4">💡 Рекомендации</h3>
+            <div class="space-y-3 text-white/80">
+              {#if stats.avgScore >= 80}
+                <p>✅ Отличный результат! Ученики хорошо усвоили материал.</p>
+              {:else if stats.avgScore >= 60}
+                <p>👍 Хороший результат. Большинство учеников поняли материал.</p>
+              {:else if stats.avgScore >= 40}
+                <p>📊 Средний результат. Рекомендуется повторить сложные моменты.</p>
+              {:else if stats.avgScore > 0}
+                <p>⚠️ Материал вызвал затруднения. Рекомендуется дополнительное объяснение.</p>
+              {:else}
+                <p>📝 Нет данных для анализа. Попросите учеников отметить свои ответы на мишени.</p>
+              {/if}
+              
+              {#if stats.total > 0}
+                {@const maxSectorIndex = stats.bySector.indexOf(Math.max(...stats.bySector))}
+                {@const minRingIndex = stats.byRing.indexOf(Math.max(...stats.byRing))}
+                {#if stats.bySector[maxSectorIndex] > stats.total / criteria.length * 1.5}
+                  <p>📌 Тема «{criteria[maxSectorIndex]}» получила больше всего отметок.</p>
+                {/if}
+              {/if}
+            </div>
+          </div>
+          
+        </div>
       </div>
       
     </div>
