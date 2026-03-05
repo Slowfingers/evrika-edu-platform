@@ -28,9 +28,8 @@
 
 <!-- Popup меню инструментов -->
 {#if toolsOpen}
-  <div class="fixed inset-0 z-[60] md:hidden" on:click={() => toolsOpen = false}>
-    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
-    <div class="absolute bottom-20 left-4 right-4 bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/50 overflow-hidden" on:click|stopPropagation>
+  <div class="modal-overlay md:hidden" on:click={() => toolsOpen = false}>
+    <div class="absolute bottom-20 left-4 right-4 modal-content bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/50 overflow-hidden" on:click|stopPropagation>
       <div class="flex items-center justify-between px-5 py-4 border-b border-white/40">
         <span class="text-sm font-bold text-gray-800 uppercase tracking-wider">Меню</span>
         <button on:click={() => toolsOpen = false} class="text-sm font-bold text-rose-500 bg-rose-50 px-3 py-1.5 rounded-xl">✕ Закрыть</button>
