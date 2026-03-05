@@ -15,14 +15,6 @@ export class BaseApi {
       },
     };
 
-    // Добавляем токен авторизации если есть
-    if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('auth_token');
-      if (token) {
-        defaultOptions.headers.Authorization = `Bearer ${token}`;
-      }
-    }
-
     const config = {
       ...defaultOptions,
       ...options,

@@ -30,16 +30,6 @@ class DatabaseService {
 
   async createTables() {
     const tables = [
-      // Пользователи
-      `CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        email TEXT UNIQUE NOT NULL,
-        name TEXT NOT NULL,
-        password_hash TEXT NOT NULL,
-        role TEXT DEFAULT 'user',
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-      )`,
-      
       // Карточки приемов
       `CREATE TABLE IF NOT EXISTS cards (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -90,42 +80,6 @@ class DatabaseService {
   }
 
   async seedData() {
-    // Создаем/обновляем админа по умолчанию
-    const bcrypt = require('bcryptjs');
-    // Надежный пароль: смесь букв, цифр, спецсимволов, длина 16 символов
-    const adminPassword = bcrypt.hashSync('Evr1ka@Adm!n2024', 12);
-    
-    // Сначала пытаемся создать админа
-    await new Promise((resolve, reject) => {
-      this.db.run(
-        `INSERT OR IGNORE INTO users (email, name, password_hash, role) 
-         VALUES (?, ?, ?, ?)`,
-        ['admin@evrika.com', 'Администратор', adminPassword, 'admin'],
-        (err) => {
-          if (err) {
-            // Админ уже существует, это нормально
-          }
-          resolve();
-        }
-      );
-    });
-    
-    // Затем обновляем пароль на случай, если админ уже существует
-    await new Promise((resolve, reject) => {
-      this.db.run(
-        `UPDATE users SET password_hash = ? WHERE email = ?`,
-        [adminPassword, 'admin@evrika.com'],
-        (err) => {
-          if (err) {
-            // Ошибка обновления пароля
-          } else {
-            // Пароль успешно обновлен
-          }
-          resolve();
-        }
-      );
-    });
-
     // Добавляем базовые метаданные
     const ageGroups = [
       { id: 'primary', name: 'Начальные классы (1-4)', description: 'Младшие школьники' },

@@ -22,7 +22,7 @@
       { href: '/', label: 'Каталог', icon: 'catalog' },
       { href: '/constructor', label: 'Урок', icon: 'constructor' },
       { href: '/timer', label: 'Таймер', icon: 'timer' },
-      { href: '/noisemeter', label: 'Шум', icon: 'noise' },
+      { href: '/target', label: 'Мишень', icon: 'target' },
       { href: '/classroom', label: 'Класс', icon: 'class' }
     ] as item}
       {@const active = currentPath === item.href}
@@ -42,6 +42,12 @@
         {:else if item.icon === 'noise'}
           <svg class="w-5 h-5 {active ? 'text-gray-900' : 'text-gray-400'}" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="{active ? 2.5 : 1.8}">
             <path stroke-linecap="round" stroke-linejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/>
+          </svg>
+        {:else if item.icon === 'target'}
+          <svg class="w-5 h-5 {active ? 'text-gray-900' : 'text-gray-400'}" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="{active ? 2.5 : 1.8}">
+            <circle cx="12" cy="12" r="10" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="12" cy="12" r="6" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="12" cy="12" r="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         {:else if item.icon === 'class'}
           <svg class="w-5 h-5 {active ? 'text-gray-900' : 'text-gray-400'}" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="{active ? 2.5 : 1.8}">
