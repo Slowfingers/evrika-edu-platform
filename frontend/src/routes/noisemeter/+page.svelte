@@ -254,8 +254,8 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m-4 0h8m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
           </svg>
         </div>
-        <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Шумомер</h1>
-        <p class="text-gray-500 text-sm">Измеряйте уровень шума в классе в реальном времени</p>
+        <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Шумометр</h1>
+        <p class="text-gray-700 text-sm font-medium">Измеряйте уровень шума в классе в реальном времени</p>
       </div>
 
       <!-- Кнопки выбора -->
@@ -273,7 +273,7 @@
             </div>
             <div class="flex-1 min-w-0">
               <h3 class="text-base font-semibold text-gray-900 group-hover:text-emerald-700 transition-colors">Микрофон устройства</h3>
-              <p class="text-xs text-gray-500">Встроенный микрофон компьютера или доски</p>
+              <p class="text-xs text-gray-700 font-medium">Встроенный микрофон компьютера или доски</p>
             </div>
             <svg class="w-5 h-5 text-gray-300 group-hover:text-gray-500 group-hover:translate-x-0.5 transition-all flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -294,7 +294,7 @@
             </div>
             <div class="flex-1 min-w-0">
               <h3 class="text-base font-semibold text-gray-900 group-hover:text-blue-700 transition-colors">Подключить телефон</h3>
-              <p class="text-xs text-gray-500">Нет микрофона? Используйте телефон по коду</p>
+              <p class="text-xs text-gray-700 font-medium">Нет микрофона? Используйте телефон по коду</p>
             </div>
             <svg class="w-5 h-5 text-gray-300 group-hover:text-gray-500 group-hover:translate-x-0.5 transition-all flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -304,7 +304,7 @@
       </div>
 
       <!-- Подсказка внизу -->
-      <p class="text-center text-gray-400 text-xs mt-6">
+      <p class="text-center text-gray-600 text-xs mt-6 font-medium">
         Выберите источник звука для измерения
       </p>
     </div>
@@ -319,8 +319,8 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
         </svg>
       </div>
-      <h2 class="text-2xl font-bold text-gray-800 mb-2">Ошибка</h2>
-      <p class="text-gray-500 mb-6">{errorMsg}</p>
+      <h2 class="text-2xl font-bold text-gray-900 mb-2">Ошибка</h2>
+      <p class="text-gray-700 mb-6 font-medium">{errorMsg}</p>
       <button
         on:click={backToChoose}
         class="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold hover:shadow-lg transition-all"
@@ -345,8 +345,8 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"></path>
         </svg>
       </div>
-      <h2 class="text-2xl font-bold text-gray-800 mb-2">Шумомер остановлен</h2>
-      <p class="text-gray-500 mb-6">Микрофон отключён</p>
+      <h2 class="text-2xl font-bold text-gray-900 mb-2">Шумометр остановлен</h2>
+      <p class="text-gray-700 mb-6 font-medium">Микрофон отключён</p>
       <div class="flex gap-3 justify-center">
         <button
           on:click={backToChoose}
@@ -395,8 +395,8 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
           </svg>
         </div>
-        <h2 class="text-2xl font-bold text-gray-800 mb-2">Подключите телефон</h2>
-        <p class="text-gray-500 mb-6">Откройте шумомер на телефоне и введите код:</p>
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">Подключите телефон</h2>
+        <p class="text-gray-700 mb-6 font-medium">Откройте шумометр на телефоне и введите код:</p>
 
         <!-- Код -->
         <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 mb-4">
@@ -412,7 +412,7 @@
           </div>
         </div>
 
-        <p class="text-xs text-gray-400 mb-4">
+        <p class="text-xs text-gray-600 mb-4 font-medium">
           Перейдите на <strong>{browser ? window.location.origin : ''}/noisemeter/connect</strong> на телефоне
         </p>
 
