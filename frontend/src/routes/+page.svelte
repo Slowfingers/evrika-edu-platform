@@ -182,23 +182,25 @@
 {#if filtersExpanded}
   <div class="fixed inset-0 z-40 md:hidden">
     <button class="absolute inset-0 bg-black/30 backdrop-blur-sm w-full h-full" on:click={() => filtersExpanded = false} aria-label="Закрыть фильтры"></button>
-    <div class="absolute bottom-0 left-0 right-0 rounded-t-3xl p-6 max-h-[85vh] overflow-y-auto" style="background: rgba(255,255,255,0.95); backdrop-filter: blur(20px);">
-      <div class="flex items-center justify-between mb-6">
-        <h2 class="text-lg font-bold text-gray-900">Фильтры</h2>
-        <button on:click={() => filtersExpanded = false} class="p-2 rounded-full hover:bg-gray-100">
-          <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div class="absolute bottom-0 left-0 right-0 rounded-t-3xl max-h-[85vh] flex flex-col" style="background: rgba(255,255,255,0.95); backdrop-filter: blur(20px);">
+      <div class="flex items-center justify-between p-6 pb-4">
+        <h2 class="text-lg font-bold text-purple-900">Фильтры</h2>
+        <button on:click={() => filtersExpanded = false} class="p-2 rounded-full hover:bg-purple-50">
+          <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
           </svg>
         </button>
       </div>
-      <div class="space-y-6">
-        <FilterPanel
-          {ageGroups} {skills} {stages} {types} {timeRanges}
-          bind:selectedAgeGroups bind:selectedSkills bind:selectedStages
-          bind:selectedTypes bind:selectedTimeRange
-        />
+      <div class="flex-1 overflow-y-auto px-6 pb-20">
+        <div class="space-y-6">
+          <FilterPanel
+            {ageGroups} {skills} {stages} {types} {timeRanges}
+            bind:selectedAgeGroups bind:selectedSkills bind:selectedStages
+            bind:selectedTypes bind:selectedTimeRange
+          />
+        </div>
       </div>
-      <div class="mt-6 pt-4 border-t border-gray-200 flex gap-3">
+      <div class="absolute bottom-0 left-0 right-0 p-4 flex gap-3" style="background: linear-gradient(to top, rgba(255,255,255,0.98) 0%, rgba(255,255,255,0.98) 70%, rgba(255,255,255,0) 100%); backdrop-filter: blur(10px);">
         <button on:click={() => { clearFilters(); filtersExpanded = false; }} class="btn btn-secondary flex-1">Сбросить</button>
         <button on:click={() => filtersExpanded = false} class="btn btn-primary flex-1">Применить</button>
       </div>

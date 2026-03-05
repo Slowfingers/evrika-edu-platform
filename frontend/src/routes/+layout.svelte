@@ -106,8 +106,8 @@
   </a>
   
   <!-- Меню -->
-  <button on:click={() => toolsOpen = !toolsOpen} class="flex flex-col items-center gap-1 flex-1 {toolsOpen ? 'text-indigo-700 scale-110' : 'text-gray-500'} transition-all duration-300">
-    <div class="w-10 h-10 rounded-[1.2rem] flex items-center justify-center {toolsOpen ? 'bg-indigo-100 shadow-sm' : 'hover:bg-gray-100'} transition-all">
+  <button on:click={() => toolsOpen = !toolsOpen} class="flex flex-col items-center gap-1 flex-1 {toolsOpen ? 'text-purple-700 scale-110' : 'text-gray-500'} transition-all duration-300">
+    <div class="w-10 h-10 rounded-[1.2rem] flex items-center justify-center {toolsOpen ? 'bg-purple-50 shadow-sm' : 'hover:bg-gray-100'} transition-all">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="{toolsOpen ? 2.5 : 2}">
         {#if toolsOpen}
           <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>

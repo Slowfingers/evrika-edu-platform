@@ -540,15 +540,15 @@
       </div>
 
       <!-- Фиксированная панель навигации на мобильных -->
-      <div class="md:hidden fixed bottom-0 left-0 right-0 z-[60] p-3 backdrop-blur-xl" style="background: rgba(255,255,255,0.9); border-top: 1px solid rgba(0,0,0,0.08);">
-        <div class="flex items-center justify-between gap-2 max-w-lg mx-auto">
-          <button class="btn btn-secondary !py-2.5 flex-1" on:click={prevStep}>
+      <div class="md:hidden fixed bottom-0 left-0 right-0 z-[60] p-4" style="background: linear-gradient(to top, rgba(255,255,255,0.98) 0%, rgba(255,255,255,0.98) 70%, rgba(255,255,255,0) 100%); backdrop-filter: blur(10px);">
+        <div class="flex items-center justify-between gap-3 max-w-lg mx-auto">
+          <button class="btn btn-secondary !py-3 flex-1" on:click={prevStep}>
             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
             </svg>
             Назад
           </button>
-          <button class="btn btn-primary !py-2.5 flex-1" disabled={!step2ButtonEnabled} on:click={nextStep}>
+          <button class="btn btn-primary !py-3 flex-1" disabled={!step2ButtonEnabled} on:click={nextStep}>
             Далее
             <span class="ml-1 px-1.5 py-0.5 rounded-full text-[10px] bg-white/20">{lessonData.selectedCards.length}</span>
             <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -558,7 +558,7 @@
         </div>
       </div>
       <!-- Отступ для фиксированной панели на мобильных -->
-      <div class="md:hidden h-16"></div>
+      <div class="md:hidden h-20"></div>
     </div>
 
   <!-- ШАГ 3: Готовый план -->
