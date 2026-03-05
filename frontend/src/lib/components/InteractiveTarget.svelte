@@ -699,34 +699,34 @@
       </div>
       
       <!-- Управление -->
-      <div class="absolute top-4 right-4 flex gap-2 z-20">
-        <button on:click={showStats} class="px-4 py-2.5 rounded-xl bg-emerald-500/90 backdrop-blur-xl text-white font-medium hover:bg-emerald-500 transition-all shadow-lg shadow-emerald-500/25">
-          📊 Результаты
+      <div class="absolute top-2 md:top-4 right-2 md:right-4 flex flex-wrap gap-1.5 md:gap-2 z-20 max-w-[calc(100%-1rem)]">
+        <button on:click={showStats} class="px-2.5 md:px-4 py-1.5 md:py-2.5 rounded-lg md:rounded-xl bg-emerald-500/90 backdrop-blur-xl text-white text-xs md:text-sm font-medium hover:bg-emerald-500 transition-all shadow-lg shadow-emerald-500/25">
+          📊 <span class="hidden sm:inline">Результаты</span>
         </button>
-        <button on:click={clearMarkers} class="px-4 py-2.5 rounded-xl bg-white/15 backdrop-blur-xl text-white font-medium hover:bg-white/25 transition-all">
-          🗑️ Очистить
+        <button on:click={clearMarkers} class="px-2.5 md:px-4 py-1.5 md:py-2.5 rounded-lg md:rounded-xl bg-white/15 backdrop-blur-xl text-white text-xs md:text-sm font-medium hover:bg-white/25 transition-all">
+          🗑️ <span class="hidden sm:inline">Очистить</span>
         </button>
-        <button on:click={saveAsPNG} class="px-4 py-2.5 rounded-xl bg-white/15 backdrop-blur-xl text-white font-medium hover:bg-white/25 transition-all">
-          💾 Сохранить
+        <button on:click={saveAsPNG} class="px-2.5 md:px-4 py-1.5 md:py-2.5 rounded-lg md:rounded-xl bg-white/15 backdrop-blur-xl text-white text-xs md:text-sm font-medium hover:bg-white/25 transition-all">
+          💾 <span class="hidden sm:inline">Сохранить</span>
         </button>
-        <button on:click={exitPresentation} class="px-4 py-2.5 rounded-xl bg-red-500/90 backdrop-blur-xl text-white font-medium hover:bg-red-500 transition-all shadow-lg shadow-red-500/25">
-          ✕ Выход
+        <button on:click={exitPresentation} class="px-2.5 md:px-4 py-1.5 md:py-2.5 rounded-lg md:rounded-xl bg-red-500/90 backdrop-blur-xl text-white text-xs md:text-sm font-medium hover:bg-red-500 transition-all shadow-lg shadow-red-500/25">
+          ✕ <span class="hidden sm:inline">Выход</span>
         </button>
       </div>
       
       <!-- Счётчик маркеров -->
-      <div class="absolute top-4 left-4 z-20">
-        <div class="px-5 py-3 rounded-2xl bg-white/15 backdrop-blur-xl text-white shadow-lg">
-          <div class="text-3xl font-bold">{markers.length}</div>
-          <div class="text-xs text-white/70">ответов</div>
+      <div class="absolute top-2 md:top-4 left-2 md:left-4 z-20">
+        <div class="px-3 md:px-5 py-2 md:py-3 rounded-xl md:rounded-2xl bg-white/15 backdrop-blur-xl text-white shadow-lg">
+          <div class="text-xl md:text-3xl font-bold">{markers.length}</div>
+          <div class="text-[10px] md:text-xs text-white/70">ответов</div>
         </div>
       </div>
       
       <!-- Подсказка -->
-      <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-20">
-        <div class="px-6 py-4 rounded-2xl bg-white/15 backdrop-blur-xl text-white text-center shadow-lg max-w-lg">
-          <p class="text-base font-medium mb-1">👆 Нажми в <span class="text-amber-300 font-bold">каждый сектор</span></p>
-          <p class="text-sm text-white/70">Ближе к центру = понял отлично ✨ | Ближе к краю = было сложно 🤔</p>
+      <div class="absolute bottom-2 md:bottom-6 left-1/2 -translate-x-1/2 z-20 px-2 w-full max-w-lg">
+        <div class="px-3 md:px-6 py-2 md:py-4 rounded-xl md:rounded-2xl bg-white/15 backdrop-blur-xl text-white text-center shadow-lg">
+          <p class="text-xs md:text-base font-medium mb-0.5 md:mb-1">👆 Нажми в <span class="text-amber-300 font-bold">каждый сектор</span></p>
+          <p class="text-[10px] md:text-sm text-white/70">Центр = понял ✨ | Край = сложно 🤔</p>
         </div>
       </div>
       
