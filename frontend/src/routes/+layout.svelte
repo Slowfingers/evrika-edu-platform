@@ -11,7 +11,14 @@
   $: isToolPage = toolRoutes.includes(currentPath);
 </script>
 
-<div class="min-h-screen pb-20 md:pb-0">
+<div class="min-h-screen pb-20 md:pb-0 relative z-0">
+  <!-- Фоновые blobs -->
+  <div class="bg-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
   <Header />
   
   <main class="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-8">
@@ -59,46 +66,48 @@
 {/if}
 
 <!-- Мобильная нижняя навигация (PWA) -->
-<nav class="fixed bottom-0 left-0 right-0 z-50 md:hidden shadow-[0_-8px_30px_rgba(0,0,0,0.1)]" style="background: rgba(255,255,255,0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-top: 1px solid rgba(255,255,255,0.5); padding-bottom: env(safe-area-inset-bottom);">
-  <div class="flex items-center justify-around px-2 py-3 relative">
-    
-    <!-- Каталог -->
-    <a href="/" class="flex flex-col items-center gap-1.5 flex-1 {currentPath === '/' ? 'text-indigo-700' : 'text-gray-600'} transition-colors">
+<nav class="mobile-nav">
+  <!-- Каталог -->
+  <a href="/" class="flex flex-col items-center gap-1 flex-1 {currentPath === '/' ? 'text-indigo-700 scale-110' : 'text-gray-500'} transition-all duration-300">
+    <div class="w-10 h-10 rounded-[1.2rem] flex items-center justify-center {currentPath === '/' ? 'bg-indigo-100 shadow-sm' : 'hover:bg-gray-100'} transition-all">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="{currentPath === '/' ? 2.5 : 2}">
         <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
       </svg>
-      <span class="text-[11px] font-bold">Каталог</span>
-    </a>
-    
-    <!-- Таймер -->
-    <a href="/timer" class="flex flex-col items-center gap-1.5 flex-1 {currentPath === '/timer' ? 'text-indigo-700' : 'text-gray-600'} transition-colors">
+    </div>
+  </a>
+  
+  <!-- Таймер -->
+  <a href="/timer" class="flex flex-col items-center gap-1 flex-1 {currentPath === '/timer' ? 'text-indigo-700 scale-110' : 'text-gray-500'} transition-all duration-300">
+    <div class="w-10 h-10 rounded-[1.2rem] flex items-center justify-center {currentPath === '/timer' ? 'bg-indigo-100 shadow-sm' : 'hover:bg-gray-100'} transition-all">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="{currentPath === '/timer' ? 2.5 : 2}">
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
       </svg>
-      <span class="text-[11px] font-bold">Таймер</span>
-    </a>
-    
-    <!-- Центральная кнопка Конструктор -->
-    <a href="/constructor" class="flex flex-col items-center gap-1 flex-1 -mt-8 relative z-10 group">
-      <div class="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 shadow-[0_8px_20px_rgba(99,102,241,0.4)] flex items-center justify-center transform transition-transform group-active:scale-95 {currentPath === '/constructor' ? 'ring-4 ring-indigo-200' : 'border-4 border-white'}">
-        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
-        </svg>
-      </div>
-    </a>
-    
-    <!-- Мишень -->
-    <a href="/target" class="flex flex-col items-center gap-1.5 flex-1 {currentPath === '/target' ? 'text-indigo-700' : 'text-gray-600'} transition-colors">
+    </div>
+  </a>
+  
+  <!-- Центральная кнопка Конструктор -->
+  <a href="/constructor" class="flex flex-col items-center gap-1 flex-1 -mt-8 relative z-10 group px-2">
+    <div class="w-16 h-16 rounded-[1.5rem] bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 shadow-[0_8px_32px_rgba(99,102,241,0.4)] flex items-center justify-center transform transition-all duration-300 group-hover:scale-105 group-active:scale-95 border-[3px] border-white/80 backdrop-blur-xl {currentPath === '/constructor' ? 'ring-4 ring-indigo-200 shadow-indigo-500/50' : ''}">
+      <svg class="w-8 h-8 text-white drop-shadow-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+      </svg>
+    </div>
+  </a>
+  
+  <!-- Мишень -->
+  <a href="/target" class="flex flex-col items-center gap-1 flex-1 {currentPath === '/target' ? 'text-indigo-700 scale-110' : 'text-gray-500'} transition-all duration-300">
+    <div class="w-10 h-10 rounded-[1.2rem] flex items-center justify-center {currentPath === '/target' ? 'bg-indigo-100 shadow-sm' : 'hover:bg-gray-100'} transition-all">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="{currentPath === '/target' ? 2.5 : 2}">
         <circle cx="12" cy="12" r="10" stroke-linecap="round" stroke-linejoin="round"/>
         <circle cx="12" cy="12" r="6" stroke-linecap="round" stroke-linejoin="round"/>
         <circle cx="12" cy="12" r="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
-      <span class="text-[11px] font-bold">Мишень</span>
-    </a>
-    
-    <!-- Меню -->
-    <button on:click={() => toolsOpen = !toolsOpen} class="flex flex-col items-center gap-1.5 flex-1 {toolsOpen ? 'text-indigo-700' : 'text-gray-600'} transition-colors">
+    </div>
+  </a>
+  
+  <!-- Меню -->
+  <button on:click={() => toolsOpen = !toolsOpen} class="flex flex-col items-center gap-1 flex-1 {toolsOpen ? 'text-indigo-700 scale-110' : 'text-gray-500'} transition-all duration-300">
+    <div class="w-10 h-10 rounded-[1.2rem] flex items-center justify-center {toolsOpen ? 'bg-indigo-100 shadow-sm' : 'hover:bg-gray-100'} transition-all">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="{toolsOpen ? 2.5 : 2}">
         {#if toolsOpen}
           <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
@@ -106,8 +115,6 @@
           <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
         {/if}
       </svg>
-      <span class="text-[11px] font-bold">Меню</span>
-    </button>
-
-  </div>
+    </div>
+  </button>
 </nav>
