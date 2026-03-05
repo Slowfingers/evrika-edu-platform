@@ -1,8 +1,8 @@
 <script>
-  import { onMount } from 'svelte';
+  import { onMount, tick, afterUpdate } from 'svelte';
   
   // Режимы работы
-  let mode = 'setup'; // setup | presentation | results
+  let mode = 'setup'; // setup | presentation
   
   // Настройки мишени
   let criteria = ['Тема 1', 'Тема 2', 'Тема 3', 'Тема 4'];
@@ -11,31 +11,35 @@
   
   // Данные взаимодействия
   let markers = []; // {x, y, sector, ring, timestamp}
-  let isFullscreen = false;
   
-  // Canvas и размеры
-  let canvas;
-  let ctx;
-  let canvasSize = 600;
-  let centerX = 300;
-  let centerY = 300;
+  // Canvas элементы (отдельные для каждого режима)
+  let previewCanvas;
+  let presentationCanvas;
+  
+  // Размеры
+  const canvasSize = 600;
+  const centerX = 300;
+  const centerY = 300;
   
   // Цвета для секторов (glassmorphism)
   const sectorColors = [
-    'rgba(99, 102, 241, 0.3)',   // indigo
-    'rgba(236, 72, 153, 0.3)',   // pink
-    'rgba(34, 197, 94, 0.3)',    // green
-    'rgba(245, 158, 11, 0.3)',   // amber
-    'rgba(59, 130, 246, 0.3)',   // blue
-    'rgba(239, 68, 68, 0.3)',    // red
-    'rgba(20, 184, 166, 0.3)',   // teal
-    'rgba(168, 85, 247, 0.3)'    // purple
+    'rgba(99, 102, 241, 0.5)',   // indigo
+    'rgba(236, 72, 153, 0.5)',   // pink
+    'rgba(34, 197, 94, 0.5)',    // green
+    'rgba(245, 158, 11, 0.5)',   // amber
+    'rgba(59, 130, 246, 0.5)',   // blue
+    'rgba(239, 68, 68, 0.5)',    // red
+    'rgba(20, 184, 166, 0.5)',   // teal
+    'rgba(168, 85, 247, 0.5)'    // purple
   ];
   
   onMount(() => {
-    if (canvas) {
-      ctx = canvas.getContext('2d');
-      drawTarget();
+    drawPreview();
+  });
+  
+  afterUpdate(() => {
+    if (mode === 'setup' && previewCanvas) {
+      drawPreview();
     }
   });
   
@@ -43,6 +47,7 @@
   function addCriterion() {
     if (criteria.length < 8) {
       criteria = [...criteria, `Тема ${criteria.length + 1}`];
+      drawPreview();
     }
   }
   
@@ -50,6 +55,7 @@
   function removeCriterion(index) {
     if (criteria.length > 2) {
       criteria = criteria.filter((_, i) => i !== index);
+      drawPreview();
     }
   }
   
@@ -63,15 +69,36 @@
       5: ['Очень сложно', 'Сложно', 'Нормально', 'Легко', 'Супер']
     };
     ringLabels = defaultLabels[count] || ringLabels;
+    drawPreview();
   }
   
-  // Рисовать мишень
-  function drawTarget() {
+  // Рисовать превью
+  function drawPreview() {
+    if (!previewCanvas) return;
+    const ctx = previewCanvas.getContext('2d');
+    drawTargetOnCanvas(ctx, false);
+  }
+  
+  // Рисовать презентацию
+  function drawPresentation() {
+    if (!presentationCanvas) return;
+    const ctx = presentationCanvas.getContext('2d');
+    drawTargetOnCanvas(ctx, true);
+  }
+  
+  // Универсальная функция отрисовки мишени
+  function drawTargetOnCanvas(ctx, isDark = false) {
     if (!ctx) return;
     
     ctx.clearRect(0, 0, canvasSize, canvasSize);
     
-    const maxRadius = Math.min(canvasSize, canvasSize) / 2 - 20;
+    // Фон для презентации
+    if (isDark) {
+      ctx.fillStyle = '#1f2937';
+      ctx.fillRect(0, 0, canvasSize, canvasSize);
+    }
+    
+    const maxRadius = canvasSize / 2 - 40;
     const angleStep = (2 * Math.PI) / criteria.length;
     
     // Рисуем сектора и кольца
@@ -85,104 +112,130 @@
         
         // Рисуем сектор
         ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
         ctx.arc(centerX, centerY, outerRadius, startAngle, endAngle);
-        if (innerRadius > 0) {
-          ctx.arc(centerX, centerY, innerRadius, endAngle, startAngle, true);
-        } else {
-          ctx.lineTo(centerX, centerY);
-        }
         ctx.closePath();
         
-        // Заливка с прозрачностью (glassmorphism)
+        // Заливка
         ctx.fillStyle = sectorColors[s % sectorColors.length];
         ctx.fill();
         
-        // Граница с неоновым эффектом
-        ctx.strokeStyle = `rgba(255, 255, 255, 0.3)`;
+        // Граница
+        ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.4)' : 'rgba(255, 255, 255, 0.8)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+      
+      // Кольцо (граница)
+      if (innerRadius > 0) {
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, innerRadius, 0, 2 * Math.PI);
+        ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.3)' : 'rgba(255, 255, 255, 0.6)';
         ctx.lineWidth = 2;
         ctx.stroke();
       }
     }
     
+    // Внешняя граница
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, maxRadius, 0, 2 * Math.PI);
+    ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.2)';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    
     // Подписи критериев
-    ctx.fillStyle = '#1f2937';
-    ctx.font = 'bold 14px sans-serif';
+    ctx.fillStyle = isDark ? '#ffffff' : '#1f2937';
+    ctx.font = 'bold 14px system-ui, sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     
     for (let s = 0; s < criteria.length; s++) {
       const angle = s * angleStep - Math.PI / 2 + angleStep / 2;
-      const labelRadius = maxRadius + 15;
+      const labelRadius = maxRadius + 25;
       const x = centerX + Math.cos(angle) * labelRadius;
       const y = centerY + Math.sin(angle) * labelRadius;
       
-      ctx.fillText(criteria[s], x, y);
+      // Обрезаем длинные названия
+      const text = criteria[s].length > 12 ? criteria[s].substring(0, 10) + '...' : criteria[s];
+      ctx.fillText(text, x, y);
     }
     
-    // Рисуем маркеры
-    markers.forEach((marker, index) => {
-      drawMarker(marker.x, marker.y, index);
-    });
+    // Рисуем маркеры (только в презентации)
+    if (isDark) {
+      markers.forEach((marker, index) => {
+        drawMarkerOnCanvas(ctx, marker.x, marker.y, index);
+      });
+    }
   }
   
   // Рисовать маркер
-  function drawMarker(x, y, index) {
+  function drawMarkerOnCanvas(ctx, x, y, index) {
     if (!ctx) return;
+    
+    // Тень
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+    ctx.shadowBlur = 8;
+    ctx.shadowOffsetX = 2;
+    ctx.shadowOffsetY = 2;
     
     // Основной маркер
     ctx.beginPath();
-    ctx.arc(x, y, 8, 0, 2 * Math.PI);
-    ctx.fillStyle = 'rgba(239, 68, 68, 0.8)';
+    ctx.arc(x, y, 12, 0, 2 * Math.PI);
+    ctx.fillStyle = '#ef4444';
     ctx.fill();
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 3;
     ctx.stroke();
     
-    // Номер маркера
-    ctx.fillStyle = '#fff';
-    ctx.font = 'bold 10px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(index + 1, x, y);
+    // Сброс тени
+    ctx.shadowColor = 'transparent';
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
   }
   
   // Обработка клика/тапа
   function handleCanvasClick(event) {
-    if (mode !== 'presentation') return;
+    if (!presentationCanvas) return;
     
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
+    const rect = presentationCanvas.getBoundingClientRect();
+    const scaleX = presentationCanvas.width / rect.width;
+    const scaleY = presentationCanvas.height / rect.height;
     
-    const x = (event.clientX - rect.left) * scaleX;
-    const y = (event.clientY - rect.top) * scaleY;
+    let clientX, clientY;
+    
+    if (event.touches && event.touches.length > 0) {
+      clientX = event.touches[0].clientX;
+      clientY = event.touches[0].clientY;
+    } else {
+      clientX = event.clientX;
+      clientY = event.clientY;
+    }
+    
+    const x = (clientX - rect.left) * scaleX;
+    const y = (clientY - rect.top) * scaleY;
     
     // Определяем сектор и кольцо
     const dx = x - centerX;
     const dy = y - centerY;
     const distance = Math.sqrt(dx * dx + dy * dy);
-    const angle = Math.atan2(dy, dx) + Math.PI / 2;
-    const normalizedAngle = angle < 0 ? angle + 2 * Math.PI : angle;
     
-    const maxRadius = Math.min(canvasSize, canvasSize) / 2 - 20;
-    const sectorIndex = Math.floor((normalizedAngle / (2 * Math.PI)) * criteria.length);
-    const ringIndex = Math.floor((distance / maxRadius) * rings);
+    const maxRadius = canvasSize / 2 - 40;
     
-    if (ringIndex < rings && distance <= maxRadius) {
+    if (distance <= maxRadius) {
       // Добавляем маркер
       markers = [...markers, {
         x,
         y,
-        sector: sectorIndex,
-        ring: ringIndex,
         timestamp: Date.now()
       }];
       
-      // Анимация появления (будет добавлена позже)
-      drawTarget();
+      // Перерисовываем
+      drawPresentation();
       
       // Эффект для центра (яблочко)
-      if (ringIndex === rings - 1) {
+      const ringIndex = Math.floor((distance / maxRadius) * rings);
+      if (ringIndex >= rings - 1) {
         animateBullseye(x, y);
       }
     }
@@ -190,39 +243,43 @@
   
   // Анимация попадания в яблочко
   function animateBullseye(x, y) {
-    // Простая пульсация (будет улучшена с particles)
-    if (!ctx) return;
+    if (!presentationCanvas) return;
+    const ctx = presentationCanvas.getContext('2d');
     
     let scale = 1;
     const animate = () => {
-      if (scale > 1.5) return;
+      if (scale > 2) {
+        drawPresentation();
+        return;
+      }
+      
+      drawPresentation();
       
       ctx.save();
-      ctx.globalAlpha = 1 - (scale - 1) / 0.5;
+      ctx.globalAlpha = 1 - (scale - 1);
       ctx.beginPath();
-      ctx.arc(x, y, 15 * scale, 0, 2 * Math.PI);
+      ctx.arc(x, y, 20 * scale, 0, 2 * Math.PI);
       ctx.strokeStyle = '#fbbf24';
-      ctx.lineWidth = 3;
+      ctx.lineWidth = 4;
       ctx.stroke();
       ctx.restore();
       
-      scale += 0.05;
+      scale += 0.1;
       requestAnimationFrame(animate);
     };
     animate();
   }
   
   // Переход в режим презентации
-  function startPresentation() {
+  async function startPresentation() {
     mode = 'presentation';
-    drawTarget();
+    markers = [];
+    await tick();
     
-    // Попытка перейти в fullscreen
-    if (canvas && canvas.requestFullscreen) {
-      canvas.requestFullscreen().catch(err => {
-        console.log('Fullscreen не поддерживается:', err);
-      });
-    }
+    // Ждём пока canvas появится в DOM
+    setTimeout(() => {
+      drawPresentation();
+    }, 100);
   }
   
   // Выход из режима презентации
@@ -237,23 +294,26 @@
   function clearMarkers() {
     if (confirm('Очистить все маркеры?')) {
       markers = [];
-      drawTarget();
+      drawPresentation();
     }
   }
   
   // Сохранение в PNG
   function saveAsPNG() {
-    if (!canvas) return;
+    if (!presentationCanvas) return;
     
     const link = document.createElement('a');
     link.download = `target-${Date.now()}.png`;
-    link.href = canvas.toDataURL();
+    link.href = presentationCanvas.toDataURL();
     link.click();
   }
   
-  // Реактивность
-  $: if (ctx && mode === 'setup') {
-    drawTarget();
+  // Реактивность для превью
+  $: if (previewCanvas && mode === 'setup') {
+    criteria;
+    rings;
+    ringLabels;
+    drawPreview();
   }
 </script>
 
@@ -325,8 +385,8 @@
           <!-- Превью мишени -->
           <div class="card flex flex-col items-center justify-center">
             <h3 class="text-sm font-bold text-gray-900 mb-3">Превью</h3>
-            <canvas bind:this={canvas} width={canvasSize} height={canvasSize} 
-              class="max-w-full h-auto rounded-xl shadow-lg"></canvas>
+            <canvas bind:this={previewCanvas} width={canvasSize} height={canvasSize} 
+              class="max-w-full h-auto rounded-xl shadow-lg" style="background: #f9fafb;"></canvas>
           </div>
           
         </div>
@@ -369,7 +429,7 @@
       
       <!-- Мишень -->
       <div class="flex-1 flex items-center justify-center p-8">
-        <canvas bind:this={canvas} width={canvasSize} height={canvasSize} 
+        <canvas bind:this={presentationCanvas} width={canvasSize} height={canvasSize} 
           on:click={handleCanvasClick}
           on:touchstart|preventDefault={handleCanvasClick}
           class="max-w-full max-h-full cursor-crosshair rounded-2xl shadow-2xl"></canvas>
