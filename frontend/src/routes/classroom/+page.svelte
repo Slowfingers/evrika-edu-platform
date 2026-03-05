@@ -437,7 +437,7 @@
 <div class="h-[calc(100vh-3.5rem-4rem)] md:h-[calc(100vh-4rem)] flex flex-col overflow-hidden relative">
 
   <!-- ===== TOOLBAR ===== -->
-  <div class="flex-shrink-0 backdrop-blur-xl px-2 md:px-3 py-1.5 md:py-2 flex flex-wrap md:flex-nowrap items-center gap-1 md:gap-2" style="background:rgba(255,255,255,0.7); border-bottom:1px solid rgba(255,255,255,0.3);">
+  <div class="flex-shrink-0 backdrop-blur-xl px-2 md:px-3 py-1.5 md:py-2 flex flex-wrap md:flex-nowrap items-center gap-1 md:gap-2 relative z-30" style="background:rgba(255,255,255,0.85); border-bottom:1px solid rgba(255,255,255,0.3);">
 
     <!-- Mode tabs -->
     <div class="flex bg-white bg-opacity-60 rounded-lg p-0.5 flex-shrink-0">

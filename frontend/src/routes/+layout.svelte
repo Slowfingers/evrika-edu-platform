@@ -4,6 +4,11 @@
   import Header from '$lib/components/Header.svelte';
 
   $: currentPath = $page.url.pathname;
+  
+  let toolsOpen = false;
+  
+  const toolRoutes = ['/timer', '/noisemeter', '/target', '/classroom'];
+  $: isToolPage = toolRoutes.includes(currentPath);
 </script>
 
 <div class="min-h-screen pb-20 md:pb-0">

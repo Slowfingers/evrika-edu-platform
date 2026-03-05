@@ -175,8 +175,8 @@
 
 {#if isFinished}
   <!-- Экран завершения урока -->
-  <div class="min-h-screen flex flex-col items-center justify-center p-6 text-center text-white font-sans" style="background-color: {backgroundColor};">
-    <div class="fixed inset-0 bg-gradient-to-br from-black from-opacity-5 to-black to-opacity-30 pointer-events-none"></div>
+  <div class="fixed inset-0 z-10 flex flex-col items-center justify-center p-6 text-center text-white font-sans transition-colors duration-[1500ms]" style="background-color: {backgroundColor};">
+    <div class="absolute inset-0 bg-gradient-to-br from-transparent to-black/20 pointer-events-none"></div>
     <div class="relative bg-white bg-opacity-10 backdrop-blur-xl p-10 rounded-3xl border border-white border-opacity-20 shadow-2xl max-w-md w-full">
       <h1 class="text-4xl md:text-5xl font-bold mb-4">Урок завершен!</h1>
       <p class="text-lg md:text-xl text-white text-opacity-80 mb-8">Отличная работа!</p>
@@ -189,12 +189,12 @@
     </div>
   </div>
 {:else}
-  <!-- Динамический фон (общий) -->
-  <div class="fixed inset-0 -z-50 transition-colors duration-[1500ms] ease-in-out" style="background-color: {backgroundColor};"></div>
-  <div class="fixed inset-0 -z-40 bg-gradient-to-br from-black from-opacity-5 to-black to-opacity-30 pointer-events-none"></div>
+  <!-- Динамический фон (перекрывает глобальный градиент) -->
+  <div class="fixed inset-0 z-0 transition-colors duration-[1500ms] ease-in-out" style="background-color: {backgroundColor};"></div>
+  <div class="fixed inset-0 z-0 bg-gradient-to-br from-transparent to-black/20 pointer-events-none"></div>
 
   <!-- ========== МОБИЛЬНЫЙ ТАЙМЕР (полноэкранный) ========== -->
-  <div class="md:hidden h-[calc(100vh-3.5rem-4rem)] flex flex-col items-center justify-between font-sans text-white overflow-hidden px-4 py-4 relative">
+  <div class="md:hidden h-[calc(100vh-3.5rem-4rem)] flex flex-col items-center justify-between font-sans text-white overflow-hidden px-4 py-4 relative z-10">
     
     <!-- Верхняя панель: настройки + заголовок + полноэкран -->
     <div class="w-full flex items-center justify-between flex-shrink-0">
@@ -355,7 +355,7 @@
   </div>
 
   <!-- ========== ДЕСКТОП ТАЙМЕР (карточка с двумя колонками) ========== -->
-  <div class="hidden md:flex h-[calc(100vh-4rem)] items-center justify-center py-3 px-6 font-sans text-white overflow-hidden">
+  <div class="hidden md:flex h-[calc(100vh-4rem)] items-center justify-center py-3 px-6 font-sans text-white overflow-hidden relative z-10">
     <div class="w-full max-w-5xl bg-white bg-opacity-10 backdrop-blur-3xl rounded-[3rem] border border-white border-opacity-20 shadow-2xl overflow-hidden flex flex-row max-h-full relative">
       
       <!-- Кнопки -->
