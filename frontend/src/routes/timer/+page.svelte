@@ -307,7 +307,7 @@
                   </div>
                   <div class="flex items-center gap-3 pl-2">
                     <div class="flex items-center gap-1 bg-white rounded-lg px-2 py-1 shadow-sm">
-                      <input type="number" min="1" max="120" value={stage.duration} on:input={(e) => updateStage(index, { ...stage, duration: parseInt(e.target.value) || 1 })} class="w-10 bg-transparent text-center text-gray-800 text-sm font-semibold focus:outline-none" />
+                      <input type="number" min="1" max="120" value={stage.duration} on:input={(e) => updateStage(index, { ...stage, duration: parseInt(e.target.value) || 1 })} class="w-10 bg-transparent text-center text-gray-900 text-sm font-semibold focus:outline-none" />
                       <span class="text-[10px] text-gray-500 font-medium">мин</span>
                     </div>
                     <div class="flex gap-1 flex-1 overflow-x-auto">
@@ -436,7 +436,7 @@
                 <div class="flex items-center gap-4 pl-6">
                   <div class="flex items-center gap-1 bg-white rounded-lg px-2 py-1 shadow-sm">
                     <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    <input type="number" min="1" max="120" value={stage.duration} on:input={(e) => updateStage(index, { ...stage, duration: parseInt(e.target.value) || 1 })} class="w-12 bg-transparent text-center text-gray-800 text-sm font-semibold focus:outline-none" />
+                    <input type="number" min="1" max="120" value={stage.duration} on:input={(e) => updateStage(index, { ...stage, duration: parseInt(e.target.value) || 1 })} class="w-12 bg-transparent text-center text-gray-900 text-sm font-semibold focus:outline-none" />
                     <span class="text-xs text-gray-500 font-medium">мин</span>
                   </div>
                   <div class="flex gap-1 flex-1 overflow-x-auto pb-1">
