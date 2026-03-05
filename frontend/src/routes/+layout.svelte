@@ -68,8 +68,8 @@
 <!-- Мобильная нижняя навигация (PWA) -->
 <nav class="mobile-nav">
   <!-- Каталог -->
-  <a href="/" class="flex flex-col items-center gap-1 flex-1 {currentPath === '/' ? 'text-indigo-700 scale-110' : 'text-gray-500'} transition-all duration-300">
-    <div class="w-10 h-10 rounded-[1.2rem] flex items-center justify-center {currentPath === '/' ? 'bg-indigo-100 shadow-sm' : 'hover:bg-gray-100'} transition-all">
+  <a href="/" class="flex flex-col items-center gap-1 flex-1 {currentPath === '/' ? 'text-purple-700 scale-110' : 'text-gray-500'} transition-all duration-300">
+    <div class="w-10 h-10 rounded-[1.2rem] flex items-center justify-center {currentPath === '/' ? 'bg-purple-50 shadow-sm' : 'hover:bg-gray-100'} transition-all">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="{currentPath === '/' ? 2.5 : 2}">
         <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
       </svg>
@@ -77,8 +77,8 @@
   </a>
   
   <!-- Таймер -->
-  <a href="/timer" class="flex flex-col items-center gap-1 flex-1 {currentPath === '/timer' ? 'text-indigo-700 scale-110' : 'text-gray-500'} transition-all duration-300">
-    <div class="w-10 h-10 rounded-[1.2rem] flex items-center justify-center {currentPath === '/timer' ? 'bg-indigo-100 shadow-sm' : 'hover:bg-gray-100'} transition-all">
+  <a href="/timer" class="flex flex-col items-center gap-1 flex-1 {currentPath === '/timer' ? 'text-purple-700 scale-110' : 'text-gray-500'} transition-all duration-300">
+    <div class="w-10 h-10 rounded-[1.2rem] flex items-center justify-center {currentPath === '/timer' ? 'bg-purple-50 shadow-sm' : 'hover:bg-gray-100'} transition-all">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="{currentPath === '/timer' ? 2.5 : 2}">
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
       </svg>
@@ -86,17 +86,17 @@
   </a>
   
   <!-- Центральная кнопка Конструктор -->
-  <a href="/constructor" class="flex flex-col items-center gap-1 flex-1 -mt-8 relative z-10 group px-2">
-    <div class="w-16 h-16 rounded-[1.5rem] bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 shadow-[0_8px_32px_rgba(99,102,241,0.4)] flex items-center justify-center transform transition-all duration-300 group-hover:scale-105 group-active:scale-95 border-[3px] border-white/80 backdrop-blur-xl {currentPath === '/constructor' ? 'ring-4 ring-indigo-200 shadow-indigo-500/50' : ''}">
-      <svg class="w-8 h-8 text-white drop-shadow-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+  <a href="/constructor" class="flex flex-col items-center gap-1 flex-1 -mt-6 relative z-10 group px-2">
+    <div class="w-14 h-14 rounded-[1.3rem] shadow-[0_6px_24px_rgba(200,168,233,0.35)] flex items-center justify-center transform transition-all duration-300 group-hover:scale-105 group-active:scale-95 border-2 border-white/90 {currentPath === '/constructor' ? 'ring-2 ring-purple-200' : ''}" style="background: linear-gradient(135deg, #c8a8e9 0%, #d5b8e8 50%, #f6bcba 100%);">
+      <svg class="w-7 h-7 text-white drop-shadow-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
         <path stroke-linecap="round" stroke-linejoin="round" d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
       </svg>
     </div>
   </a>
   
   <!-- Мишень -->
-  <a href="/target" class="flex flex-col items-center gap-1 flex-1 {currentPath === '/target' ? 'text-indigo-700 scale-110' : 'text-gray-500'} transition-all duration-300">
-    <div class="w-10 h-10 rounded-[1.2rem] flex items-center justify-center {currentPath === '/target' ? 'bg-indigo-100 shadow-sm' : 'hover:bg-gray-100'} transition-all">
+  <a href="/target" class="flex flex-col items-center gap-1 flex-1 {currentPath === '/target' ? 'text-purple-700 scale-110' : 'text-gray-500'} transition-all duration-300">
+    <div class="w-10 h-10 rounded-[1.2rem] flex items-center justify-center {currentPath === '/target' ? 'bg-purple-50 shadow-sm' : 'hover:bg-gray-100'} transition-all">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="{currentPath === '/target' ? 2.5 : 2}">
         <circle cx="12" cy="12" r="10" stroke-linecap="round" stroke-linejoin="round"/>
         <circle cx="12" cy="12" r="6" stroke-linecap="round" stroke-linejoin="round"/>

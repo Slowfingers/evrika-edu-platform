@@ -182,7 +182,7 @@
 {#if filtersExpanded}
   <div class="fixed inset-0 z-40 md:hidden">
     <button class="absolute inset-0 bg-black/30 backdrop-blur-sm w-full h-full" on:click={() => filtersExpanded = false} aria-label="Закрыть фильтры"></button>
-    <div class="absolute bottom-0 left-0 right-0 rounded-t-3xl max-h-[85vh] flex flex-col" style="background: rgba(255,255,255,0.95); backdrop-filter: blur(20px);">
+    <div class="absolute bottom-20 left-0 right-0 rounded-3xl mx-3 max-h-[70vh] flex flex-col" style="background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); box-shadow: 0 -4px 30px rgba(200,168,233,0.15);">
       <div class="flex items-center justify-between p-6 pb-4">
         <h2 class="text-lg font-bold text-purple-900">Фильтры</h2>
         <button on:click={() => filtersExpanded = false} class="p-2 rounded-full hover:bg-purple-50">
@@ -191,7 +191,7 @@
           </svg>
         </button>
       </div>
-      <div class="flex-1 overflow-y-auto px-6 pb-20">
+      <div class="flex-1 overflow-y-auto px-6 pb-4">
         <div class="space-y-6">
           <FilterPanel
             {ageGroups} {skills} {stages} {types} {timeRanges}
@@ -200,9 +200,9 @@
           />
         </div>
       </div>
-      <div class="absolute bottom-0 left-0 right-0 p-4 flex gap-3" style="background: linear-gradient(to top, rgba(255,255,255,0.98) 0%, rgba(255,255,255,0.98) 70%, rgba(255,255,255,0) 100%); backdrop-filter: blur(10px);">
-        <button on:click={() => { clearFilters(); filtersExpanded = false; }} class="btn btn-secondary flex-1">Сбросить</button>
-        <button on:click={() => filtersExpanded = false} class="btn btn-primary flex-1">Применить</button>
+      <div class="p-4 flex gap-3 border-t border-purple-100/50" style="background: rgba(255,255,255,0.9);">
+        <button on:click={() => { clearFilters(); filtersExpanded = false; }} class="btn btn-secondary flex-1 !py-2.5 text-sm">Сбросить</button>
+        <button on:click={() => filtersExpanded = false} class="btn btn-primary flex-1 !py-2.5 text-sm">Применить</button>
       </div>
     </div>
   </div>
