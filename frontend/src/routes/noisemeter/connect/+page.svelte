@@ -159,7 +159,7 @@
       <div class="text-center">
         <div class="text-5xl mb-4">📱</div>
         <h1 class="text-2xl font-bold text-gray-800 mb-2">Подключение к шумомеру</h1>
-        <p class="text-gray-500 text-sm mb-6">Введите код с экрана доски</p>
+        <p class="text-gray-700 font-medium text-sm mb-6">Введите код с экрана доски</p>
 
         <div class="bg-white bg-opacity-70 backdrop-blur-xl rounded-2xl p-6 shadow-lg mb-4" style="border: 1px solid rgba(255,255,255,0.3);">
           <input
@@ -190,7 +190,7 @@
           Подключиться
         </button>
 
-        <a href="/noisemeter" class="inline-block mt-4 text-sm text-gray-400 hover:text-gray-600 transition-colors">
+        <a href="/noisemeter" class="inline-block mt-4 text-sm text-gray-600 font-medium hover:text-indigo-600 transition-colors">
           ← Открыть шумомер на этом устройстве
         </a>
       </div>
@@ -200,7 +200,7 @@
       <div class="text-center">
         <div class="w-12 h-12 border-4 border-gray-200 border-t-blue-500 rounded-full animate-spin mx-auto mb-4"></div>
         <h2 class="text-xl font-bold text-gray-800 mb-2">Подключение...</h2>
-        <p class="text-gray-500 text-sm">Код: {code}</p>
+        <p class="text-gray-700 font-medium text-sm">Код: {code}</p>
       </div>
 
     {:else if status === 'connected' || status === 'sending'}
@@ -233,11 +233,11 @@
           </svg>
           <div class="absolute inset-0 flex flex-col items-center justify-center">
             <span class="text-5xl font-bold tabular-nums text-gray-800">{noiseLevel}</span>
-            <span class="text-gray-400 text-xs">уровень</span>
+            <span class="text-gray-600 font-bold text-xs uppercase tracking-wider">уровень</span>
           </div>
         </div>
 
-        <p class="text-gray-400 text-xs mb-6">Микрофон активен. Данные передаются на доску.</p>
+        <p class="text-gray-700 font-medium text-xs mb-6">Микрофон активен. Данные передаются на доску.</p>
 
         <button
           on:click={disconnect}

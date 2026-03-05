@@ -160,7 +160,7 @@
   </div>
 {:else if notFound}
   <div class="max-w-3xl mx-auto text-center py-16">
-    <p class="text-gray-500 mb-4">Приём не найден</p>
+    <p class="text-gray-600 font-medium mb-4">Приём не найден</p>
     <a href="/" class="btn btn-secondary">← Назад к каталогу</a>
   </div>
 {:else if card}
@@ -188,7 +188,7 @@
           </svg>
         </div>
         <div class="min-w-0">
-          <p class="text-[10px] text-gray-400 uppercase tracking-wide">Возраст</p>
+          <p class="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Возраст</p>
           <p class="text-xs text-gray-800 font-medium leading-snug">{getAgeGroupNames(card.age_groups)}</p>
         </div>
       </div>
@@ -200,7 +200,7 @@
           </svg>
         </div>
         <div class="min-w-0">
-          <p class="text-[10px] text-gray-400 uppercase tracking-wide">Навыки</p>
+          <p class="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Навыки</p>
           <p class="text-xs text-gray-800 font-medium leading-snug">{getSkillNames(card.skills)}</p>
         </div>
       </div>
@@ -212,7 +212,7 @@
           </svg>
         </div>
         <div class="min-w-0">
-          <p class="text-[10px] text-gray-400 uppercase tracking-wide">Этап</p>
+          <p class="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Этап</p>
           <p class="text-xs text-gray-800 font-medium leading-snug">{getStageNames(card.stages)}</p>
         </div>
       </div>
@@ -224,7 +224,7 @@
           </svg>
         </div>
         <div class="min-w-0">
-          <p class="text-[10px] text-gray-400 uppercase tracking-wide">Тип</p>
+          <p class="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Тип</p>
           <p class="text-xs text-gray-800 font-medium leading-snug">{getTypeNames(card.types)}</p>
         </div>
       </div>
@@ -240,7 +240,7 @@
         {card.content}
       </div>
     {:else}
-      <p class="text-gray-400 italic text-sm">Содержание пока не добавлено</p>
+      <p class="text-gray-600 font-medium italic text-sm">Содержание пока не добавлено</p>
     {/if}
 
     {#if card.file_url}

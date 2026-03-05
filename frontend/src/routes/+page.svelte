@@ -210,13 +210,13 @@
 
   <!-- Сайдбар с фильтрами (только десктоп) -->
   <aside class="hidden md:flex flex-col gap-4 w-64 flex-shrink-0 sticky top-24">
-    <div class="card !p-5">
+    <div class="card !p-5 bg-white border border-gray-200">
       <div class="flex items-center justify-between mb-4">
         <h2 class="font-bold text-gray-900">Фильтры</h2>
         {#if hasActiveFilters}
-          <button on:click={clearFilters} class="text-xs text-gray-500 hover:text-gray-800 transition-colors">
-            Сбросить
-          </button>
+          <button on:click={clearFilters} class="text-xs text-gray-700 font-bold hover:text-indigo-600 transition-colors">
+          Сбросить
+        </button>
         {/if}
       </div>
       <div class="space-y-6">
@@ -235,7 +235,7 @@
     <!-- Поиск + мобильная кнопка фильтров -->
     <div class="flex gap-3 mb-6">
       <div class="relative flex-1">
-        <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
         </svg>
         <input
@@ -264,12 +264,12 @@
 
     <!-- Счётчик результатов -->
     <div class="flex items-center justify-between mb-4">
-      <p class="text-sm text-gray-500">
+      <p class="text-sm font-bold text-gray-700">
         {#if loading}Загрузка...{:else}{totalCards} приемов{/if}
       </p>
       <!-- Активные теги фильтров -->
       {#if hasActiveFilters}
-        <button on:click={clearFilters} class="text-xs text-gray-500 hover:text-gray-800 md:hidden transition-colors">
+        <button on:click={clearFilters} class="text-xs text-gray-700 font-bold hover:text-indigo-600 md:hidden transition-colors">
           Сбросить всё
         </button>
       {/if}
@@ -296,7 +296,7 @@
         <svg class="w-12 h-12 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
         </svg>
-        <p class="text-gray-500 mb-4">Ничего не найдено</p>
+        <p class="text-gray-700 font-medium mb-4">Ничего не найдено</p>
         <button on:click={clearFilters} class="btn btn-secondary">Сбросить фильтры</button>
       </div>
     {:else}
