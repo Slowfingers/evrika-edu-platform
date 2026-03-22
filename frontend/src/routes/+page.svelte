@@ -182,17 +182,17 @@
 {#if filtersExpanded}
   <div class="fixed inset-0 z-40 md:hidden">
     <button class="absolute inset-0 bg-black/30 backdrop-blur-sm w-full h-full" on:click={() => filtersExpanded = false} aria-label="Закрыть фильтры"></button>
-    <div class="absolute bottom-20 left-0 right-0 rounded-3xl mx-3 max-h-[70vh] flex flex-col" style="background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); box-shadow: 0 -4px 30px rgba(200,168,233,0.15);">
-      <div class="flex items-center justify-between p-6 pb-4">
+    <div class="absolute bottom-24 left-4 right-4 rounded-3xl max-h-[65vh] flex flex-col border border-white/60" style="background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); box-shadow: 0 -4px 30px rgba(200,168,233,0.2), 0 4px 20px rgba(0,0,0,0.1);">
+      <div class="flex items-center justify-between p-5 pb-3">
         <h2 class="text-lg font-bold text-purple-900">Фильтры</h2>
-        <button on:click={() => filtersExpanded = false} class="p-2 rounded-full hover:bg-purple-50">
+        <button on:click={() => filtersExpanded = false} class="p-2 rounded-full hover:bg-purple-50 transition-colors">
           <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
           </svg>
         </button>
       </div>
-      <div class="flex-1 overflow-y-auto px-6 pb-4">
-        <div class="space-y-6">
+      <div class="flex-1 overflow-y-auto px-5 pb-3">
+        <div class="space-y-5">
           <FilterPanel
             {ageGroups} {skills} {stages} {types} {timeRanges}
             bind:selectedAgeGroups bind:selectedSkills bind:selectedStages
@@ -200,14 +200,14 @@
           />
         </div>
       </div>
-      <div class="p-3 flex gap-2 border-t border-purple-100/50" style="background: rgba(255,255,255,0.9);">
-        <button on:click={() => { clearFilters(); filtersExpanded = false; }} class="btn btn-secondary !px-4 !py-2 text-sm">
+      <div class="p-4 flex gap-3 border-t border-purple-100/50 rounded-b-3xl" style="background: rgba(255,255,255,0.95);">
+        <button on:click={() => { clearFilters(); filtersExpanded = false; }} class="btn btn-secondary !px-5 !py-2.5 text-sm font-semibold">
           <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
           </svg>
           Сбросить
         </button>
-        <button on:click={() => filtersExpanded = false} class="btn btn-primary flex-1 !py-2 text-sm">
+        <button on:click={() => filtersExpanded = false} class="btn btn-primary flex-1 !py-2.5 text-sm font-semibold">
           <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
           </svg>
