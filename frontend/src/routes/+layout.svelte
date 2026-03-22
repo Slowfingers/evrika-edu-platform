@@ -35,18 +35,6 @@
         <button on:click={() => toolsOpen = false} class="text-sm font-bold text-rose-500 bg-rose-50 px-3 py-1.5 rounded-xl">✕ Закрыть</button>
       </div>
       <div class="p-3 space-y-2">
-        <a href="/classroom" class="flex items-center gap-4 p-4 rounded-2xl hover:bg-white/80 transition-colors shadow-sm bg-white/40" on:click={() => toolsOpen = false}>
-          <div class="w-12 h-12 rounded-2xl bg-indigo-500 shadow-md flex items-center justify-center">
-            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-          </div>
-          <div class="flex-1">
-            <div class="font-bold text-gray-900 text-lg">Классы</div>
-            <div class="text-sm text-gray-700 font-medium">Управление классом</div>
-          </div>
-          <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm">
-            <svg class="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
-          </div>
-        </a>
         <a href="/noisemeter" class="flex items-center gap-4 p-4 rounded-2xl hover:bg-white/80 transition-colors shadow-sm bg-white/40" on:click={() => toolsOpen = false}>
           <div class="w-12 h-12 rounded-2xl bg-emerald-500 shadow-md flex items-center justify-center">
             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
