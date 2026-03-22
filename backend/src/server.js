@@ -2,6 +2,8 @@
 require('dotenv').config();
 
 const express = require('express');
+const http = require('http');
+const NoisemeterService = require('./services/noisemeter.service');
 const cors = require('cors');
 const path = require('path');
 
@@ -70,7 +72,7 @@ async function startServer() {
     });
     
     // Запуск сервера
-    app.listen(PORT, () => {
+    const server = http.createServer(app); NoisemeterService.setupWebSocket(server); server.listen(PORT, () => {
       console.log(`🚀 EvrikaEdu Backend запущен на порту ${PORT}`);
       console.log(`📊 API доступен по адресу: http://localhost:${PORT}`);
     });

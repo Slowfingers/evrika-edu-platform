@@ -53,9 +53,9 @@
       } else if (msg.type === 'disconnected') {
         status = 'error';
         errorMsg = msg.reason === 'session_reset' 
-          ? 'Сессия сброшена на доске. Запросите новый код.'
+          ? 'Сессия сброшена. Запросите новый код.'
           : msg.reason === 'code_refreshed'
-          ? 'Код обновлён на доске. Запросите новый код.'
+          ? 'Код обновлён. Запросите новый код.'
           : 'Отключено';
         stopMicrophone();
       }

@@ -305,22 +305,10 @@
       }
     }
     
-    // Центральный круг (яблочко) с особым эффектом
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, maxRadius / rings * 0.7, 0, 2 * Math.PI);
-    const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, maxRadius / rings * 0.7);
-    gradient.addColorStop(0, 'rgba(251, 191, 36, 0.9)');
-    gradient.addColorStop(1, 'rgba(245, 158, 11, 0.7)');
-    ctx.fillStyle = gradient;
-    ctx.fill();
-    ctx.strokeStyle = '#ffffff';
-    ctx.lineWidth = 3;
-    ctx.stroke();
-    
-    // Звёздочка в центре
+    // Звёздочка в центре (только в презентации)
     if (isDark) {
       ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 24px system-ui, sans-serif';
+      ctx.font = 'bold 20px system-ui, sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText('⭐', centerX, centerY);
@@ -678,7 +666,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
-              Запустить на доске
+              Запустить
             </span>
           </button>
         </div>

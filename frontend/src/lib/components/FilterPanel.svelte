@@ -12,8 +12,8 @@
   export let selectedTimeRange = '';
 </script>
 
-<!-- Возрастные группы -->
-<div>
+<!-- Возрастные группы (скрыто на мобильных) -->
+<div class="hidden md:block">
   <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Возраст</p>
   <div class="space-y-2.5">
     {#each ageGroups as group}
