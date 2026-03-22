@@ -1,5 +1,7 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
+const additionalCards = require('./additional-cards');
+const moreCards = require('./more-cards');
 
 const dbPath = path.join(__dirname, 'evrika.db');
 const db = new sqlite3.Database(dbPath);
@@ -821,6 +823,9 @@ const seedData = async () => {
     }
   ];
 
+  // Объединяем все карточки
+  const allCards = [...cards, ...additionalCards, ...moreCards];
+
   try {
     // Вставляем возрастные группы
     for (const group of ageGroups) {
@@ -847,7 +852,7 @@ const seedData = async () => {
     console.log(`✅ Добавлено ${skills.length} навыков`);
 
     // Вставляем карточки
-    for (const card of cards) {
+    for (const card of allCards) {
       await new Promise((resolve, reject) => {
         db.run(
           `INSERT OR REPLACE INTO cards 
@@ -869,7 +874,7 @@ const seedData = async () => {
         );
       });
     }
-    console.log(`✅ Добавлено ${cards.length} карточек приемов`);
+    console.log(`✅ Добавлено ${allCards.length} карточек приемов`);
 
     console.log('\n🎉 База данных успешно заполнена!');
   } catch (error) {
