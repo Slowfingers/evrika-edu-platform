@@ -319,28 +319,69 @@
       </div>
 
       {#if totalPages > 1}
-        <div class="flex justify-center items-center gap-2 pb-24 md:pb-8">
+        <div class="flex justify-center items-center gap-1.5 md:gap-2 pb-24 md:pb-8">
+          <!-- Кнопка назад -->
           <button
             on:click={() => goToPage(currentPage - 1)}
             disabled={currentPage === 1}
-            class="btn btn-secondary disabled:opacity-40 px-4"
+            class="w-10 h-10 md:w-auto md:h-auto md:px-4 md:py-2 rounded-xl flex items-center justify-center btn btn-secondary disabled:opacity-40"
           >
-            ←
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
           </button>
-          {#each Array(totalPages) as _, i}
-            <button
-              on:click={() => goToPage(i + 1)}
-              class="btn {currentPage === i + 1 ? 'btn-primary' : 'btn-secondary'} !px-4 !py-2"
-            >
-              {i + 1}
-            </button>
-          {/each}
+          
+          <!-- Мобильная версия: текущая/всего -->
+          <div class="flex md:hidden items-center gap-2 px-4 py-2 bg-white/60 backdrop-blur-sm rounded-xl border border-white/50">
+            <span class="text-sm font-bold text-purple-700">{currentPage}</span>
+            <span class="text-gray-400">/</span>
+            <span class="text-sm text-gray-600">{totalPages}</span>
+          </div>
+          
+          <!-- Десктоп версия: все страницы -->
+          <div class="hidden md:flex items-center gap-1.5">
+            {#if totalPages <= 7}
+              {#each Array(totalPages) as _, i}
+                <button
+                  on:click={() => goToPage(i + 1)}
+                  class="btn {currentPage === i + 1 ? 'btn-primary' : 'btn-secondary'} !px-4 !py-2"
+                >
+                  {i + 1}
+                </button>
+              {/each}
+            {:else}
+              <!-- Первая страница -->
+              <button on:click={() => goToPage(1)} class="btn {currentPage === 1 ? 'btn-primary' : 'btn-secondary'} !px-4 !py-2">1</button>
+              
+              {#if currentPage > 3}
+                <span class="px-2 text-gray-400">...</span>
+              {/if}
+              
+              <!-- Страницы вокруг текущей -->
+              {#each Array(totalPages) as _, i}
+                {#if i + 1 > 1 && i + 1 < totalPages && Math.abs(i + 1 - currentPage) <= 1}
+                  <button on:click={() => goToPage(i + 1)} class="btn {currentPage === i + 1 ? 'btn-primary' : 'btn-secondary'} !px-4 !py-2">{i + 1}</button>
+                {/if}
+              {/each}
+              
+              {#if currentPage < totalPages - 2}
+                <span class="px-2 text-gray-400">...</span>
+              {/if}
+              
+              <!-- Последняя страница -->
+              <button on:click={() => goToPage(totalPages)} class="btn {currentPage === totalPages ? 'btn-primary' : 'btn-secondary'} !px-4 !py-2">{totalPages}</button>
+            {/if}
+          </div>
+          
+          <!-- Кнопка вперёд -->
           <button
             on:click={() => goToPage(currentPage + 1)}
             disabled={currentPage === totalPages}
-            class="btn btn-secondary disabled:opacity-40 px-4"
+            class="w-10 h-10 md:w-auto md:h-auto md:px-4 md:py-2 rounded-xl flex items-center justify-center btn btn-secondary disabled:opacity-40"
           >
-            →
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
           </button>
         </div>
       {/if}
