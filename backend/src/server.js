@@ -71,8 +71,14 @@ async function startServer() {
       });
     });
     
+    // Создаём HTTP сервер для поддержки WebSocket
+    const server = http.createServer(app);
+    
+    // Инициализация WebSocket для шумомера
+    NoisemeterService.setupWebSocket(server);
+    
     // Запуск сервера
-    const server = http.createServer(app); NoisemeterService.setupWebSocket(server); server.listen(PORT, () => {
+    server.listen(PORT, () => {
       console.log(`🚀 EvrikaEdu Backend запущен на порту ${PORT}`);
       console.log(`📊 API доступен по адресу: http://localhost:${PORT}`);
     });
