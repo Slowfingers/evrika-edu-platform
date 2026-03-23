@@ -16,23 +16,32 @@ class NoisemeterService {
       const url = new URL(req.url, 'http://localhost');
       const role = url.searchParams.get('role');
       const code = url.searchParams.get('code');
+      
+      console.log(`📱 WebSocket connection: role=${role}, code=${code || 'none'}`);
 
       if (role === 'display') {
         this.handleDisplay(ws);
       } else if (role === 'sender' && code) {
         this.handleSender(ws, code);
       } else {
+        console.log('❌ WebSocket: invalid role or missing code');
         ws.close();
       }
     });
 
-    console.log('📡 WebSocket: /ws/noisemeter');
+    wss.on('error', (error) => {
+      console.error('❌ WebSocket Server Error:', error);
+    });
+
+    console.log('📡 WebSocket server initialized: /ws/noisemeter');
   }
 
   handleDisplay(ws) {
     const code = this.generateCode();
     this.rooms.set(code, { display: ws, sender: null });
     ws.roomCode = code;
+    
+    console.log(`🖥️  Display connected: room code ${code}`);
 
     ws.send(JSON.stringify({
       type: 'room_created',
@@ -65,6 +74,7 @@ class NoisemeterService {
     });
 
     ws.on('close', () => {
+      console.log(`🖥️  Display disconnected: room code ${ws.roomCode}`);
       this.rooms.delete(ws.roomCode);
     });
   }
@@ -72,11 +82,13 @@ class NoisemeterService {
   handleSender(ws, code) {
     const room = this.rooms.get(code);
     if (!room || room.sender) {
+      console.log(`❌ Sender rejected: room ${code} ${!room ? 'not found' : 'already has sender'}`);
       ws.close();
       return;
     }
 
     room.sender = ws;
+    console.log(`📱 Sender connected to room ${code}`);
     ws.send(JSON.stringify({ type: 'connected' }));
     room.display.send(JSON.stringify({ type: 'sender_connected' }));
 
@@ -92,6 +104,7 @@ class NoisemeterService {
     });
 
     ws.on('close', () => {
+      console.log(`📱 Sender disconnected from room ${code}`);
       room.sender = null;
       if (room.display.readyState === 1) {
         room.display.send(JSON.stringify({ type: 'sender_disconnected' }));
