@@ -2,8 +2,6 @@
 require('dotenv').config();
 
 const express = require('express');
-const http = require('http');
-const NoisemeterService = require('./services/noisemeter.service');
 const cors = require('cors');
 const path = require('path');
 
@@ -71,14 +69,8 @@ async function startServer() {
       });
     });
     
-    // Создаём HTTP сервер для поддержки WebSocket
-    const server = http.createServer(app);
-    
-    // Инициализация WebSocket для шумомера
-    NoisemeterService.setupWebSocket(server);
-    
     // Запуск сервера
-    server.listen(PORT, () => {
+    app.listen(PORT, () => {
       console.log(`🚀 EvrikaEdu Backend запущен на порту ${PORT}`);
       console.log(`📊 API доступен по адресу: http://localhost:${PORT}`);
     });
