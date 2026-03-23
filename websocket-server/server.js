@@ -1,4 +1,7 @@
 const WebSocket = require('ws');
+const http = require('http');
+
+const PORT = process.env.PORT || 8080;
 
 class NoisemeterService {
   constructor() {
@@ -17,6 +20,8 @@ class NoisemeterService {
       const role = url.searchParams.get('role');
       const code = url.searchParams.get('code');
 
+      console.log(`📱 New connection: role=${role}, code=${code}`);
+
       if (role === 'display') {
         this.handleDisplay(ws);
       } else if (role === 'sender' && code) {
@@ -26,7 +31,7 @@ class NoisemeterService {
       }
     });
 
-    console.log('📡 WebSocket: /ws/noisemeter');
+    console.log('📡 WebSocket server ready at /ws/noisemeter');
   }
 
   handleDisplay(ws) {
@@ -39,6 +44,8 @@ class NoisemeterService {
       code,
       codeExpiresAt: Date.now() + 300000
     }));
+
+    console.log(`🎯 Display created room: ${code}`);
 
     ws.on('message', (data) => {
       const msg = JSON.parse(data);
@@ -61,10 +68,13 @@ class NoisemeterService {
           code: newCode,
           codeExpiresAt: Date.now() + 300000
         }));
+
+        console.log(`🔄 Room code refreshed: ${newCode}`);
       }
     });
 
     ws.on('close', () => {
+      console.log(`❌ Display disconnected: ${ws.roomCode}`);
       this.rooms.delete(ws.roomCode);
     });
   }
@@ -72,6 +82,7 @@ class NoisemeterService {
   handleSender(ws, code) {
     const room = this.rooms.get(code);
     if (!room || room.sender) {
+      console.log(`⚠️ Sender rejected for code: ${code}`);
       ws.close();
       return;
     }
@@ -79,6 +90,8 @@ class NoisemeterService {
     room.sender = ws;
     ws.send(JSON.stringify({ type: 'connected' }));
     room.display.send(JSON.stringify({ type: 'sender_connected' }));
+
+    console.log(`📲 Sender connected to room: ${code}`);
 
     ws.on('message', (data) => {
       const msg = JSON.parse(data);
@@ -92,6 +105,7 @@ class NoisemeterService {
     });
 
     ws.on('close', () => {
+      console.log(`📴 Sender disconnected from room: ${code}`);
       room.sender = null;
       if (room.display.readyState === 1) {
         room.display.send(JSON.stringify({ type: 'sender_disconnected' }));
@@ -100,4 +114,28 @@ class NoisemeterService {
   }
 }
 
-module.exports = new NoisemeterService();
+// Создаём HTTP сервер
+const server = http.createServer((req, res) => {
+  // Health check endpoint
+  if (req.url === '/health' || req.url === '/') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ 
+      status: 'ok', 
+      service: 'Evrika WebSocket Server',
+      timestamp: new Date().toISOString()
+    }));
+  } else {
+    res.writeHead(404);
+    res.end('Not Found');
+  }
+});
+
+// Инициализация WebSocket
+const noisemeterService = new NoisemeterService();
+noisemeterService.setupWebSocket(server);
+
+// Запуск сервера
+server.listen(PORT, () => {
+  console.log(`🚀 Evrika WebSocket Server running on port ${PORT}`);
+  console.log(`📡 WebSocket endpoint: ws://localhost:${PORT}/ws/noisemeter`);
+});
