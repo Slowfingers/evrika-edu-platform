@@ -15,9 +15,10 @@ yarn-error.log*
 .env.production
 
 # Database files
-*.db
 *.sqlite
 *.sqlite3
+# Разрешаем evrika.db для деплоя
+!backend/evrika.db
 
 # Logs
 *.log
