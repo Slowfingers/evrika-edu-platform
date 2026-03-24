@@ -1,35 +1,57 @@
 const DatabaseService = require('./database.service');
 
-// Функции преобразования английских ID в русские для поиска в базе
-function convertEnglishToRussianId(englishId, type) {
+// Преобразование ID фильтров в формат базы данных
+// В базе: age_groups, skills, types - английские ID; stages - русские ID
+function convertFilterIdToDbFormat(filterId, type) {
   const mappings = {
+    // age_groups в базе на английском
     ageGroups: {
-      'primary': 'начальные-классы',
-      'secondary': 'старшие-классы'
+      'начальные-классы': 'primary',
+      'старшие-классы': 'secondary',
+      'primary': 'primary',
+      'secondary': 'secondary'
     },
+    // skills в базе на английском
     skills: {
-      'critical': 'критическое-мышление',
-      'teamwork': 'командная-работа', 
-      'reflection': 'рефлексия',
-      'creative': 'креативное-мышление',
-      'systematization': 'систематизация-материала',
-      'communication': 'коммуникация'
+      'критическое-мышление': 'critical',
+      'командная-работа': 'teamwork', 
+      'рефлексия': 'reflection',
+      'креативное-мышление': 'creative',
+      'систематизация': 'systematization',
+      'систематизация-материала': 'systematization',
+      'коммуникация': 'communication',
+      'critical': 'critical',
+      'teamwork': 'teamwork',
+      'reflection': 'reflection',
+      'creative': 'creative',
+      'systematization': 'systematization',
+      'communication': 'communication'
     },
+    // stages в базе на русском
     stages: {
       'lesson-start': 'начало-урока',
       'new-material': 'объяснение-нового-материала', 
       'practice': 'закрепление',
-      'lesson-end': 'конец-урока'
+      'lesson-end': 'конец-урока',
+      'начало-урока': 'начало-урока',
+      'объяснение-нового-материала': 'объяснение-нового-материала',
+      'закрепление': 'закрепление',
+      'конец-урока': 'конец-урока'
     },
+    // types в базе на английском
     types: {
-      'individual': 'индивидуальная',
-      'pair': 'парная',
-      'team': 'командная', 
-      'frontal': 'фронтальная'
+      'индивидуальная': 'individual',
+      'парная': 'pair',
+      'командная': 'team', 
+      'фронтальная': 'frontal',
+      'individual': 'individual',
+      'pair': 'pair',
+      'team': 'team',
+      'frontal': 'frontal'
     }
   };
   
-  return mappings[type] && mappings[type][englishId] ? mappings[type][englishId] : englishId;
+  return mappings[type] && mappings[type][filterId] ? mappings[type][filterId] : filterId;
 }
 
 class CardService {
@@ -46,8 +68,8 @@ class CardService {
         const ageGroupConditions = filters.ageGroupIds.map(() => 'age_groups LIKE ?').join(' OR ');
         conditions.push(`(${ageGroupConditions})`);
         filters.ageGroupIds.forEach(id => {
-          const russianId = convertEnglishToRussianId(id, 'ageGroups');
-          params.push(`%"${russianId}"%`);
+          const dbId = convertFilterIdToDbFormat(id, 'ageGroups');
+          params.push(`%"${dbId}"%`);
         });
       }
 
@@ -56,8 +78,8 @@ class CardService {
         const skillConditions = filters.skillIds.map(() => 'skills LIKE ?').join(' OR ');
         conditions.push(`(${skillConditions})`);
         filters.skillIds.forEach(id => {
-          const russianId = convertEnglishToRussianId(id, 'skills');
-          params.push(`%"${russianId}"%`);
+          const dbId = convertFilterIdToDbFormat(id, 'skills');
+          params.push(`%"${dbId}"%`);
         });
       }
 
@@ -66,8 +88,8 @@ class CardService {
         const stageConditions = filters.stageIds.map(() => 'stages LIKE ?').join(' OR ');
         conditions.push(`(${stageConditions})`);
         filters.stageIds.forEach(id => {
-          const russianId = convertEnglishToRussianId(id, 'stages');
-          params.push(`%"${russianId}"%`);
+          const dbId = convertFilterIdToDbFormat(id, 'stages');
+          params.push(`%"${dbId}"%`);
         });
       }
 
@@ -76,8 +98,8 @@ class CardService {
         const typeConditions = filters.typeIds.map(() => 'types LIKE ?').join(' OR ');
         conditions.push(`(${typeConditions})`);
         filters.typeIds.forEach(id => {
-          const russianId = convertEnglishToRussianId(id, 'types');
-          params.push(`%"${russianId}"%`);
+          const dbId = convertFilterIdToDbFormat(id, 'types');
+          params.push(`%"${dbId}"%`);
         });
       }
 
