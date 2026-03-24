@@ -1,5 +1,6 @@
 const express = require('express');
-const CardService = require('../services/card.service');
+// Используем JSON сервис для Vercel serverless (SQLite не работает)
+const CardService = require('../services/card.service.json');
 const AuthService = require('../services/auth.service');
 
 const router = express.Router();
