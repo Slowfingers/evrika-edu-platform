@@ -9,7 +9,6 @@
   export let showImport = false;
   export let importText = '';
   export let newStudentName = '';
-  export let newStudentGroupColor = null;
   export let groups = [];
   export let STUDENT_TAGS = [];
   export let GROUP_COLORS = [];
@@ -47,27 +46,6 @@
 <!-- Add student -->
 <div class="px-3 py-2.5 border-b flex-shrink-0" style="border-color:rgba(0,0,0,0.07);">
 
-  <!-- Group color picker -->
-  <div class="flex items-center gap-1.5 mb-2.5">
-    <span class="text-[10px] font-semibold text-gray-400 tracking-wide uppercase">Группа:</span>
-    <!-- No group -->
-    <button on:click={() => dispatch('colorChange', null)} title="Без группы"
-      class="w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all flex-shrink-0
-        {newStudentGroupColor === null ? 'border-gray-500 bg-gray-200 scale-110' : 'border-gray-200 bg-gray-100 hover:border-gray-400'}">
-      {#if newStudentGroupColor === null}
-        <svg class="w-2.5 h-2.5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
-        </svg>
-      {/if}
-    </button>
-    {#each GROUP_COLORS as color}
-      <button on:click={() => dispatch('colorChange', color)} title="Группа {color}"
-        class="w-5 h-5 rounded-full border-2 transition-all flex-shrink-0
-          {newStudentGroupColor === color ? 'border-gray-800 scale-125 shadow-md' : 'border-transparent hover:scale-110 hover:shadow-sm'}"
-        style="background:{color};"></button>
-    {/each}
-  </div>
-
   <!-- Name input + submit -->
   <form on:submit|preventDefault={() => dispatch('addStudent')} class="flex gap-2">
     <div class="relative flex-1 min-w-0">
@@ -86,7 +64,7 @@
     </div>
     <button type="submit"
       class="px-3 py-2 rounded-xl text-white text-xs font-bold transition-all flex-shrink-0 shadow-sm"
-      style="background:{newStudentGroupColor || '#6366f1'}; opacity:{newStudentName.trim() ? 1 : 0.4}; cursor:{newStudentName.trim() ? 'pointer' : 'not-allowed'};">
+      style="background:#6366f1; opacity:{newStudentName.trim() ? 1 : 0.4}; cursor:{newStudentName.trim() ? 'pointer' : 'not-allowed'};">
       +
     </button>
   </form>
@@ -132,8 +110,10 @@
             draggable={!isMobile}
             on:dragstart={(e) => dispatch('studentDragStart', { e, id: s.id })}
             on:click={() => isMobile && dispatch('mobileSelect', s.id)}>
-            <div class="w-7 h-7 rounded-full flex items-center justify-center text-white text-[9px] font-bold flex-shrink-0 shadow-sm"
-              style="background:{s.groupColor || '#6366f1'};">
+            <div class="w-7 h-7 rounded-full flex items-center justify-center text-white text-[9px] font-bold flex-shrink-0 shadow-sm cursor-pointer"
+              style="background:{s.groupColor || '#6366f1'};"
+              title="Нажмите для смены цвета группы"
+              on:click|stopPropagation={() => dispatch('cycleColor', s.id)}>
               {ini(s.name)}
             </div>
             <span class="text-xs text-gray-700 truncate flex-1">{s.name}</span>
@@ -180,8 +160,10 @@
       <div class="p-2 space-y-0.5">
         {#each students as s (s.id)}
           <div class="group flex items-center gap-2 px-2.5 py-2 rounded-xl hover:bg-white/80 transition-all {s.absent ? 'opacity-40' : ''}">
-            <div class="w-7 h-7 rounded-full flex items-center justify-center text-white text-[9px] font-bold flex-shrink-0 shadow-sm"
-              style="background:{s.groupColor || '#94a3b8'};">
+            <div class="w-7 h-7 rounded-full flex items-center justify-center text-white text-[9px] font-bold flex-shrink-0 shadow-sm cursor-pointer"
+              style="background:{s.groupColor || '#94a3b8'};"
+              title="Нажмите для смены цвета группы"
+              on:click={() => dispatch('cycleColor', s.id)}>
               {ini(s.name)}
             </div>
             <span class="text-xs text-gray-700 truncate flex-1 min-w-0">{s.name}</span>
