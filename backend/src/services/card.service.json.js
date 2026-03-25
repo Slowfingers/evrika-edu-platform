@@ -132,13 +132,17 @@ class CardServiceJSON {
       }
     }
 
-    // Поиск по названию и описанию
+    // Поиск по названию и описанию (все языки)
     if (filters.search) {
       const searchLower = filters.search.toLowerCase();
       result = result.filter(card => 
         card.title.toLowerCase().includes(searchLower) ||
         card.description.toLowerCase().includes(searchLower) ||
-        (card.content && card.content.toLowerCase().includes(searchLower))
+        (card.content && card.content.toLowerCase().includes(searchLower)) ||
+        (card.title_uz && card.title_uz.toLowerCase().includes(searchLower)) ||
+        (card.title_en && card.title_en.toLowerCase().includes(searchLower)) ||
+        (card.description_uz && card.description_uz.toLowerCase().includes(searchLower)) ||
+        (card.description_en && card.description_en.toLowerCase().includes(searchLower))
       );
     }
 
@@ -160,7 +164,13 @@ class CardServiceJSON {
       skills: parseJsonField(card.skills),
       stages: parseJsonField(card.stages),
       types: parseJsonField(card.types),
-      aims: parseJsonField(card.aims)
+      aims: parseJsonField(card.aims),
+      title_uz: card.title_uz || null,
+      title_en: card.title_en || null,
+      description_uz: card.description_uz || null,
+      description_en: card.description_en || null,
+      content_uz: card.content_uz || null,
+      content_en: card.content_en || null
     }));
   }
 
@@ -175,7 +185,13 @@ class CardServiceJSON {
       skills: parseJsonField(card.skills),
       stages: parseJsonField(card.stages),
       types: parseJsonField(card.types),
-      aims: parseJsonField(card.aims)
+      aims: parseJsonField(card.aims),
+      title_uz: card.title_uz || null,
+      title_en: card.title_en || null,
+      description_uz: card.description_uz || null,
+      description_en: card.description_en || null,
+      content_uz: card.content_uz || null,
+      content_en: card.content_en || null
     };
   }
 

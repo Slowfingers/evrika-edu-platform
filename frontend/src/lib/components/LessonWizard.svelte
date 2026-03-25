@@ -6,7 +6,8 @@
   import DetailedLessonCard from './DetailedLessonCard.svelte';
   import { formatTimeDisplay } from '$lib/utils/time-intervals.js';
   import { exportLessonToPDF } from '$lib/utils/pdf-export.js';
-  import { t } from '$lib/stores/lang.js';
+  import { t, lang } from '$lib/stores/lang.js';
+  import { localizeCard } from '$lib/utils/localization.js';
 
   const dispatch = createEventDispatcher();
 
@@ -92,13 +93,17 @@
   $: {
     let filtered = catalogCards;
     
-    // Фильтр по поисковому запросу
+    // Фильтр по поисковому запросу (все языки)
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(card => 
         card.title?.toLowerCase().includes(query) ||
         card.description?.toLowerCase().includes(query) ||
-        card.content?.toLowerCase().includes(query)
+        card.content?.toLowerCase().includes(query) ||
+        card.title_uz?.toLowerCase().includes(query) ||
+        card.title_en?.toLowerCase().includes(query) ||
+        card.description_uz?.toLowerCase().includes(query) ||
+        card.description_en?.toLowerCase().includes(query)
       );
     }
     
@@ -407,7 +412,7 @@
           <div class="space-y-2">
             {#each lessonData.lessonStages[currentLessonStage].cards as card}
               <div class="flex items-center gap-3 py-2 px-3 rounded-xl bg-white/60">
-                <span class="flex-1 text-sm font-medium text-gray-900 truncate">{card.title}</span>
+                <span class="flex-1 text-sm font-medium text-gray-900 truncate">{localizeCard(card, $lang).title}</span>
                 <span class="text-xs text-gray-400 flex-shrink-0">{formatTimeDisplay(card.timeMinutes || card.time_minutes)}</span>
                 <button on:click={() => removeCard(card.id, currentLessonStage)}
                   class="w-6 h-6 rounded-full bg-red-50 text-red-400 hover:bg-red-100 flex items-center justify-center flex-shrink-0 transition-colors">

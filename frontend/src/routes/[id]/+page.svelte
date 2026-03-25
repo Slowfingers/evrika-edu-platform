@@ -2,7 +2,8 @@
   import { onMount } from 'svelte';
   import { formatTimeDisplay } from '$lib/utils/time-intervals.js';
   import { cardsApi } from '$lib/api/cards.api.js';
-  import { t } from '$lib/stores/lang.js';
+  import { t, lang } from '$lib/stores/lang.js';
+  import { localizeCard } from '$lib/utils/localization.js';
 
   export let data;
 
@@ -20,6 +21,8 @@
       loading = false;
     }
   });
+
+  $: lcard = localizeCard(card, $lang);
 
   // Реактивные маппинги ID → переведенные названия
   $: ageGroupMapping = {
@@ -94,8 +97,8 @@
 </script>
 
 <svelte:head>
-  <title>{card ? `${card.title} | EvrikaEdu` : 'EvrikaEdu'}</title>
-  {#if card}<meta name="description" content={card.description} />{/if}
+  <title>{lcard ? `${lcard.title} | EvrikaEdu` : 'EvrikaEdu'}</title>
+  {#if lcard}<meta name="description" content={lcard.description} />{/if}
   <meta name="robots" content="index, follow" />
 </svelte:head>
 
@@ -137,7 +140,7 @@
   <!-- Заголовок и бейдж времени -->
   <div class="glass-card mb-4">
     <div class="flex items-start justify-between gap-4 mb-4">
-      <h1 class="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">{card.title}</h1>
+      <h1 class="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">{lcard.title}</h1>
       <span class="glass-badge flex-shrink-0 mt-1">
         <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -145,7 +148,7 @@
         {formatTimeDisplay(card.time_minutes)}
       </span>
     </div>
-    <p class="text-gray-600 leading-relaxed text-base">{card.description}</p>
+    <p class="text-gray-600 leading-relaxed text-base">{lcard.description}</p>
   </div>
 
   <!-- Метаданные — glassmorphism карточки -->
@@ -211,9 +214,9 @@
       <h2 class="text-lg font-bold text-gray-900">{$t('card_content')}</h2>
     </div>
 
-    {#if card.content}
+    {#if lcard.content}
       <div class="text-gray-700 leading-relaxed whitespace-pre-wrap text-sm md:text-base overflow-hidden break-words max-w-full bg-white/30 rounded-2xl p-4 md:p-5 border border-white/50">
-        {card.content}
+        {lcard.content}
       </div>
     {:else}
       <p class="text-gray-600 font-medium italic text-sm bg-white/30 rounded-2xl p-4 border border-white/50">{$t('card_no_content')}</p>

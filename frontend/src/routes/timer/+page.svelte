@@ -1,16 +1,23 @@
 <script>
   import { onMount, onDestroy } from 'svelte';
-  import { t } from '$lib/stores/lang.js';
+  import { get } from 'svelte/store';
+  import { t, lang } from '$lib/stores/lang.js';
   
-  $: stages = [
-    { id: 1, name: $t('stage_intro'), duration: 3, color: '#4ade80' },
-    { id: 2, name: $t('stage_actualization'), duration: 5, color: '#facc15' },
-    { id: 3, name: $t('stage_explain_t'), duration: 10, color: '#60a5fa' },
-    { id: 4, name: $t('stage_practice_t'), duration: 15, color: '#f472b6' },
-    { id: 5, name: $t('stage_reflection_t'), duration: 7, color: '#a78bfa' },
-    { id: 6, name: $t('stage_summary'), duration: 5, color: '#fb7185' }
+  const STAGE_BASE = [
+    { id: 1, key: 'stage_intro',       duration: 3,  color: '#4ade80' },
+    { id: 2, key: 'stage_actualization', duration: 5,  color: '#facc15' },
+    { id: 3, key: 'stage_explain_t',   duration: 10, color: '#60a5fa' },
+    { id: 4, key: 'stage_practice_t',  duration: 15, color: '#f472b6' },
+    { id: 5, key: 'stage_reflection_t', duration: 7,  color: '#a78bfa' },
+    { id: 6, key: 'stage_summary',     duration: 5,  color: '#fb7185' }
   ];
-  
+
+  let stages = STAGE_BASE.map(s => ({ ...s, name: get(t)(s.key) }));
+  const _unsubLang = lang.subscribe(() => {
+    const tr = get(t);
+    stages = stages.map(s => ({ ...s, name: s.key ? tr(s.key) : s.name }));
+  });
+
   $: COLORS = [
     { label: $t('color_green'), value: '#4ade80' },
     { label: $t('color_blue'), value: '#60a5fa' },
@@ -23,7 +30,7 @@
   ];
   
   let currentStageIndex = 0;
-  let timeRemaining = stages[0].duration * 60;
+  let timeRemaining = STAGE_BASE[0].duration * 60;
   let isRunning = false;
   let isFinished = false;
   let interval = null;
@@ -165,6 +172,7 @@
   
   onDestroy(() => {
     if (interval) clearInterval(interval);
+    _unsubLang();
   });
 </script>
 

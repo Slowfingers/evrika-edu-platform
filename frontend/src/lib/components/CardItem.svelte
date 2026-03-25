@@ -1,8 +1,11 @@
 <script>
   import { formatTimeDisplay } from '$lib/utils/time-intervals.js';
-  import { getAgeGroupNames, getSkillNames, getStageNames, getTypeNames, getSkillName } from '$lib/utils/localization.js';
+  import { getAgeGroupNames, getSkillNames, getStageNames, getTypeNames, getSkillName, localizeCard } from '$lib/utils/localization.js';
+  import { lang } from '$lib/stores/lang.js';
   
   export let card;
+
+  $: lcard = localizeCard(card, $lang);
   
   // Генерация случайного пастельного градиента для каждой карточки
   const gradients = [
@@ -31,12 +34,12 @@
 
   <!-- Заголовок -->
   <h3 class="text-lg font-bold text-gray-900 mb-2 card-title">
-    {card.title}
+    {lcard.title}
   </h3>
 
   <!-- Описание -->
   <p class="text-gray-600 text-sm card-description leading-relaxed flex-grow">
-    {card.description}
+    {lcard.description}
   </p>
 
   <!-- Стрелка вперёд -->

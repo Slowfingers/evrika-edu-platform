@@ -323,6 +323,8 @@ export const translations = {
     skill_team: 'Командная работа',
 
     // LessonWizard (wiz_*)
+    wiz_add: 'Добавить',
+    wiz_remove: 'Убрать',
     wiz_step_info: 'Инфо',
     wiz_step_techniques: 'Приёмы',
     wiz_step_plan: 'План',
@@ -759,6 +761,8 @@ export const translations = {
     skill_team: 'Jamoaviy ish',
 
     // LessonWizard (wiz_*)
+    wiz_add: "Qo'shish",
+    wiz_remove: "O'chirish",
     wiz_step_info: 'Ma\'lumot',
     wiz_step_techniques: 'Usullar',
     wiz_step_plan: 'Reja',
@@ -1195,6 +1199,8 @@ export const translations = {
     skill_team: 'Teamwork',
 
     // LessonWizard (wiz_*)
+    wiz_add: 'Add',
+    wiz_remove: 'Remove',
     wiz_step_info: 'Info',
     wiz_step_techniques: 'Techniques',
     wiz_step_plan: 'Plan',

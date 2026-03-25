@@ -235,3 +235,19 @@ export function convertEnglishToRussianId(englishId, type) {
 
   return mappings[type]?.[englishId] || englishId;
 }
+
+/**
+ * Returns a card with title/description/content resolved for the given language.
+ * Falls back to Russian (default) when a translation is missing.
+ * @param {object} card
+ * @param {string} lang  'ru' | 'uz' | 'en'
+ */
+export function localizeCard(card, lang) {
+  if (!card || lang === 'ru') return card;
+  return {
+    ...card,
+    title:       card[`title_${lang}`]       || card.title,
+    description: card[`description_${lang}`] || card.description,
+    content:     card[`content_${lang}`]     || card.content
+  };
+}
