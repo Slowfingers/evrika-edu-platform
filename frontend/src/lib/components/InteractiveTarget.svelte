@@ -1,13 +1,16 @@
 <script>
   import { onMount, tick, afterUpdate } from 'svelte';
+  import { t } from '$lib/stores/lang.js';
   
   // Режимы работы
   let mode = 'setup'; // setup | presentation | stats
   
   // Настройки мишени
-  let criteria = ['Тема 1', 'Тема 2', 'Тема 3', 'Тема 4'];
-  let rings = 3; // количество колец (2-5)
-  let ringLabels = ['Сложно', 'Нормально', 'Легко'];
+  let criteria = null;
+  let rings = 3;
+  let ringLabels = null;
+  $: if (!criteria) criteria = [$t('target_topic') + ' 1', $t('target_topic') + ' 2', $t('target_topic') + ' 3', $t('target_topic') + ' 4'];
+  $: if (!ringLabels) ringLabels = [$t('ring_hard'), $t('ring_ok'), $t('ring_easy')];
   
   // Данные взаимодействия
   let markers = []; // {x, y, sector, ring, timestamp}
@@ -26,7 +29,7 @@
         bySector: [],
         sectorScores: [],
         avgScore: 0,
-        understanding: 'Нет данных',
+        understanding: $t('stat_no_data'),
         strongTopics: [],
         weakTopics: []
       };
@@ -53,7 +56,7 @@
     // ring (rings-1) = центр (легко) = 100 баллов
     const sectorScores = criteria.map((_, sectorIndex) => {
       const sectorMarkers = markersList.filter(m => m.sector === sectorIndex);
-      if (sectorMarkers.length === 0) return { count: 0, avgScore: 0, level: 'Нет данных' };
+      if (sectorMarkers.length === 0) return { count: 0, avgScore: 0, level: $t('stat_no_data') };
       
       let totalScore = 0;
       sectorMarkers.forEach(m => {
@@ -65,12 +68,12 @@
       });
       const avgScore = Math.round(totalScore / sectorMarkers.length);
       
-      let level = 'Нет данных';
-      if (avgScore >= 80) level = 'Отлично';
-      else if (avgScore >= 60) level = 'Хорошо';
-      else if (avgScore >= 40) level = 'Средне';
-      else if (avgScore >= 20) level = 'Слабо';
-      else level = 'Сложно';
+      let level = $t('stat_no_data');
+      if (avgScore >= 80) level = $t('stat_excellent');
+      else if (avgScore >= 60) level = $t('stat_good');
+      else if (avgScore >= 40) level = $t('stat_medium');
+      else if (avgScore >= 20) level = $t('stat_weak');
+      else level = $t('stat_hard');
       
       return { count: sectorMarkers.length, avgScore, level };
     });
@@ -88,12 +91,12 @@
     const avgScore = validMarkers > 0 ? Math.round(totalScore / validMarkers) : 0;
     
     // Уровень понимания
-    let understanding = 'Нет данных';
-    if (avgScore >= 80) understanding = 'Отлично! 🎉';
-    else if (avgScore >= 60) understanding = 'Хорошо 👍';
-    else if (avgScore >= 40) understanding = 'Средне 📊';
-    else if (avgScore >= 20) understanding = 'Требует внимания ⚠️';
-    else if (avgScore > 0) understanding = 'Сложно 🔴';
+    let understanding = $t('stat_no_data');
+    if (avgScore >= 80) understanding = $t('stat_und_excellent');
+    else if (avgScore >= 60) understanding = $t('stat_und_good');
+    else if (avgScore >= 40) understanding = $t('stat_und_medium');
+    else if (avgScore >= 20) understanding = $t('stat_und_attention');
+    else if (avgScore > 0) understanding = $t('stat_und_hard');
     
     // Сильные и слабые темы
     const scoredTopics = sectorScores
@@ -203,7 +206,7 @@
   // Добавить критерий
   function addCriterion() {
     if (criteria.length < 8) {
-      criteria = [...criteria, `Тема ${criteria.length + 1}`];
+      criteria = [...criteria, `${$t('target_topic')} ${criteria.length + 1}`];
       drawPreview();
     }
   }
@@ -220,10 +223,10 @@
   function updateRings(count) {
     rings = count;
     const defaultLabels = {
-      2: ['Сложно', 'Легко'],
-      3: ['Сложно', 'Нормально', 'Легко'],
-      4: ['Очень сложно', 'Сложно', 'Нормально', 'Легко'],
-      5: ['Очень сложно', 'Сложно', 'Нормально', 'Легко', 'Супер']
+      2: [$t('ring_hard'), $t('ring_easy')],
+      3: [$t('ring_hard'), $t('ring_ok'), $t('ring_easy')],
+      4: [$t('ring_very_hard'), $t('ring_hard'), $t('ring_ok'), $t('ring_easy')],
+      5: [$t('ring_very_hard'), $t('ring_hard'), $t('ring_ok'), $t('ring_easy'), $t('ring_super')]
     };
     ringLabels = defaultLabels[count] || ringLabels;
     drawPreview();
@@ -842,12 +845,12 @@
               </svg>
             </div>
             <div class="flex-1">
-              <h1 class="text-xl font-bold text-gray-900 mb-1">Мишень рефлексии</h1>
-              <p class="text-gray-500 text-sm mb-3">Интерактивный инструмент для сбора обратной связи от учеников</p>
+              <h1 class="text-xl font-bold text-gray-900 mb-1">{$t('target_title')}</h1>
+              <p class="text-gray-500 text-sm mb-3">{$t('target_desc')}</p>
               <div class="flex flex-wrap gap-2">
-                <span class="px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-600 text-xs font-medium">🎯 Каждый сектор = тема</span>
-                <span class="px-2.5 py-1 rounded-full bg-green-50 text-green-600 text-xs font-medium">✨ Центр = понял отлично</span>
-                <span class="px-2.5 py-1 rounded-full bg-amber-50 text-amber-600 text-xs font-medium">📊 Край = было сложно</span>
+                <span class="px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-600 text-xs font-medium">{$t('target_hint1')}</span>
+                <span class="px-2.5 py-1 rounded-full bg-green-50 text-green-600 text-xs font-medium">{$t('target_hint2')}</span>
+                <span class="px-2.5 py-1 rounded-full bg-amber-50 text-amber-600 text-xs font-medium">{$t('target_hint3')}</span>
               </div>
             </div>
           </div>
@@ -860,7 +863,7 @@
             
             <!-- Критерии -->
             <div class="card">
-              <h3 class="text-sm font-bold text-gray-900 mb-3">Критерии (темы урока)</h3>
+              <h3 class="text-sm font-bold text-gray-900 mb-3">{$t('target_criteria')}</h3>
               <div class="space-y-2 mb-3">
                 {#each criteria as criterion, i}
                   <div class="flex items-center gap-2">
@@ -878,14 +881,14 @@
               </div>
               {#if criteria.length < 8}
                 <button on:click={addCriterion} class="btn btn-secondary w-full !py-2 text-sm">
-                  + Добавить критерий
+                  {$t('target_add_criterion')}
                 </button>
               {/if}
             </div>
             
             <!-- Кольца -->
             <div class="card">
-              <h3 class="text-sm font-bold text-gray-900 mb-3">Количество колец</h3>
+              <h3 class="text-sm font-bold text-gray-900 mb-3">{$t('target_rings')}</h3>
               <div class="flex gap-2 mb-3">
                 {#each [2, 3, 4, 5] as count}
                   <button on:click={() => updateRings(count)} 
@@ -897,7 +900,7 @@
               <div class="space-y-1.5">
                 {#each ringLabels as label, i}
                   <div class="flex items-center gap-2">
-                    <span class="text-xs text-gray-400 w-16">Кольцо {i + 1}</span>
+                    <span class="text-xs text-gray-400 w-16">{$t('target_ring_n', i + 1)}</span>
                     <input type="text" bind:value={ringLabels[i]} class="input flex-1 !py-1.5 text-sm" />
                   </div>
                 {/each}
@@ -908,7 +911,7 @@
           
           <!-- Превью мишени -->
           <div class="card flex flex-col items-center justify-center">
-            <h3 class="text-sm font-bold text-gray-900 mb-3">Превью</h3>
+            <h3 class="text-sm font-bold text-gray-900 mb-3">{$t('target_preview')}</h3>
             <canvas bind:this={previewCanvas} width={canvasSize} height={canvasSize} 
               class="max-w-full h-auto rounded-xl shadow-lg" style="background: #f9fafb;"></canvas>
           </div>
@@ -924,7 +927,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
-              Запустить
+              {$t('target_start')}
             </span>
           </button>
         </div>
@@ -946,16 +949,16 @@
       <!-- Управление -->
       <div class="absolute top-2 md:top-4 right-2 md:right-4 flex flex-wrap gap-1.5 md:gap-2 z-20 max-w-[calc(100%-1rem)]">
         <button on:click={showStats} class="px-2.5 md:px-4 py-1.5 md:py-2.5 rounded-lg md:rounded-xl bg-emerald-500/90 backdrop-blur-xl text-white text-xs md:text-sm font-medium hover:bg-emerald-500 transition-all shadow-lg shadow-emerald-500/25">
-          📊 <span class="hidden sm:inline">Результаты</span>
+          📊 <span class="hidden sm:inline">{$t('target_results')}</span>
         </button>
         <button on:click={clearMarkers} class="px-2.5 md:px-4 py-1.5 md:py-2.5 rounded-lg md:rounded-xl bg-white/15 backdrop-blur-xl text-white text-xs md:text-sm font-medium hover:bg-white/25 transition-all">
-          🗑️ <span class="hidden sm:inline">Очистить</span>
+          🗑️ <span class="hidden sm:inline">{$t('target_clear')}</span>
         </button>
         <button on:click={saveAsPNG} class="px-2.5 md:px-4 py-1.5 md:py-2.5 rounded-lg md:rounded-xl bg-white/15 backdrop-blur-xl text-white text-xs md:text-sm font-medium hover:bg-white/25 transition-all">
-          💾 <span class="hidden sm:inline">Сохранить</span>
+          💾 <span class="hidden sm:inline">{$t('target_save')}</span>
         </button>
         <button on:click={exitPresentation} class="px-2.5 md:px-4 py-1.5 md:py-2.5 rounded-lg md:rounded-xl bg-red-500/90 backdrop-blur-xl text-white text-xs md:text-sm font-medium hover:bg-red-500 transition-all shadow-lg shadow-red-500/25">
-          ✕ <span class="hidden sm:inline">Выход</span>
+          ✕ <span class="hidden sm:inline">{$t('target_exit')}</span>
         </button>
       </div>
       
@@ -963,15 +966,15 @@
       <div class="absolute top-2 md:top-4 left-2 md:left-4 z-20">
         <div class="px-3 md:px-5 py-2 md:py-3 rounded-xl md:rounded-2xl bg-white/15 backdrop-blur-xl text-white shadow-lg">
           <div class="text-xl md:text-3xl font-bold">{markers.length}</div>
-          <div class="text-[10px] md:text-xs text-white/70">ответов</div>
+          <div class="text-[10px] md:text-xs text-white/70">{$t('target_responses')}</div>
         </div>
       </div>
       
       <!-- Подсказка -->
       <div class="absolute bottom-2 md:bottom-6 left-1/2 -translate-x-1/2 z-20 px-2 w-full max-w-lg">
         <div class="px-3 md:px-6 py-2 md:py-4 rounded-xl md:rounded-2xl bg-white/15 backdrop-blur-xl text-white text-center shadow-lg">
-          <p class="text-xs md:text-base font-medium mb-0.5 md:mb-1">👆 Нажми в <span class="text-amber-300 font-bold">каждый сектор</span></p>
-          <p class="text-[10px] md:text-sm text-white/70">Центр = понял ✨ | Край = сложно 🤔</p>
+          <p class="text-xs md:text-base font-medium mb-0.5 md:mb-1">{@html $t('target_tap_hint')}</p>
+          <p class="text-[10px] md:text-sm text-white/70">{$t('target_tap_sub')}</p>
         </div>
       </div>
       
@@ -992,13 +995,13 @@
       <!-- Управление -->
       <div class="absolute top-4 right-4 flex gap-2 z-10">
         <button on:click={downloadStats} class="px-4 py-2 rounded-xl bg-emerald-500/80 backdrop-blur-xl text-white hover:bg-emerald-500 transition-all flex items-center gap-2">
-          ⬇️ Скачать отчёт
+          ⬇️ {$t('target_download_report')}
         </button>
         <button on:click={backToPresentation} class="px-4 py-2 rounded-xl bg-indigo-500/80 backdrop-blur-xl text-white hover:bg-indigo-500 transition-all">
-          ← Назад к мишени
+          ← {$t('target_back_to_target')}
         </button>
         <button on:click={exitPresentation} class="px-4 py-2 rounded-xl bg-red-500/80 backdrop-blur-xl text-white hover:bg-red-500 transition-all">
-          Завершить
+          {$t('target_finish')}
         </button>
       </div>
       
@@ -1007,11 +1010,11 @@
           
           <!-- Заголовок -->
           <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-white mb-2">Результаты рефлексии</h1>
-            <p class="text-white/60 mb-4">Анализ ответов учеников</p>
+            <h1 class="text-3xl font-bold text-white mb-2">{$t('target_stats_title')}</h1>
+            <p class="text-white/60 mb-4">{$t('target_stats_desc')}</p>
             <div class="flex items-center justify-center gap-3">
-              <label class="text-white/60 text-sm">Класс:</label>
-              <input type="text" bind:value={className} placeholder="например: 7А" 
+              <label for="className" class="text-white/60 text-sm">{$t('target_class_label')}</label>
+              <input id="className" type="text" bind:value={className} placeholder={$t('target_class_ph')} 
                 class="px-4 py-2 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/30 text-sm focus:outline-none focus:border-white/50 w-40" />
             </div>
           </div>
@@ -1020,21 +1023,21 @@
           <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             <div class="bg-white/10 backdrop-blur-xl rounded-2xl p-5 text-center">
               <p class="text-4xl font-bold text-white mb-1">{stats.total}</p>
-              <p class="text-white/60 text-sm">Всего ответов</p>
+              <p class="text-white/60 text-sm">{$t('target_total_responses')}</p>
             </div>
             <div class="bg-white/10 backdrop-blur-xl rounded-2xl p-5 text-center">
               <p class="text-4xl font-bold text-white mb-1">{stats.avgScore}%</p>
-              <p class="text-white/60 text-sm">Средний балл</p>
+              <p class="text-white/60 text-sm">{$t('target_avg_score')}</p>
             </div>
             <div class="bg-white/10 backdrop-blur-xl rounded-2xl p-5 text-center col-span-2">
               <p class="text-2xl font-bold text-white mb-1">{stats.understanding}</p>
-              <p class="text-white/60 text-sm">Уровень понимания</p>
+              <p class="text-white/60 text-sm">{$t('target_understanding')}</p>
             </div>
           </div>
           
           <!-- Распределение по кольцам (уровень понимания) -->
           <div class="bg-white/10 backdrop-blur-xl rounded-2xl p-6 mb-6">
-            <h3 class="text-lg font-bold text-white mb-4">📊 Распределение по уровням</h3>
+            <h3 class="text-lg font-bold text-white mb-4">{$t('target_by_level')}</h3>
             <div class="space-y-3">
               {#each ringLabels as label, i}
                 {@const count = stats.byRing[i] || 0}
@@ -1058,8 +1061,8 @@
           
           <!-- Анализ понимания по темам -->
           <div class="bg-white/10 backdrop-blur-xl rounded-2xl p-6 mb-6">
-            <h3 class="text-lg font-bold text-white mb-4">📚 Понимание по темам</h3>
-            <p class="text-white/60 text-sm mb-4">Средний балл понимания каждой темы (ближе к центру = лучше поняли)</p>
+            <h3 class="text-lg font-bold text-white mb-4">{$t('target_by_topic')}</h3>
+            <p class="text-white/60 text-sm mb-4">{$t('target_by_topic_desc')}</p>
             <div class="space-y-3">
               {#each criteria as criterion, i}
                 {@const sectorData = stats.sectorScores[i] || { count: 0, avgScore: 0, level: 'Нет данных' }}
@@ -1072,7 +1075,7 @@
                       <span class="text-white font-medium">{criterion}</span>
                     </div>
                     <div class="flex items-center gap-2">
-                      <span class="text-white/60 text-sm">{sectorData.count} отв.</span>
+                      <span class="text-white/60 text-sm">{sectorData.count} {$t('target_answers_abbr')}</span>
                       <span class="px-2 py-0.5 rounded-full text-xs font-bold
                         {isStrong ? 'bg-green-500/30 text-green-300' : isWeak ? 'bg-red-500/30 text-red-300' : 'bg-amber-500/30 text-amber-300'}">
                         {sectorData.level}
@@ -1086,9 +1089,9 @@
                     </div>
                   </div>
                   <div class="flex justify-between mt-1">
-                    <span class="text-white/40 text-xs">Сложно</span>
+                    <span class="text-white/40 text-xs">{$t('ring_hard')}</span>
                     <span class="text-white font-bold text-sm">{sectorData.avgScore}%</span>
-                    <span class="text-white/40 text-xs">Легко</span>
+                    <span class="text-white/40 text-xs">{$t('ring_easy')}</span>
                   </div>
                 </div>
               {/each}
@@ -1101,7 +1104,7 @@
               {#if stats.strongTopics.length > 0}
                 <div class="bg-green-500/20 backdrop-blur-xl rounded-2xl p-5">
                   <h4 class="text-green-300 font-bold mb-3 flex items-center gap-2">
-                    <span>✅</span> Сильные темы
+                    <span>✅</span> {$t('target_strong_topics')}
                   </h4>
                   <div class="space-y-2">
                     {#each stats.strongTopics as topic}
@@ -1117,7 +1120,7 @@
               {#if stats.weakTopics.length > 0}
                 <div class="bg-red-500/20 backdrop-blur-xl rounded-2xl p-5">
                   <h4 class="text-red-300 font-bold mb-3 flex items-center gap-2">
-                    <span>⚠️</span> Требуют внимания
+                    <span>⚠️</span> {$t('target_weak_topics')}
                   </h4>
                   <div class="space-y-2">
                     {#each stats.weakTopics as topic}
@@ -1134,27 +1137,27 @@
           
           <!-- Рекомендации -->
           <div class="bg-white/10 backdrop-blur-xl rounded-2xl p-6">
-            <h3 class="text-lg font-bold text-white mb-4">💡 Рекомендации</h3>
+            <h3 class="text-lg font-bold text-white mb-4">{$t('target_recommendations')}</h3>
             <div class="space-y-3 text-white/80">
               {#if stats.total === 0}
-                <p>📝 Нет данных для анализа.</p>
-                <p class="text-white/60 text-sm">Попросите каждого ученика поставить отметку в КАЖДЫЙ сектор на том уровне, насколько он понял эту тему.</p>
+                <p>{$t('target_rec_no_data')}</p>
+                <p class="text-white/60 text-sm">{$t('target_rec_instruction')}</p>
               {:else if stats.avgScore >= 80}
-                <p>✅ Отличный результат! Ученики хорошо усвоили все темы урока.</p>
+                <p>{$t('target_rec_excellent')}</p>
               {:else if stats.avgScore >= 60}
-                <p>👍 Хороший результат. Большинство тем усвоены хорошо.</p>
+                <p>{$t('target_rec_good')}</p>
               {:else if stats.avgScore >= 40}
-                <p>📊 Средний результат. Рекомендуется повторить сложные темы.</p>
+                <p>{$t('target_rec_medium')}</p>
               {:else}
-                <p>⚠️ Материал вызвал затруднения. Рекомендуется дополнительное объяснение.</p>
+                <p>{$t('target_rec_hard')}</p>
               {/if}
               
               {#if stats.weakTopics.length > 0}
-                <p class="text-amber-300">🔄 Рекомендуется повторить: {stats.weakTopics.map(t => t.name).join(', ')}</p>
+                <p class="text-amber-300">{$t('target_rec_repeat')} {stats.weakTopics.map(t => t.name).join(', ')}</p>
               {/if}
               
               {#if stats.strongTopics.length > 0 && stats.weakTopics.length > 0}
-                <p class="text-white/60 text-sm">💡 Можно использовать сильные темы как опору для объяснения слабых.</p>
+                <p class="text-white/60 text-sm">{$t('target_rec_use_strong')}</p>
               {/if}
             </div>
           </div>

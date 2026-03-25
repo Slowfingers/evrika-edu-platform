@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { cardsApi } from '$lib/api/cards.api.js';
   import LessonWizard from '$lib/components/LessonWizard.svelte';
+  import { t } from '$lib/stores/lang.js';
 
   // Состояние каталога
   let catalogCards = [];
@@ -61,8 +62,7 @@
 </script>
 
 <svelte:head>
-  <title>Конструктор урока - EvrikaEdu</title>
-  <meta name="description" content="Создайте план урока с помощью конструктора EvrikaEdu" />
+  <title>{$t('title_constructor')}</title>
 </svelte:head>
 
 <LessonWizard 

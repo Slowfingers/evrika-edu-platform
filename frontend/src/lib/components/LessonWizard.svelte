@@ -6,6 +6,7 @@
   import DetailedLessonCard from './DetailedLessonCard.svelte';
   import { formatTimeDisplay } from '$lib/utils/time-intervals.js';
   import { exportLessonToPDF } from '$lib/utils/pdf-export.js';
+  import { t } from '$lib/stores/lang.js';
 
   const dispatch = createEventDispatcher();
 
@@ -41,11 +42,11 @@
   let currentLessonStage = 'начало-урока';
   
   // Названия этапов урока для отображения
-  const lessonStageNames = {
-    'начало-урока': 'Начало урока',
-    'объяснение-нового-материала': 'Объяснение нового материала',
-    'закрепление': 'Закрепление',
-    'конец-урока': 'Конец урока'
+  $: lessonStageNames = {
+    'начало-урока': $t('stage_start'),
+    'объяснение-нового-материала': $t('stage_explain'),
+    'закрепление': $t('stage_consolidate'),
+    'конец-урока': $t('stage_end')
   };
   let timeFilter = 'all'; // all, short (до 15 мин), medium (15-30 мин), long (30+ мин)
   let selectedAgeGroups = [];
@@ -58,33 +59,33 @@
   // Управление этапами урока на втором шаге
   let showStageCards = {}; // Для отображения карточек каждого этапа
   
-  // Предопределенные данные для фильтров (как в каталоге)
-  const predefinedAgeGroups = [
-    { id: 'начальные-классы', name: 'Начальные классы (1-4)' },
-    { id: 'старшие-классы', name: 'Старшие классы (5-11)' }
+  // Предопределенные данные для фильтров (реактивные при смене языка)
+  $: predefinedAgeGroups = [
+    { id: 'начальные-классы', name: $t('age_primary') },
+    { id: 'старшие-классы', name: $t('age_secondary') }
   ];
 
-  const predefinedSkills = [
-    { id: 'критическое-мышление', name: 'Критическое мышление' },
-    { id: 'командная-работа', name: 'Командная работа' },
-    { id: 'рефлексия', name: 'Рефлексия' },
-    { id: 'креативное-мышление', name: 'Креативное мышление' },
-    { id: 'систематизация', name: 'Систематизация материала' },
-    { id: 'коммуникация', name: 'Коммуникативные навыки' }
+  $: predefinedSkills = [
+    { id: 'критическое-мышление', name: $t('skill_critical') },
+    { id: 'командная-работа', name: $t('skill_team') },
+    { id: 'рефлексия', name: $t('skill_reflection') },
+    { id: 'креативное-мышление', name: $t('skill_creative') },
+    { id: 'систематизация', name: $t('skill_systematization') },
+    { id: 'коммуникация', name: $t('skill_communication') }
   ];
 
-  const predefinedStages = [
-    { id: 'начало-урока', name: 'Начало урока' },
-    { id: 'объяснение-нового-материала', name: 'Объяснение нового материала' },
-    { id: 'закрепление', name: 'Закрепление' },
-    { id: 'конец-урока', name: 'Конец урока' }
+  $: predefinedStages = [
+    { id: 'начало-урока', name: $t('stage_start') },
+    { id: 'объяснение-нового-материала', name: $t('stage_explain') },
+    { id: 'закрепление', name: $t('stage_consolidate') },
+    { id: 'конец-урока', name: $t('stage_end') }
   ];
 
-  const predefinedTypes = [
-    { id: 'индивидуальная', name: 'Индивидуальная работа' },
-    { id: 'парная', name: 'Парная работа' },
-    { id: 'командная', name: 'Командная работа' },
-    { id: 'фронтальная', name: 'Фронтальная работа' }
+  $: predefinedTypes = [
+    { id: 'индивидуальная', name: $t('type_individual') },
+    { id: 'парная', name: $t('type_pair') },
+    { id: 'командная', name: $t('type_team') },
+    { id: 'фронтальная', name: $t('type_frontal') }
   ];
 
   // Улучшенная фильтрация карточек с расширенными фильтрами
@@ -295,7 +296,7 @@
             {:else}{stepNum}{/if}
           </div>
           <span class="text-[10px] font-medium {active ? 'text-gray-900' : 'text-gray-400'}">
-            {#if i === 0}Инфо{:else if i === 1}Приёмы{:else}План{/if}
+            {#if i === 0}{$t('wiz_step_info')}{:else if i === 1}{$t('wiz_step_techniques')}{:else}{$t('wiz_step_plan')}{/if}
           </span>
         </button>
         {#if i < totalSteps - 1}
@@ -309,43 +310,43 @@
   {#if currentStep === 1}
     <div transition:slide={{ duration: 250, easing: quintOut }}>
       <div class="card mb-4 text-center">
-        <h1 class="text-2xl font-bold text-gray-900 mb-1">Создание урока</h1>
-        <p class="text-gray-500 text-sm">Расскажите об уроке — заполните основную информацию</p>
+        <h1 class="text-2xl font-bold text-gray-900 mb-1">{$t('wiz_create_lesson')}</h1>
+        <p class="text-gray-500 text-sm">{$t('wiz_create_lesson_desc')}</p>
       </div>
 
       <div class="card mb-4">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5" for="subject">Предмет</label>
+            <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5" for="subject">{$t('wiz_subject')}</label>
             <input id="subject" type="text" bind:value={lessonData.subject}
-              placeholder="Математика, История..." class="input" />
+              placeholder={$t('wiz_subject_ph')} class="input" />
           </div>
           <div>
-            <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5" for="grade">Класс</label>
+            <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5" for="grade">{$t('wiz_grade')}</label>
             <input id="grade" type="text" bind:value={lessonData.grade}
-              placeholder="5А, 8-9 классы..." class="input" />
+              placeholder={$t('wiz_grade_ph')} class="input" />
           </div>
         </div>
         <div class="mt-4">
-          <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5" for="topic">Тема урока</label>
+          <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5" for="topic">{$t('wiz_topic')}</label>
           <input id="topic" type="text" bind:value={lessonData.topic}
-            placeholder="Решение квадратных уравнений..." class="input" />
+            placeholder={$t('wiz_topic_ph')} class="input" />
         </div>
         <div class="mt-4">
-          <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5" for="goals">Цели урока</label>
+          <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5" for="goals">{$t('wiz_goals')}</label>
           <textarea id="goals" bind:value={lessonData.goals} rows="2"
-            placeholder="Развить навыки критического мышления..." class="input resize-none"></textarea>
+            placeholder={$t('wiz_goals_ph')} class="input resize-none"></textarea>
         </div>
         <div class="mt-4">
-          <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5" for="description">Описание <span class="font-normal text-gray-400">(необязательно)</span></label>
+          <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5" for="description">{$t('wiz_description')} <span class="font-normal text-gray-400">({$t('wiz_optional')})</span></label>
           <textarea id="description" bind:value={lessonData.description} rows="2"
-            placeholder="Краткое описание хода урока..." class="input resize-none"></textarea>
+            placeholder={$t('wiz_description_ph')} class="input resize-none"></textarea>
         </div>
       </div>
 
       <div class="flex justify-end">
         <button class="btn btn-primary" on:click={nextStep}>
-          Выбрать приёмы
+          {$t('wiz_choose_techniques')}
           <svg class="w-4 h-4 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
           </svg>
@@ -361,13 +362,13 @@
       <div class="card mb-4">
         <div class="flex items-center justify-between flex-wrap gap-3">
           <div>
-            <h2 class="text-lg font-bold text-gray-900">Выбор приёмов по этапам</h2>
-            <p class="text-sm text-gray-500">Добавьте приёмы для каждого этапа урока</p>
+            <h2 class="text-lg font-bold text-gray-900">{$t('wiz_choose_by_stage')}</h2>
+            <p class="text-sm text-gray-500">{$t('wiz_choose_by_stage_desc')}</p>
           </div>
           <div class="flex items-center gap-2 px-4 py-2 rounded-2xl" style="background: rgba(0,0,0,0.04)">
-            <span class="text-sm font-bold text-gray-900">{lessonData.totalTime} мин</span>
+            <span class="text-sm font-bold text-gray-900">{lessonData.totalTime} {$t('wiz_min')}</span>
             <span class="text-gray-400 text-sm">/</span>
-            <span class="text-sm text-gray-500">45 мин</span>
+            <span class="text-sm text-gray-500">45 {$t('wiz_min')}</span>
             <div class="w-20 h-1.5 rounded-full bg-gray-200 overflow-hidden">
               <div class="h-full rounded-full transition-all duration-500
                 {lessonData.totalTime > 40 ? 'bg-red-400' : lessonData.totalTime > 30 ? 'bg-amber-400' : 'bg-gray-900'}"
@@ -391,7 +392,7 @@
               {lessonStageNames[stageId]}
             </p>
             <p class="text-[10px] {currentLessonStage === stageId ? 'text-white/70' : 'text-gray-400'}">
-              {stage.cards.length} приёмов · {stage.totalTime} мин
+              {$t('wiz_n_techniques', stage.cards.length)} · {stage.totalTime} {$t('wiz_min')}
             </p>
           </button>
         {/each}
@@ -426,7 +427,7 @@
           <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
           </svg>
-          <input type="text" bind:value={searchQuery} placeholder="Поиск приёмов..."
+          <input type="text" bind:value={searchQuery} placeholder={$t('wiz_search_ph')}
             class="input !pl-10 !pr-10" />
           {#if searchQuery}
             <button on:click={() => searchQuery = ''}
@@ -439,13 +440,13 @@
         </div>
 
         <div class="flex items-center justify-between mb-2">
-          <span class="text-xs text-gray-500">{filteredCards.length} приёмов</span>
+          <span class="text-xs text-gray-500">{$t('wiz_n_techniques', filteredCards.length)}</span>
           <button on:click={() => showFilters = !showFilters}
             class="text-xs font-medium text-gray-600 hover:text-gray-900 flex items-center gap-1 transition-colors">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.707A1 1 0 013 7V4z"/>
             </svg>
-            Фильтры
+            {$t('filters')}
             <svg class="w-3 h-3 transition-transform {showFilters ? 'rotate-180' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
             </svg>
@@ -456,9 +457,9 @@
           <div transition:slide={{ duration: 200 }} class="pt-3 border-t border-white/30 space-y-3">
             <!-- Время -->
             <div>
-              <p class="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1.5">Время</p>
+              <p class="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1.5">{$t('filter_time')}</p>
               <div class="flex gap-1.5 flex-wrap">
-                {#each [['all','Все'],['short','≤ 15м'],['medium','15-30м'],['long','≥ 30м']] as [val, label]}
+                {#each [['all',$t('wiz_time_all')],['short',$t('wiz_time_short')],['medium',$t('wiz_time_medium')],['long',$t('wiz_time_long')]] as [val, label]}
                   <button on:click={() => timeFilter = val}
                     class="px-3 py-1.5 rounded-xl text-xs font-medium transition-all
                       {timeFilter === val ? 'bg-gray-900 text-white' : 'bg-white/60 text-gray-600 hover:bg-white/80'}">
@@ -469,7 +470,7 @@
             </div>
             <!-- Возраст -->
             <div>
-              <p class="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1.5">Возраст</p>
+              <p class="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1.5">{$t('filter_age')}</p>
               <div class="flex gap-1.5 flex-wrap">
                 {#each predefinedAgeGroups as g}
                   <label class="px-3 py-1.5 rounded-xl text-xs font-medium cursor-pointer transition-all
@@ -482,7 +483,7 @@
             </div>
             <!-- Навыки -->
             <div>
-              <p class="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1.5">Навыки</p>
+              <p class="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1.5">{$t('filter_skills')}</p>
               <div class="flex gap-1.5 flex-wrap">
                 {#each predefinedSkills as s}
                   <label class="px-3 py-1.5 rounded-xl text-xs font-medium cursor-pointer transition-all
@@ -495,7 +496,7 @@
             </div>
             <!-- Сброс -->
             <button on:click={() => { searchQuery=''; timeFilter='all'; selectedAgeGroups=[]; selectedSkills=[]; selectedStages=[]; selectedTypes=[]; }}
-              class="text-xs text-gray-400 hover:text-gray-600 transition-colors">Сбросить фильтры</button>
+              class="text-xs text-gray-400 hover:text-gray-600 transition-colors">{$t('reset_filters_btn')}</button>
           </div>
         {/if}
       </div>
@@ -504,11 +505,11 @@
       {#if isLoading}
         <div class="text-center py-12">
           <div class="w-8 h-8 border-2 border-gray-300 border-t-gray-900 rounded-full animate-spin mx-auto mb-3"></div>
-          <p class="text-sm text-gray-500">Загрузка приёмов...</p>
+          <p class="text-sm text-gray-500">{$t('wiz_loading')}</p>
         </div>
       {:else if filteredCards.length === 0}
         <div class="card text-center py-10">
-          <p class="text-gray-400 text-sm">Приёмы не найдены</p>
+          <p class="text-gray-400 text-sm">{$t('wiz_not_found')}</p>
         </div>
       {:else}
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
@@ -529,10 +530,10 @@
           <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
           </svg>
-          Назад
+          {$t('btn_back')}
         </button>
         <button class="btn btn-primary" disabled={!step2ButtonEnabled} on:click={nextStep}>
-          Создать план урока
+          {$t('wiz_create_plan')}
           <svg class="w-4 h-4 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
           </svg>
@@ -546,10 +547,10 @@
             <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
             </svg>
-            Назад
+            {$t('btn_back')}
           </button>
           <button class="btn btn-primary flex-1 !py-2.5 text-sm font-semibold" disabled={!step2ButtonEnabled} on:click={nextStep}>
-            Далее
+            {$t('btn_next')}
             <span class="ml-2 px-2 py-0.5 rounded-full text-xs bg-white/20 font-bold">{lessonData.selectedCards.length}</span>
             <svg class="w-4 h-4 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
@@ -566,17 +567,17 @@
     <div transition:slide={{ duration: 250, easing: quintOut }}>
 
       <div class="card mb-4 text-center">
-        <h1 class="text-2xl font-bold text-gray-900 mb-1">План урока готов!</h1>
+        <h1 class="text-2xl font-bold text-gray-900 mb-1">{$t('wiz_plan_ready')}</h1>
         <p class="text-gray-500 text-sm">«{lessonData.topic}»</p>
       </div>
 
       <!-- Сводка -->
       <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
         {#each [
-          ['Предмет', lessonData.subject],
-          ['Класс', lessonData.grade],
-          ['Приёмов', lessonData.selectedCards.length],
-          ['Время', `${lessonData.totalTime} мин`]
+          [$t('wiz_subject'), lessonData.subject],
+          [$t('wiz_grade'), lessonData.grade],
+          [$t('wiz_techniques_label'), lessonData.selectedCards.length],
+          [$t('wiz_time_label'), `${lessonData.totalTime} ${$t('wiz_min')}`]
         ] as [label, value]}
           <div class="card !p-3">
             <p class="text-[10px] text-gray-400 uppercase tracking-wide mb-1">{label}</p>
@@ -592,7 +593,7 @@
             <div>
               <div class="flex items-center gap-2 mb-2">
                 <h3 class="text-sm font-bold text-gray-900">{lessonStageNames[stageId]}</h3>
-                <span class="badge-count !text-xs">{lessonData.lessonStages[stageId].totalTime} мин</span>
+                <span class="badge-count !text-xs">{lessonData.lessonStages[stageId].totalTime} {$t('wiz_min')}</span>
               </div>
               <div class="space-y-2">
                 {#each lessonData.lessonStages[stageId].cards as card, index (`${stageId}-${card.id}-${index}`)}
@@ -613,13 +614,13 @@
           <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
           </svg>
-          Изменить приёмы
+          {$t('wiz_edit_techniques')}
         </button>
         <button class="btn btn-primary" on:click={handleExportPDF}>
           <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
           </svg>
-          Сохранить в PDF
+          {$t('wiz_save_pdf')}
         </button>
       </div>
     </div>

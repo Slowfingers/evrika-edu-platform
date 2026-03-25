@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { formatTimeDisplay } from '$lib/utils/time-intervals.js';
   import { cardsApi } from '$lib/api/cards.api.js';
+  import { t } from '$lib/stores/lang.js';
 
   export let data;
 
@@ -20,125 +21,82 @@
     }
   });
 
-  // Маппинг ID возрастных групп в русские названия
-  const ageGroupMapping = {
-    // Русские ID
-    'начальные-классы': 'Начальные классы (1-4)',
-    'старшие-классы': 'Старшие классы (5-11)',
-    // Обратная совместимость с английскими ID
-    'primary': 'Начальные классы (1-4)',
-    'secondary': 'Старшие классы (5-11)',
-    'preschool': 'Дошкольники',
-    'adult': 'Взрослые'
+  // Реактивные маппинги ID → переведенные названия
+  $: ageGroupMapping = {
+    'начальные-классы': $t('age_primary'),
+    'старшие-классы': $t('age_secondary'),
+    'primary': $t('age_primary'),
+    'secondary': $t('age_secondary'),
+    'preschool': $t('age_primary'),
+    'adult': $t('age_secondary')
   };
 
-  // Получение названий возрастных групп
   function getAgeGroupNames(ageGroups) {
-    if (!ageGroups || ageGroups.length === 0) return 'Не указано';
-    return ageGroups.map(group => {
-      // Если group - это объект с полем name, используем его
-      if (typeof group === 'object' && group.name) {
-        return group.name;
-      }
-      // Если group - это строка (ID), переводим через маппинг
-      return ageGroupMapping[group] || group;
-    }).join(', ');
+    if (!ageGroups || ageGroups.length === 0) return $t('not_specified');
+    return ageGroups.map(g => (typeof g === 'object' && g.name) ? g.name : (ageGroupMapping[g] || g)).join(', ');
   }
 
-  // Маппинг ID навыков в русские названия
-  const skillMapping = {
-    // Русские ID
-    'критическое-мышление': 'Критическое мышление',
-    'командная-работа': 'Командная работа',
-    'рефлексия': 'Рефлексия',
-    'креативное-мышление': 'Креативное мышление',
-    'систематизация': 'Систематизация материала',
-    'коммуникация': 'Коммуникативные навыки',
-    // Обратная совместимость с английскими ID
-    'critical': 'Критическое мышление',
-    'teamwork': 'Командная работа',
-    'reflection': 'Рефлексия',
-    'creative': 'Креативное мышление',
-    'systematization': 'Систематизация материала',
-    'communication': 'Коммуникативные навыки'
+  $: skillMapping = {
+    'критическое-мышление': $t('skill_critical'),
+    'командная-работа': $t('skill_teamwork'),
+    'рефлексия': $t('skill_reflection'),
+    'креативное-мышление': $t('skill_creative'),
+    'систематизация': $t('skill_systematization'),
+    'коммуникация': $t('skill_communication'),
+    'critical': $t('skill_critical'),
+    'teamwork': $t('skill_teamwork'),
+    'reflection': $t('skill_reflection'),
+    'creative': $t('skill_creative'),
+    'systematization': $t('skill_systematization'),
+    'communication': $t('skill_communication')
   };
 
-  // Получение названий навыков
   function getSkillNames(skills) {
-    if (!skills || skills.length === 0) return 'Не указано';
-    return skills.map(skill => {
-      // Если skill - это объект с полем name, используем его
-      if (typeof skill === 'object' && skill.name) {
-        return skill.name;
-      }
-      // Если skill - это строка (ID), переводим через маппинг
-      return skillMapping[skill] || skill;
-    }).join(', ');
+    if (!skills || skills.length === 0) return $t('not_specified');
+    return skills.map(s => (typeof s === 'object' && s.name) ? s.name : (skillMapping[s] || s)).join(', ');
   }
 
-  // Маппинг ID этапов урока в русские названия
-  const stageMapping = {
-    // Русские ID
-    'начало-урока': 'Начало урока',
-    'объяснение-нового-материала': 'Объяснение нового материала',
-    'закрепление': 'Закрепление',
-    'конец-урока': 'Конец урока',
-    // Обратная совместимость со старыми русскими ID
-    'мотивация': 'Мотивация',
-    'объяснение': 'Объяснение',
-    'практика': 'Практика',
-    'рефлексия': 'Рефлексия',
-    // Обратная совместимость с английскими ID
-    'motivation': 'Мотивация',
-    'explanation': 'Объяснение',
-    'practice': 'Практика',
-    'reflection': 'Рефлексия'
+  $: stageMapping = {
+    'начало-урока': $t('stage_start'),
+    'объяснение-нового-материала': $t('stage_explanation'),
+    'закрепление': $t('stage_practice'),
+    'конец-урока': $t('stage_end'),
+    'мотивация': $t('stage_intro'),
+    'объяснение': $t('stage_explain_t'),
+    'практика': $t('stage_practice_t'),
+    'рефлексия': $t('skill_reflection'),
+    'motivation': $t('stage_intro'),
+    'explanation': $t('stage_explain_t'),
+    'practice': $t('stage_practice_t'),
+    'reflection': $t('skill_reflection')
   };
 
-  // Получение названий этапов урока
   function getStageNames(stages) {
-    if (!stages || stages.length === 0) return 'Не указано';
-    return stages.map(stage => {
-      // Если stage - это объект с полем name, используем его
-      if (typeof stage === 'object' && stage.name) {
-        return stage.name;
-      }
-      // Если stage - это строка (ID), переводим через маппинг
-      return stageMapping[stage] || stage;
-    }).join(', ');
+    if (!stages || stages.length === 0) return $t('not_specified');
+    return stages.map(s => (typeof s === 'object' && s.name) ? s.name : (stageMapping[s] || s)).join(', ');
   }
 
-  // Маппинг ID типов работы в русские названия
-  const typeMapping = {
-    // Русские ID
-    'индивидуальная': 'Индивидуальная',
-    'парная': 'Парная',
-    'командная': 'Командная',
-    'фронтальная': 'Фронтальная',
-    // Обратная совместимость с английскими ID
-    'individual': 'Индивидуальная',
-    'pair': 'Парная',
-    'team': 'Командная',
-    'frontal': 'Фронтальная'
+  $: typeMapping = {
+    'индивидуальная': $t('type_individual'),
+    'парная': $t('type_pair'),
+    'командная': $t('type_team'),
+    'фронтальная': $t('type_frontal'),
+    'individual': $t('type_individual'),
+    'pair': $t('type_pair'),
+    'team': $t('type_team'),
+    'frontal': $t('type_frontal')
   };
 
-  // Получение названий типов работы
   function getTypeNames(types) {
-    if (!types || types.length === 0) return 'Не указано';
-    return types.map(type => {
-      // Если type - это объект с полем name, используем его
-      if (typeof type === 'object' && type.name) {
-        return type.name;
-      }
-      // Если type - это строка (ID), переводим через маппинг
-      return typeMapping[type] || type;
-    }).join(', ');
+    if (!types || types.length === 0) return $t('not_specified');
+    return types.map(tp => (typeof tp === 'object' && tp.name) ? tp.name : (typeMapping[tp] || tp)).join(', ');
   }
 </script>
 
 <svelte:head>
   <title>{card ? `${card.title} | EvrikaEdu` : 'EvrikaEdu'}</title>
   {#if card}<meta name="description" content={card.description} />{/if}
+  <meta name="robots" content="index, follow" />
 </svelte:head>
 
 {#if loading}
@@ -161,8 +119,8 @@
 {:else if notFound}
   <div class="max-w-3xl mx-auto text-center py-16">
     <div class="glass-card inline-block">
-      <p class="text-gray-700 font-medium mb-4">Приём не найден</p>
-      <a href="/" class="btn btn-secondary">← Назад к каталогу</a>
+      <p class="text-gray-700 font-medium mb-4">{$t('card_not_found')}</p>
+      <a href="/" class="btn btn-secondary">{$t('card_back')}</a>
     </div>
   </div>
 {:else if card}
@@ -173,7 +131,7 @@
     <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
     </svg>
-    Назад к каталогу
+    {$t('card_back')}
   </a>
 
   <!-- Заголовок и бейдж времени -->
@@ -200,7 +158,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
           </svg>
         </div>
-        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Возраст</p>
+        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-wider">{$t('card_age')}</p>
       </div>
       <p class="text-sm text-gray-800 font-medium leading-snug">{getAgeGroupNames(card.age_groups)}</p>
     </div>
@@ -212,7 +170,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
           </svg>
         </div>
-        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Навыки</p>
+        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-wider">{$t('card_skills')}</p>
       </div>
       <p class="text-sm text-gray-800 font-medium leading-snug">{getSkillNames(card.skills)}</p>
     </div>
@@ -224,7 +182,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
           </svg>
         </div>
-        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Этап</p>
+        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-wider">{$t('card_stage')}</p>
       </div>
       <p class="text-sm text-gray-800 font-medium leading-snug">{getStageNames(card.stages)}</p>
     </div>
@@ -236,7 +194,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
           </svg>
         </div>
-        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Тип</p>
+        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-wider">{$t('card_type')}</p>
       </div>
       <p class="text-sm text-gray-800 font-medium leading-snug">{getTypeNames(card.types)}</p>
     </div>
@@ -250,7 +208,7 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
         </svg>
       </div>
-      <h2 class="text-lg font-bold text-gray-900">Содержание приёма</h2>
+      <h2 class="text-lg font-bold text-gray-900">{$t('card_content')}</h2>
     </div>
 
     {#if card.content}
@@ -258,7 +216,7 @@
         {card.content}
       </div>
     {:else}
-      <p class="text-gray-600 font-medium italic text-sm bg-white/30 rounded-2xl p-4 border border-white/50">Содержание пока не добавлено</p>
+      <p class="text-gray-600 font-medium italic text-sm bg-white/30 rounded-2xl p-4 border border-white/50">{$t('card_no_content')}</p>
     {/if}
 
     {#if card.file_url}
@@ -267,7 +225,7 @@
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
           </svg>
-          Скачать материалы
+          {$t('card_download_materials')}
         </a>
       </div>
     {/if}

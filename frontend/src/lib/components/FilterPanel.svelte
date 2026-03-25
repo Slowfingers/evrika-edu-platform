@@ -1,4 +1,6 @@
 <script>
+  import { t } from '$lib/stores/lang.js';
+
   export let ageGroups = [];
   export let skills = [];
   export let stages = [];
@@ -14,7 +16,7 @@
 
 <!-- Возрастные группы -->
 <div>
-  <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Возраст</p>
+  <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">{$t('filter_age')}</p>
   <div class="space-y-2.5">
     {#each ageGroups as group}
       <label class="flex items-center gap-2.5 cursor-pointer">
@@ -37,7 +39,7 @@
 
 <!-- Навыки -->
 <div>
-  <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Навыки</p>
+  <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">{$t('filter_skills')}</p>
   <div class="space-y-2.5">
     {#each skills as skill}
       <label class="flex items-center gap-2.5 cursor-pointer">
@@ -60,7 +62,7 @@
 
 <!-- Этапы урока -->
 <div>
-  <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Этап урока</p>
+  <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">{$t('filter_stage')}</p>
   <div class="space-y-2.5">
     {#each stages as stage}
       <label class="flex items-center gap-2.5 cursor-pointer">
@@ -83,7 +85,7 @@
 
 <!-- Тип работы -->
 <div>
-  <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Тип работы</p>
+  <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">{$t('filter_type')}</p>
   <div class="space-y-2.5">
     {#each types as type}
       <label class="flex items-center gap-2.5 cursor-pointer">
@@ -106,7 +108,7 @@
 
 <!-- Время -->
 <div>
-  <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Время</p>
+  <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">{$t('filter_time')}</p>
   <div class="space-y-2.5">
     {#each timeRanges as range}
       <label class="flex items-center gap-2.5 cursor-pointer">
@@ -126,7 +128,7 @@
         on:click={() => selectedTimeRange = ''}
         class="text-xs text-gray-400 hover:text-gray-700 mt-1 block"
       >
-        Снять выбор
+        {$t('deselect')}
       </button>
     {/if}
   </div>

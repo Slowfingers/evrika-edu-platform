@@ -1,5 +1,6 @@
 <script>
   import { onMount, onDestroy } from 'svelte';
+  import { t } from '$lib/stores/lang.js';
 
   // --- State ---
   let noiseLevel = 0;       // 0-100
@@ -15,11 +16,11 @@
   let localAnimFrame = null;
 
   // Визуальные пороги
-  const THRESHOLDS = [
-    { max: 25, label: 'Тишина', color: '#22c55e', bgFrom: '#4ade80', bgTo: '#10b981' },
-    { max: 50, label: 'Нормально', color: '#eab308', bgFrom: '#facc15', bgTo: '#f59e0b' },
-    { max: 75, label: 'Шумно', color: '#f97316', bgFrom: '#fb923c', bgTo: '#ef4444' },
-    { max: 100, label: 'Очень громко!', color: '#ef4444', bgFrom: '#f87171', bgTo: '#dc2626' },
+  $: THRESHOLDS = [
+    { max: 25, label: $t('noise_silence'), color: '#22c55e', bgFrom: '#4ade80', bgTo: '#10b981' },
+    { max: 50, label: $t('noise_normal'), color: '#eab308', bgFrom: '#facc15', bgTo: '#f59e0b' },
+    { max: 75, label: $t('noise_loud'), color: '#f97316', bgFrom: '#fb923c', bgTo: '#ef4444' },
+    { max: 100, label: $t('noise_very_loud'), color: '#ef4444', bgFrom: '#f87171', bgTo: '#dc2626' },
   ];
 
   $: currentThreshold = THRESHOLDS.find(t => noiseLevel <= t.max) || THRESHOLDS[3];
@@ -70,7 +71,7 @@
       tick();
     } catch (e) {
       status = 'error';
-      errorMsg = 'Нет доступа к микрофону. Разрешите доступ в настройках браузера.';
+      errorMsg = $t('noise_error_mic');
     }
   }
 
@@ -97,8 +98,8 @@
 </script>
 
 <svelte:head>
-  <title>Шумомер - EvrikaEdu</title>
-  <meta name="description" content="Шумомер для класса — измеряйте уровень шума в реальном времени" />
+  <title>{$t('title_noisemeter')}</title>
+  <meta name="description" content={$t('noise_desc')} />
 </svelte:head>
 
 {#if status === 'idle'}
@@ -110,8 +111,8 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m-4 0h8m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
         </svg>
       </div>
-      <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Шумомер</h1>
-      <p class="text-gray-700 text-base font-medium mb-8">Измеряйте уровень шума в классе в реальном времени</p>
+      <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3">{$t('noise_title')}</h1>
+      <p class="text-gray-700 text-base font-medium mb-8">{$t('noise_desc')}</p>
       
       <button
         on:click={startMicrophone}
@@ -122,12 +123,12 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
-          Запустить
+          {$t('noise_start')}
         </span>
       </button>
 
       <p class="text-gray-600 text-sm mt-6 font-medium">
-        Нажмите "Запустить" и разрешите доступ к микрофону
+        {$t('noise_hint')}
       </p>
     </div>
   </div>
@@ -141,13 +142,13 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
         </svg>
       </div>
-      <h2 class="text-2xl font-bold text-gray-900 mb-2">Ошибка</h2>
+      <h2 class="text-2xl font-bold text-gray-900 mb-2">{$t('noise_error_title')}</h2>
       <p class="text-gray-700 mb-6 font-medium">{errorMsg}</p>
       <button
         on:click={() => { status = 'idle'; errorMsg = ''; }}
         class="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold hover:shadow-lg transition-all"
       >
-        Назад
+        {$t('noise_back')}
       </button>
     </div>
   </div>
@@ -206,7 +207,7 @@
 
       <!-- Подсказка -->
       <p class="text-white text-opacity-80 text-sm md:text-base mt-6 font-medium">
-        Уровень шума: {noiseRaw} dB
+        {$t('noise_level_label')}: {noiseRaw} dB
       </p>
     </div>
   </div>

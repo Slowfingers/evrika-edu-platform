@@ -2,6 +2,7 @@
   import '../app.css';
   import { page } from '$app/stores';
   import Header from '$lib/components/Header.svelte';
+  import { t } from '$lib/stores/lang.js';
 
   $: currentPath = $page.url.pathname;
   
@@ -31,8 +32,8 @@
   <div class="modal-overlay md:hidden" on:click={() => toolsOpen = false}>
     <div class="absolute bottom-20 left-4 right-4 modal-content bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/50 overflow-hidden" on:click|stopPropagation>
       <div class="flex items-center justify-between px-5 py-4 border-b border-white/40">
-        <span class="text-sm font-bold text-gray-800 uppercase tracking-wider">Меню</span>
-        <button on:click={() => toolsOpen = false} class="text-sm font-bold text-rose-500 bg-rose-50 px-3 py-1.5 rounded-xl">✕ Закрыть</button>
+        <span class="text-sm font-bold text-gray-800 uppercase tracking-wider">{$t('nav_menu')}</span>
+        <button on:click={() => toolsOpen = false} class="text-sm font-bold text-rose-500 bg-rose-50 px-3 py-1.5 rounded-xl">✕ {$t('close')}</button>
       </div>
       <div class="p-3 space-y-2">
         <a href="/noisemeter" class="flex items-center gap-4 p-4 rounded-2xl hover:bg-white/80 transition-colors shadow-sm bg-white/40" on:click={() => toolsOpen = false}>
@@ -40,8 +41,8 @@
             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
           </div>
           <div class="flex-1">
-            <div class="font-bold text-gray-900 text-lg">Шумометр</div>
-            <div class="text-sm text-gray-700 font-medium">Контроль уровня шума</div>
+            <div class="font-bold text-gray-900 text-lg">{$t('noise_title')}</div>
+            <div class="text-sm text-gray-700 font-medium">{$t('noise_desc')}</div>
           </div>
           <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm">
             <svg class="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>

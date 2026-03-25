@@ -2,36 +2,37 @@
   import { onMount } from 'svelte';
   import { browser } from '$app/environment';
   import ClassroomStudentPanel from '$lib/components/ClassroomStudentPanel.svelte';
+  import { t } from '$lib/stores/lang.js';
 
   // ==================== CONSTANTS ====================
   const CANVAS_W = 760;
   const CANVAS_H = 480;
 
-  const DESK_TYPES = {
-    single:  { label: 'Одиночная', slots: 1, w: 64, h: 48, color: '#6366f1' },
-    double:  { label: 'Двойная',   slots: 2, w: 110, h: 48, color: '#8b5cf6' },
-    group2:  { label: 'Группа 2',  slots: 2, w: 90, h: 70, color: '#7c3aed', isGroup: true },
-    group3:  { label: 'Группа 3',  slots: 3, w: 110, h: 70, color: '#9333ea', isGroup: true },
-    group4:  { label: 'Группа 4',  slots: 4, w: 110, h: 86, color: '#a855f7', isGroup: true },
-    group6:  { label: 'Группа 6',  slots: 6, w: 150, h: 86, color: '#c084fc', isGroup: true },
-    teacher: { label: 'Учитель',   slots: 0, w: 130, h: 48, color: '#f59e0b' },
+  $: DESK_TYPES = {
+    single:  { label: $t('desk_single'),  slots: 1, w: 64,  h: 48, color: '#6366f1' },
+    double:  { label: $t('desk_double'),  slots: 2, w: 110, h: 48, color: '#8b5cf6' },
+    group2:  { label: $t('desk_group2'),  slots: 2, w: 90,  h: 70, color: '#7c3aed', isGroup: true },
+    group3:  { label: $t('desk_group3'),  slots: 3, w: 110, h: 70, color: '#9333ea', isGroup: true },
+    group4:  { label: $t('desk_group4'),  slots: 4, w: 110, h: 86, color: '#a855f7', isGroup: true },
+    group6:  { label: $t('desk_group6'),  slots: 6, w: 150, h: 86, color: '#c084fc', isGroup: true },
+    teacher: { label: $t('desk_teacher'), slots: 0, w: 130, h: 48, color: '#f59e0b' },
   };
 
-  const STUDENT_TAGS = [
-    { id: 'active',   label: 'Активный',    color: '#22c55e' },
-    { id: 'quiet',    label: 'Тихий',       color: '#3b82f6' },
-    { id: 'conflict', label: 'Конфликтный', color: '#ef4444' },
-    { id: 'strong',   label: 'Сильный',     color: '#f59e0b' },
-    { id: 'weak',     label: 'Слабый',      color: '#a855f7' },
+  $: STUDENT_TAGS = [
+    { id: 'active',   label: $t('tag_active'),   color: '#22c55e' },
+    { id: 'quiet',    label: $t('tag_quiet'),    color: '#3b82f6' },
+    { id: 'conflict', label: $t('tag_conflict'), color: '#ef4444' },
+    { id: 'strong',   label: $t('tag_strong'),   color: '#f59e0b' },
+    { id: 'weak',     label: $t('tag_weak'),     color: '#a855f7' },
   ];
 
   const GROUP_COLORS = ['#6366f1','#ec4899','#22c55e','#f59e0b','#3b82f6','#ef4444','#14b8a6','#f97316'];
 
-  const TEMPLATES = [
-    { id: 'rows',    label: 'Ряды' },
-    { id: 'u-shape', label: 'U-образно' },
-    { id: 'islands', label: 'Островки' },
-    { id: 'circle',  label: 'Круг' },
+  $: TEMPLATES = [
+    { id: 'rows',    label: $t('tmpl_rows') },
+    { id: 'u-shape', label: $t('tmpl_u') },
+    { id: 'islands', label: $t('tmpl_islands') },
+    { id: 'circle',  label: $t('tmpl_circle') },
   ];
 
   // ==================== STATE ====================
@@ -453,7 +454,7 @@
 </script>
 
 <svelte:head>
-  <title>Конструктор класса - EvrikaEdu</title>
+  <title>{$t('title_classroom')}</title>
 </svelte:head>
 
 <div class="h-[calc(100vh-3.5rem-4rem)] md:h-[calc(100vh-4rem)] flex overflow-hidden relative">
@@ -473,12 +474,12 @@
 
     <!-- Header -->
     <div class="flex items-center gap-1.5 px-4 py-3 flex-shrink-0 border-b" style="border-color:rgba(0,0,0,0.08);">
-      <span class="flex-1 text-sm font-bold text-gray-800">Класс</span>
-      <button on:click={() => showSaveDialog = true} title="Сохранить"
+      <span class="flex-1 text-sm font-bold text-gray-800">{$t('classroom_title')}</span>
+      <button on:click={() => showSaveDialog = true} title={$t('classroom_save')}
         class="p-1.5 rounded-xl text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 transition-all">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
       </button>
-      <button on:click={() => showHistory = !showHistory} title="Сохранённые рассадки"
+      <button on:click={() => showHistory = !showHistory} title={$t('classroom_saved_layouts')}
         class="p-1.5 rounded-xl transition-all {showHistory ? 'bg-indigo-50 text-indigo-600' : 'text-gray-500 hover:text-indigo-600 hover:bg-indigo-50'}">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
       </button>
@@ -493,7 +494,7 @@
     <!-- Mode tabs -->
     <div class="px-3 pt-2.5 pb-2 flex-shrink-0">
       <div class="grid grid-cols-3 bg-gray-100/70 rounded-2xl p-1 gap-0.5">
-        {#each [['edit','✏️','Редактор'],['seat','🪑','Рассадка'],['groups','👥','Группы']] as [m, icon, label]}
+        {#each [['edit','✏️', $t('mode_edit')],['seat','🪑', $t('mode_seat')],['groups','👥', $t('mode_groups')]] as [m, icon, label]}
           <button on:click={() => { mode = m; mobileSelectedStudent = null; }}
             class="flex flex-col items-center py-2 rounded-xl text-center transition-all
               {mode === m ? 'bg-white shadow-sm text-indigo-700' : 'text-gray-500 hover:text-gray-700'}">
@@ -522,13 +523,13 @@
           <button on:click={addDesk}
             class="flex-1 py-2 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-xs font-bold shadow-sm hover:shadow-md active:scale-95 transition-all flex items-center justify-center gap-1.5">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
-            Добавить
+            {$t('tool_add_desk')}
           </button>
           <div class="relative z-10">
             <button on:click|stopPropagation={() => showTemplates = !showTemplates}
               class="py-2 px-3 rounded-xl text-xs font-bold shadow-sm transition-all
                 {showTemplates ? 'bg-indigo-100 text-indigo-700' : 'bg-white/70 text-gray-700 hover:bg-white'}">
-              📐 Шаблон
+              {$t('tool_template')}
             </button>
             {#if showTemplates}
               <div class="absolute bottom-full right-0 mb-2 bg-white/95 backdrop-blur-xl rounded-2xl shadow-xl border border-white/50 p-1.5 w-40">
@@ -547,25 +548,25 @@
         <div class="grid grid-cols-2 gap-1.5">
           <button on:click={autoSeatRandom}
             class="py-2.5 rounded-xl bg-white/70 text-indigo-700 hover:bg-white transition-all shadow-sm text-xs font-bold flex items-center justify-center gap-1.5">
-            🎲 Случайно
+            {$t('tool_random')}
           </button>
           <button on:click={autoSeatBalanced}
             class="py-2.5 rounded-xl bg-white/70 text-purple-700 hover:bg-white transition-all shadow-sm text-xs font-bold flex items-center justify-center gap-1.5">
-            ⚖️ Баланс
+            {$t('tool_balance')}
           </button>
           <button on:click={shuffleAll}
             class="py-2.5 rounded-xl bg-white/70 text-orange-600 hover:bg-white transition-all shadow-sm text-xs font-bold flex items-center justify-center gap-1.5">
-            🔀 Встряхнуть
+            {$t('tool_shuffle')}
           </button>
           <button on:click={clearSeating}
             class="py-2.5 rounded-xl bg-white/70 text-gray-600 hover:bg-white transition-all shadow-sm text-xs font-bold flex items-center justify-center gap-1.5">
-            ✕ Очистить
+            {$t('tool_clear_seat')}
           </button>
         </div>
 
       {:else}
         <div class="flex items-center gap-1 mb-2.5 flex-wrap">
-          <span class="text-[11px] text-gray-400 font-medium">По</span>
+          <span class="text-[11px] text-gray-400 font-medium">{$t('tool_per')}</span>
           {#each [2,3,4,5,6] as sz}
             <button on:click={() => groupSize = sz}
               class="w-8 h-8 rounded-xl text-xs font-bold transition-all shadow-sm
@@ -573,24 +574,24 @@
               {sz}
             </button>
           {/each}
-          <span class="text-[11px] text-gray-400 font-medium">чел.</span>
+          <span class="text-[11px] text-gray-400 font-medium">{$t('tool_people')}</span>
         </div>
         <div class="flex gap-1.5">
           <button on:click={generateGroups}
             class="flex-1 py-2 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-xs font-bold shadow-sm hover:shadow-md transition-all">
-            Разделить
+            {$t('tool_split')}
           </button>
           {#if groups.length > 0}
             <button on:click={seatGroupsOnDesks}
               class="flex-1 py-2 rounded-xl bg-emerald-500 text-white text-xs font-bold hover:bg-emerald-600 shadow-sm transition-all">
-              За столы
+              {$t('tool_to_seats')}
             </button>
             <button on:click={clearGroups}
               class="py-2 px-3 rounded-xl bg-white/70 text-rose-500 hover:bg-white transition-all shadow-sm text-xs font-bold">✕</button>
           {/if}
         </div>
         {#if groups.length > 0}
-          <p class="text-[10px] text-gray-400 mt-1.5">{groups.length} групп · {students.filter(s=>!s.absent).length} уч.</p>
+          <p class="text-[10px] text-gray-400 mt-1.5">{$t('tool_groups_info', groups.length, students.filter(s=>!s.absent).length)}</p>
         {/if}
       {/if}
     </div>
@@ -627,10 +628,10 @@
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h7"/></svg>
         </button>
         <span class="text-sm font-bold text-gray-700 flex-1">
-          {mode === 'edit' ? '✏️ Редактор' : mode === 'seat' ? '🪑 Рассадка' : '👥 Группы'}
+          {mode === 'edit' ? `✏️ ${$t('mode_edit')}` : mode === 'seat' ? `🪑 ${$t('mode_seat')}` : `👥 ${$t('mode_groups')}`}
         </span>
         {#if mode === 'seat' && mobileSelectedStudent != null}
-          <span class="text-xs text-indigo-600 font-medium animate-pulse">Выберите место</span>
+          <span class="text-xs text-indigo-600 font-medium animate-pulse">{$t('mode_select_seat')}</span>
         {/if}
       </div>
     {/if}
@@ -693,7 +694,7 @@
             <div class="w-full h-full rounded-xl border-2 flex items-center justify-center relative transition-all duration-150 {isSelected?'ring-2 ring-indigo-400 ring-offset-1':''}"
               style="background:{dt.color}18; border-color:{dt.color}{isSelected?'aa':'50'};">
               {#if desk.type === 'teacher'}
-                <span class="text-[10px] font-semibold pointer-events-none" style="color:{dt.color}; transform:rotate(-{desk.rotation||0}deg);">Учитель</span>
+                <span class="text-[10px] font-semibold pointer-events-none" style="color:{dt.color}; transform:rotate(-{desk.rotation||0}deg);">{$t('desk_teacher')}</span>
               {/if}
               {#each Array(dt.slots) as _, si}
                 {@const pos = getSlotPos(desk.type, si)}
@@ -730,8 +731,8 @@
         {#if desks.length === 0}
           <div class="absolute inset-0 flex flex-col items-center justify-center text-gray-400 pointer-events-none">
             <svg class="w-12 h-12 mb-3 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zm10 0a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zm10 0a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"/></svg>
-            <p class="text-sm text-gray-500">Выберите шаблон или добавьте парты</p>
-            <p class="text-xs mt-1 text-gray-400">используйте панель слева</p>
+            <p class="text-sm text-gray-500">{$t('classroom_empty')}</p>
+            <p class="text-xs mt-1 text-gray-400">{$t('classroom_empty_hint')}</p>
           </div>
         {/if}
       </div>
@@ -743,15 +744,15 @@
     <div class="fixed inset-0 z-50 bg-black/30 flex items-center justify-center backdrop-blur-sm p-4"
       on:click={() => showSaveDialog = false}>
       <div class="bg-white rounded-2xl shadow-2xl p-5 w-full max-w-xs" on:click|stopPropagation>
-        <h3 class="text-base font-bold text-gray-800 mb-3">Сохранить рассадку</h3>
-        <input bind:value={saveLayoutName} placeholder="Название..."
+        <h3 class="text-base font-bold text-gray-800 mb-3">{$t('classroom_save_layout')}</h3>
+        <input bind:value={saveLayoutName} placeholder={$t('classroom_name_ph')}
           class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 mb-3"
           on:keydown={(e) => e.key === 'Enter' && saveLayout()} />
         <div class="flex gap-2">
           <button on:click={() => showSaveDialog = false}
-            class="flex-1 py-2 rounded-xl border border-gray-200 text-gray-600 text-sm font-medium hover:bg-gray-50">Отмена</button>
+            class="flex-1 py-2 rounded-xl border border-gray-200 text-gray-600 text-sm font-medium hover:bg-gray-50">{$t('classroom_cancel')}</button>
           <button on:click={saveLayout}
-            class="flex-1 py-2 rounded-xl bg-indigo-500 text-white text-sm font-bold hover:bg-indigo-600">Сохранить</button>
+            class="flex-1 py-2 rounded-xl bg-indigo-500 text-white text-sm font-bold hover:bg-indigo-600">{$t('classroom_save')}</button>
         </div>
       </div>
     </div>
@@ -762,19 +763,19 @@
       on:click={() => showHistory = false}>
       <div class="bg-white rounded-2xl shadow-2xl p-5 w-full max-w-sm max-h-[70vh] overflow-y-auto"
         on:click|stopPropagation>
-        <h3 class="text-base font-bold text-gray-800 mb-3">Сохранённые рассадки</h3>
+        <h3 class="text-base font-bold text-gray-800 mb-3">{$t('classroom_saved_layouts')}</h3>
         {#if savedLayouts.length === 0}
-          <p class="text-sm text-gray-400 text-center py-6">Нет сохранённых рассадок</p>
+          <p class="text-sm text-gray-400 text-center py-6">{$t('classroom_no_layouts')}</p>
         {:else}
           <div class="space-y-2">
             {#each savedLayouts as layout, i}
               <div class="flex items-center gap-2 p-3 rounded-xl border border-gray-100 hover:border-indigo-200 hover:bg-indigo-50 transition-all">
                 <div class="flex-1 min-w-0">
                   <div class="text-sm font-medium text-gray-800 truncate">{layout.name}</div>
-                  <div class="text-[10px] text-gray-400">{new Date(layout.date).toLocaleDateString('ru-RU')} · {layout.students?.length||0} уч.</div>
+                  <div class="text-[10px] text-gray-400">{$t('classroom_date_students', new Date(layout.date).toLocaleDateString(), layout.students?.length||0)}</div>
                 </div>
                 <button on:click={() => loadLayout(i)}
-                  class="px-2.5 py-1 rounded-lg bg-indigo-500 text-white text-[10px] font-bold hover:bg-indigo-600 flex-shrink-0">Загрузить</button>
+                  class="px-2.5 py-1 rounded-lg bg-indigo-500 text-white text-[10px] font-bold hover:bg-indigo-600 flex-shrink-0">{$t('classroom_load')}</button>
                 <button on:click={() => deleteLayout(i)}
                   class="p-1 rounded-lg text-gray-400 hover:text-red-500 flex-shrink-0">
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>

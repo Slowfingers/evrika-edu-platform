@@ -5,12 +5,9 @@
   import CardItem from '$lib/components/CardItem.svelte';
   import FilterPanel from '$lib/components/FilterPanel.svelte';
   import { convertRussianToEnglishId } from '$lib/utils/localization.js';
+  import { t } from '$lib/stores/lang.js';
 
   let cards = [];
-  let ageGroups = [];
-  let skills = [];
-  let stages = [];
-  let types = [];
   let loading = true;
   let error = null;
 
@@ -31,41 +28,41 @@
   const cardsPerPage = 12;
 
   // Предопределенные данные с русскими ID
-  const predefinedAgeGroups = [
-    { id: 'начальные-классы', name: 'Начальные классы (1-4)' },
-    { id: 'старшие-классы', name: 'Старшие классы (5-11)' }
+  $: predefinedAgeGroups = [
+    { id: 'начальные-классы', name: $t('age_primary') },
+    { id: 'старшие-классы', name: $t('age_secondary') }
   ];
 
-  const predefinedSkills = [
-    { id: 'критическое-мышление', name: 'Критическое мышление' },
-    { id: 'командная-работа', name: 'Командная работа' },
-    { id: 'рефлексия', name: 'Рефлексия' },
-    { id: 'креативное-мышление', name: 'Креативное мышление' },
-    { id: 'систематизация', name: 'Систематизация материала' },
-    { id: 'коммуникация', name: 'Коммуникативные навыки' }
+  $: predefinedSkills = [
+    { id: 'критическое-мышление', name: $t('skill_critical') },
+    { id: 'командная-работа', name: $t('skill_teamwork') },
+    { id: 'рефлексия', name: $t('skill_reflection') },
+    { id: 'креативное-мышление', name: $t('skill_creative') },
+    { id: 'систематизация', name: $t('skill_systematization') },
+    { id: 'коммуникация', name: $t('skill_communication') }
   ];
 
-  const predefinedStages = [
-    { id: 'начало-урока', name: 'Начало урока' },
-    { id: 'объяснение-нового-материала', name: 'Объяснение нового материала' },
-    { id: 'закрепление', name: 'Закрепление' },
-    { id: 'конец-урока', name: 'Конец урока' }
+  $: predefinedStages = [
+    { id: 'начало-урока', name: $t('stage_start') },
+    { id: 'объяснение-нового-материала', name: $t('stage_explanation') },
+    { id: 'закрепление', name: $t('stage_practice') },
+    { id: 'конец-урока', name: $t('stage_end') }
   ];
 
-  const predefinedTypes = [
-    { id: 'индивидуальная', name: 'Индивидуальная' },
-    { id: 'парная', name: 'Парная' },
-    { id: 'командная', name: 'Командная' },
-    { id: 'фронтальная', name: 'Фронтальная' }
+  $: predefinedTypes = [
+    { id: 'индивидуальная', name: $t('type_individual') },
+    { id: 'парная', name: $t('type_pair') },
+    { id: 'командная', name: $t('type_team') },
+    { id: 'фронтальная', name: $t('type_frontal') }
   ];
 
-  const timeRanges = [
-    { id: 'up-to-2', name: 'до 2 минут' },
-    { id: '3-5', name: '3-5 минут' },
-    { id: '5-10', name: '5-10 минут' },
-    { id: '15-20', name: '15-20 минут' },
-    { id: '25-30', name: '25-30 минут' },
-    { id: 'full-lesson', name: 'весь урок' }
+  $: timeRanges = [
+    { id: 'up-to-2', name: $t('time_up2') },
+    { id: '3-5', name: $t('time_3_5') },
+    { id: '5-10', name: $t('time_5_10') },
+    { id: '15-20', name: $t('time_15_20') },
+    { id: '25-30', name: $t('time_25_30') },
+    { id: 'full-lesson', name: $t('time_full') }
   ];
 
   // Функция convertRussianToEnglishId теперь импортируется из localization.js
@@ -74,13 +71,14 @@
     await loadMetadata();
   });
 
-  async function loadMetadata() {
-    // Используем предопределенные данные вместо загрузки из API
-    ageGroups = predefinedAgeGroups;
-    skills = predefinedSkills;
-    stages = predefinedStages;
-    types = predefinedTypes;
+  // Данные фильтров реактивно привязаны к predefined* выше
+  $: ageGroups = predefinedAgeGroups;
+  $: skills = predefinedSkills;
+  $: stages = predefinedStages;
+  $: types = predefinedTypes;
 
+  async function loadMetadata() {
+    // Данные берутся из реактивных predefined* переменных выше
   }
 
   async function loadCards() {
@@ -175,7 +173,7 @@
 </script>
 
 <svelte:head>
-  <title>Каталог педагогических приемов — EvrikaEdu</title>
+  <title>{$t('title_catalog')}</title>
 </svelte:head>
 
 <!-- Мобильная шторка фильтров -->
@@ -184,8 +182,8 @@
     <button class="absolute inset-0 bg-black/30 backdrop-blur-sm w-full h-full" on:click={() => filtersExpanded = false} aria-label="Закрыть фильтры"></button>
     <div class="absolute bottom-24 left-4 right-4 rounded-3xl max-h-[65vh] flex flex-col border border-white/60" style="background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); box-shadow: 0 -4px 30px rgba(200,168,233,0.2), 0 4px 20px rgba(0,0,0,0.1);">
       <div class="flex items-center justify-between p-5 pb-3">
-        <h2 class="text-lg font-bold text-purple-900">Фильтры</h2>
-        <button on:click={() => filtersExpanded = false} class="p-2 rounded-full hover:bg-purple-50 transition-colors">
+        <h2 class="text-lg font-bold text-purple-900">{$t('filters')}</h2>
+        <button on:click={() => filtersExpanded = false} aria-label={$t('close_filters')} class="p-2 rounded-full hover:bg-purple-50 transition-colors">
           <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
           </svg>
@@ -205,13 +203,13 @@
           <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
           </svg>
-          Сбросить
+          {$t('reset_filters')}
         </button>
         <button on:click={() => filtersExpanded = false} class="btn btn-primary flex-1 !py-2.5 text-sm font-semibold">
           <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
           </svg>
-          Применить
+          {$t('apply')}
         </button>
       </div>
     </div>
@@ -224,10 +222,10 @@
   <aside class="hidden md:flex flex-col gap-4 w-64 flex-shrink-0 sticky top-24">
     <div class="card-modern !p-5">
       <div class="flex items-center justify-between mb-4">
-        <h2 class="font-bold text-purple-900">Фильтры</h2>
+        <h2 class="font-bold text-purple-900">{$t('filters')}</h2>
         {#if hasActiveFilters}
           <button on:click={clearFilters} class="text-xs text-purple-700 font-bold hover:text-purple-900 transition-colors">
-          Сбросить
+          {$t('reset_filters')}
         </button>
         {/if}
       </div>
@@ -253,7 +251,7 @@
         <input
           type="text"
           bind:value={searchQuery}
-          placeholder="Поиск приемов..."
+          placeholder={$t('search_placeholder')}
           class="input pl-10"
           on:keydown={(e) => e.key === 'Enter' && handleSearch()}
         />
@@ -277,12 +275,12 @@
     <!-- Счётчик результатов -->
     <div class="flex items-center justify-between mb-4">
       <p class="text-sm font-bold text-gray-700">
-        {#if loading}Загрузка...{:else}{totalCards} приемов{/if}
+        {#if loading}{$t('loading')}{:else}{$t('techniques_count', totalCards)}{/if}
       </p>
       <!-- Активные теги фильтров -->
       {#if hasActiveFilters}
         <button on:click={clearFilters} class="text-xs text-gray-700 font-bold hover:text-indigo-600 md:hidden transition-colors">
-          Сбросить всё
+          {$t('reset_all')}
         </button>
       {/if}
     </div>
@@ -300,16 +298,16 @@
       </div>
     {:else if error}
       <div class="card text-center py-12">
-        <p class="text-gray-600 mb-4">Ошибка: {error}</p>
-        <button on:click={loadCards} class="btn btn-primary">Повторить</button>
+        <p class="text-gray-600 mb-4">{$t('error_msg', error)}</p>
+        <button on:click={loadCards} class="btn btn-primary">{$t('retry')}</button>
       </div>
     {:else if cards.length === 0}
       <div class="card text-center py-16">
         <svg class="w-12 h-12 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
         </svg>
-        <p class="text-gray-700 font-medium mb-4">Ничего не найдено</p>
-        <button on:click={clearFilters} class="btn btn-secondary">Сбросить фильтры</button>
+        <p class="text-gray-700 font-medium mb-4">{$t('not_found')}</p>
+        <button on:click={clearFilters} class="btn btn-secondary">{$t('reset_filters_btn')}</button>
       </div>
     {:else}
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
