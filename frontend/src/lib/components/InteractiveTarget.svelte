@@ -12,6 +12,9 @@
   // Данные взаимодействия
   let markers = []; // {x, y, sector, ring, timestamp}
   
+  // Название класса для скачивания отчёта
+  let className = '';
+  
   // Статистика (вычисляемая)
   $: stats = calculateStats(markers);
   
@@ -55,8 +58,8 @@
       let totalScore = 0;
       sectorMarkers.forEach(m => {
         if (m.ring !== undefined) {
-          // Инвертируем: центр = высокий балл
-          const score = ((rings - 1 - m.ring) / (rings - 1)) * 100;
+          // Центр (ring = rings-1) = высокий балл, край (ring = 0) = низкий балл
+          const score = (m.ring / (rings - 1)) * 100;
           totalScore += score;
         }
       });
@@ -77,7 +80,7 @@
     let validMarkers = 0;
     markersList.forEach(m => {
       if (m.ring !== undefined) {
-        const score = ((rings - 1 - m.ring) / (rings - 1)) * 100;
+        const score = (m.ring / (rings - 1)) * 100;
         totalScore += score;
         validMarkers++;
       }
@@ -444,7 +447,9 @@
       const angle = Math.atan2(dy, dx) + Math.PI / 2;
       const normalizedAngle = angle < 0 ? angle + 2 * Math.PI : angle;
       const sectorIndex = Math.floor((normalizedAngle / (2 * Math.PI)) * criteria.length) % criteria.length;
-      const ringIndex = Math.min(Math.floor((distance / maxRadius) * rings), rings - 1);
+      // Инвертируем: центр (distance=0) → ring=rings-1 (Легко), край → ring=0 (Сложно)
+      const rawRing = Math.min(Math.floor((distance / maxRadius) * rings), rings - 1);
+      const ringIndex = rings - 1 - rawRing;
       
       // Цвет маркера
       const markerColor = markerColors[markers.length % markerColors.length];
@@ -555,6 +560,53 @@
     link.download = `target-${Date.now()}.png`;
     link.href = presentationCanvas.toDataURL();
     link.click();
+  }
+  
+  // Скачать статистику как текстовый отчёт
+  function downloadStats() {
+    const date = new Date().toLocaleDateString('ru-RU');
+    const lines = [];
+    
+    lines.push('РЕЗУЛЬТАТЫ РЕФЛЕКСИИ — МИШЕНЬ');
+    lines.push('================================');
+    if (className) lines.push(`Класс: ${className}`);
+    lines.push(`Дата: ${date}`);
+    lines.push('');
+    lines.push(`Всего ответов: ${stats.total}`);
+    lines.push(`Средний балл: ${stats.avgScore}%`);
+    lines.push(`Уровень понимания: ${stats.understanding}`);
+    lines.push('');
+    lines.push('РАСПРЕДЕЛЕНИЕ ПО УРОВНЯМ:');
+    ringLabels.forEach((label, i) => {
+      const count = stats.byRing[i] || 0;
+      const percent = stats.total > 0 ? Math.round((count / stats.total) * 100) : 0;
+      lines.push(`  ${label}: ${count} отв. (${percent}%)`);
+    });
+    lines.push('');
+    lines.push('ПОНИМАНИЕ ПО ТЕМАМ:');
+    criteria.forEach((criterion, i) => {
+      const s = stats.sectorScores[i] || { count: 0, avgScore: 0, level: 'Нет данных' };
+      lines.push(`  ${criterion}: ${s.avgScore}% — ${s.level} (${s.count} отв.)`);
+    });
+    if (stats.strongTopics.length > 0) {
+      lines.push('');
+      lines.push('СИЛЬНЫЕ ТЕМЫ:');
+      stats.strongTopics.forEach(t => lines.push(`  ✓ ${t.name}: ${t.avgScore}%`));
+    }
+    if (stats.weakTopics.length > 0) {
+      lines.push('');
+      lines.push('ТРЕБУЮТ ВНИМАНИЯ:');
+      stats.weakTopics.forEach(t => lines.push(`  ! ${t.name}: ${t.avgScore}%`));
+    }
+    
+    const text = lines.join('\n');
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `мишень${className ? '-' + className : ''}-${date.replace(/\./g, '-')}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
   }
   
   // Реактивность для превью
@@ -733,6 +785,9 @@
       
       <!-- Управление -->
       <div class="absolute top-4 right-4 flex gap-2 z-10">
+        <button on:click={downloadStats} class="px-4 py-2 rounded-xl bg-emerald-500/80 backdrop-blur-xl text-white hover:bg-emerald-500 transition-all flex items-center gap-2">
+          ⬇️ Скачать отчёт
+        </button>
         <button on:click={backToPresentation} class="px-4 py-2 rounded-xl bg-indigo-500/80 backdrop-blur-xl text-white hover:bg-indigo-500 transition-all">
           ← Назад к мишени
         </button>
@@ -747,7 +802,12 @@
           <!-- Заголовок -->
           <div class="text-center mb-8">
             <h1 class="text-3xl font-bold text-white mb-2">Результаты рефлексии</h1>
-            <p class="text-white/60">Анализ ответов учеников</p>
+            <p class="text-white/60 mb-4">Анализ ответов учеников</p>
+            <div class="flex items-center justify-center gap-3">
+              <label class="text-white/60 text-sm">Класс:</label>
+              <input type="text" bind:value={className} placeholder="например: 7А" 
+                class="px-4 py-2 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/30 text-sm focus:outline-none focus:border-white/50 w-40" />
+            </div>
           </div>
           
           <!-- Главные метрики -->
