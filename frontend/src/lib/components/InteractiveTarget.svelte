@@ -562,51 +562,257 @@
     link.click();
   }
   
-  // Скачать статистику как текстовый отчёт
+  // Вспомогательная функция: скруглённый прямоугольник
+  function rRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+  }
+
+  // Скачать статистику как PNG-изображение
   function downloadStats() {
     const date = new Date().toLocaleDateString('ru-RU');
-    const lines = [];
-    
-    lines.push('РЕЗУЛЬТАТЫ РЕФЛЕКСИИ — МИШЕНЬ');
-    lines.push('================================');
-    if (className) lines.push(`Класс: ${className}`);
-    lines.push(`Дата: ${date}`);
-    lines.push('');
-    lines.push(`Всего ответов: ${stats.total}`);
-    lines.push(`Средний балл: ${stats.avgScore}%`);
-    lines.push(`Уровень понимания: ${stats.understanding}`);
-    lines.push('');
-    lines.push('РАСПРЕДЕЛЕНИЕ ПО УРОВНЯМ:');
+    const W = 900;
+    const PAD = 40;
+    const INNER = W - PAD * 2;
+    const hasStrongWeak = stats.strongTopics.length > 0 || stats.weakTopics.length > 0;
+    const swRows = Math.max(stats.strongTopics.length, stats.weakTopics.length);
+
+    // Pre-calculate total height
+    const H = 160          // header
+      + 110                // metrics row
+      + 30 + rings * 40    // rings section
+      + 30 + criteria.length * 68  // topics section
+      + (hasStrongWeak ? 60 + swRows * 26 : 0)
+      + 70;                // footer
+
+    const canvas = document.createElement('canvas');
+    canvas.width = W;
+    canvas.height = H;
+    const ctx = canvas.getContext('2d');
+
+    // Background gradient
+    const bg = ctx.createLinearGradient(0, 0, 0, H);
+    bg.addColorStop(0,   '#1e1b4b');
+    bg.addColorStop(0.4, '#312e81');
+    bg.addColorStop(0.7, '#4c1d95');
+    bg.addColorStop(1,   '#1e1b4b');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, W, H);
+
+    // Dot texture
+    ctx.fillStyle = 'rgba(255,255,255,0.025)';
+    for (let x = 20; x < W; x += 40)
+      for (let y = 20; y < H; y += 40) {
+        ctx.beginPath(); ctx.arc(x, y, 1.5, 0, Math.PI * 2); ctx.fill();
+      }
+
+    let cy = 0;
+
+    // ── Header ──────────────────────────────────────────
+    cy += 38;
+    ctx.textAlign = 'center';
+    ctx.fillStyle = 'rgba(255,255,255,0.45)';
+    ctx.font = '13px system-ui,sans-serif';
+    ctx.fillText('РЕЗУЛЬТАТЫ РЕФЛЕКСИИ', W / 2, cy);
+
+    cy += 36;
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 28px system-ui,sans-serif';
+    ctx.fillText('Мишень рефлексии 🎯', W / 2, cy);
+
+    cy += 24;
+    ctx.fillStyle = 'rgba(255,255,255,0.45)';
+    ctx.font = '14px system-ui,sans-serif';
+    const sub = [className ? `Класс: ${className}` : null, `Дата: ${date}`].filter(Boolean).join('   •   ');
+    ctx.fillText(sub, W / 2, cy);
+
+    cy += 28;
+    ctx.strokeStyle = 'rgba(255,255,255,0.13)';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(PAD, cy); ctx.lineTo(W - PAD, cy); ctx.stroke();
+
+    // ── Metrics row ──────────────────────────────────────
+    cy += 22;
+    const mW = (INNER - 20) / 3;
+    const mH = 72;
+    const scoreColor = stats.avgScore >= 60 ? '#34d399' : stats.avgScore >= 40 ? '#fbbf24' : '#f87171';
+    [
+      { label: 'Всего ответов', value: String(stats.total),    color: '#818cf8' },
+      { label: 'Средний балл',  value: `${stats.avgScore}%`,   color: scoreColor },
+      { label: 'Понимание',     value: stats.understanding.replace(/[🎉👍📊⚠️🔴]/gu, '').trim(), color: '#e879f9' }
+    ].forEach((m, i) => {
+      const bx = PAD + i * (mW + 10);
+      ctx.fillStyle = 'rgba(255,255,255,0.07)';
+      rRect(ctx, bx, cy, mW, mH, 12); ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,0.12)'; ctx.lineWidth = 1;
+      rRect(ctx, bx, cy, mW, mH, 12); ctx.stroke();
+      ctx.textAlign = 'center';
+      ctx.fillStyle = m.color;
+      ctx.font = 'bold 24px system-ui,sans-serif';
+      ctx.fillText(m.value, bx + mW / 2, cy + 34);
+      ctx.fillStyle = 'rgba(255,255,255,0.45)';
+      ctx.font = '12px system-ui,sans-serif';
+      ctx.fillText(m.label, bx + mW / 2, cy + 54);
+    });
+    cy += mH + 26;
+
+    // ── Rings (уровни) ───────────────────────────────────
+    ctx.textAlign = 'left';
+    ctx.fillStyle = 'rgba(255,255,255,0.65)';
+    ctx.font = 'bold 14px system-ui,sans-serif';
+    ctx.fillText('📊  Распределение по уровням', PAD, cy);
+    cy += 22;
+
     ringLabels.forEach((label, i) => {
-      const count = stats.byRing[i] || 0;
+      const count   = stats.byRing[i] || 0;
       const percent = stats.total > 0 ? Math.round((count / stats.total) * 100) : 0;
-      lines.push(`  ${label}: ${count} отв. (${percent}%)`);
+      const rColor  = i === 0 ? '#f87171' : i >= rings - 1 ? '#34d399' : '#fbbf24';
+      const rowH    = 32;
+
+      ctx.fillStyle = 'rgba(255,255,255,0.75)';
+      ctx.font = '12px system-ui,sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText(label, PAD, cy + 21);
+
+      const bx = PAD + 110, bw = INNER - 110 - 4, bh = 20;
+      ctx.fillStyle = 'rgba(255,255,255,0.08)';
+      rRect(ctx, bx, cy + 6, bw, bh, 6); ctx.fill();
+      if (percent > 0) {
+        const fw = Math.max((percent / 100) * bw, 24);
+        ctx.fillStyle = rColor;
+        rRect(ctx, bx, cy + 6, fw, bh, 6); ctx.fill();
+        ctx.fillStyle = '#fff'; ctx.font = 'bold 11px system-ui,sans-serif';
+        ctx.textAlign = 'right';
+        ctx.fillText(`${count} (${percent}%)`, bx + fw - 7, cy + 20);
+      }
+      cy += rowH;
     });
-    lines.push('');
-    lines.push('ПОНИМАНИЕ ПО ТЕМАМ:');
+
+    cy += 16;
+    ctx.strokeStyle = 'rgba(255,255,255,0.1)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(PAD, cy); ctx.lineTo(W - PAD, cy); ctx.stroke();
+    cy += 20;
+
+    // ── Topics ───────────────────────────────────────────
+    ctx.textAlign = 'left';
+    ctx.fillStyle = 'rgba(255,255,255,0.65)';
+    ctx.font = 'bold 14px system-ui,sans-serif';
+    ctx.fillText('📚  Понимание по темам', PAD, cy);
+    cy += 22;
+
     criteria.forEach((criterion, i) => {
-      const s = stats.sectorScores[i] || { count: 0, avgScore: 0, level: 'Нет данных' };
-      lines.push(`  ${criterion}: ${s.avgScore}% — ${s.level} (${s.count} отв.)`);
+      const s      = stats.sectorScores[i] || { count: 0, avgScore: 0, level: 'Нет данных' };
+      const strong = s.avgScore >= 60;
+      const weak   = s.avgScore < 40 && s.count > 0;
+      const tColor = strong ? '#34d399' : weak ? '#f87171' : '#fbbf24';
+      const tBg    = strong ? 'rgba(52,211,153,0.08)' : weak ? 'rgba(248,113,113,0.08)' : 'rgba(251,191,36,0.08)';
+      const tBd    = strong ? 'rgba(52,211,153,0.25)' : weak ? 'rgba(248,113,113,0.25)' : 'rgba(251,191,36,0.25)';
+      const boxH   = 60;
+
+      ctx.fillStyle = tBg;
+      rRect(ctx, PAD, cy, INNER, boxH, 10); ctx.fill();
+      ctx.strokeStyle = tBd; ctx.lineWidth = 1;
+      rRect(ctx, PAD, cy, INNER, boxH, 10); ctx.stroke();
+
+      // Sector dot
+      const rawColor = sectorColors[i % sectorColors.length];
+      ctx.fillStyle = rawColor.replace(/[\d.]+\)$/, '1)');
+      ctx.beginPath(); ctx.arc(PAD + 14, cy + 18, 6, 0, Math.PI * 2); ctx.fill();
+
+      // Name
+      ctx.fillStyle = '#fff'; ctx.font = 'bold 13px system-ui,sans-serif';
+      ctx.textAlign = 'left';
+      const nm = criterion.length > 34 ? criterion.slice(0, 32) + '…' : criterion;
+      ctx.fillText(nm, PAD + 28, cy + 22);
+
+      // Sub-label
+      ctx.fillStyle = 'rgba(255,255,255,0.45)'; ctx.font = '11px system-ui,sans-serif';
+      ctx.fillText(`${s.count} ответов  •  ${s.level}`, PAD + 28, cy + 38);
+
+      // Score
+      ctx.fillStyle = tColor; ctx.font = 'bold 18px system-ui,sans-serif';
+      ctx.textAlign = 'right';
+      ctx.fillText(`${s.avgScore}%`, W - PAD - 12, cy + 24);
+
+      // Progress bar
+      const pbx = PAD + 28, pbw = INNER - 44 - 62, pbh = 6, pby = cy + 46;
+      ctx.fillStyle = 'rgba(255,255,255,0.1)';
+      rRect(ctx, pbx, pby, pbw, pbh, 3); ctx.fill();
+      if (s.avgScore > 0) {
+        ctx.fillStyle = tColor;
+        rRect(ctx, pbx, pby, Math.max((s.avgScore / 100) * pbw, 6), pbh, 3); ctx.fill();
+      }
+
+      cy += boxH + 6;
     });
-    if (stats.strongTopics.length > 0) {
-      lines.push('');
-      lines.push('СИЛЬНЫЕ ТЕМЫ:');
-      stats.strongTopics.forEach(t => lines.push(`  ✓ ${t.name}: ${t.avgScore}%`));
+
+    // ── Strong / Weak ─────────────────────────────────────
+    if (hasStrongWeak) {
+      cy += 16;
+      ctx.strokeStyle = 'rgba(255,255,255,0.1)'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(PAD, cy); ctx.lineTo(W - PAD, cy); ctx.stroke();
+      cy += 22;
+
+      const colW = (INNER - 16) / 2;
+
+      if (stats.strongTopics.length > 0) {
+        ctx.fillStyle = 'rgba(52,211,153,0.8)'; ctx.font = 'bold 13px system-ui,sans-serif';
+        ctx.textAlign = 'left'; ctx.fillText('✅  Сильные темы', PAD, cy);
+        let sy = cy + 22;
+        stats.strongTopics.forEach(t => {
+          ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.font = '12px system-ui,sans-serif';
+          ctx.textAlign = 'left'; ctx.fillText(`• ${t.name}`, PAD + 8, sy);
+          ctx.fillStyle = '#34d399'; ctx.font = 'bold 12px system-ui,sans-serif';
+          ctx.textAlign = 'right'; ctx.fillText(`${t.avgScore}%`, PAD + colW, sy);
+          sy += 24;
+        });
+      }
+
+      if (stats.weakTopics.length > 0) {
+        const wx = stats.strongTopics.length > 0 ? PAD + colW + 16 : PAD;
+        ctx.fillStyle = 'rgba(248,113,113,0.8)'; ctx.font = 'bold 13px system-ui,sans-serif';
+        ctx.textAlign = 'left'; ctx.fillText('⚠️  Требуют внимания', wx, cy);
+        let wy = cy + 22;
+        stats.weakTopics.forEach(t => {
+          ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.font = '12px system-ui,sans-serif';
+          ctx.textAlign = 'left'; ctx.fillText(`• ${t.name}`, wx + 8, wy);
+          ctx.fillStyle = '#f87171'; ctx.font = 'bold 12px system-ui,sans-serif';
+          ctx.textAlign = 'right';
+          ctx.fillText(`${t.avgScore}%`, stats.strongTopics.length > 0 ? W - PAD : wx + colW, wy);
+          wy += 24;
+        });
+      }
+
+      cy += 14 + swRows * 24;
     }
-    if (stats.weakTopics.length > 0) {
-      lines.push('');
-      lines.push('ТРЕБУЮТ ВНИМАНИЯ:');
-      stats.weakTopics.forEach(t => lines.push(`  ! ${t.name}: ${t.avgScore}%`));
-    }
-    
-    const text = lines.join('\n');
-    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `мишень${className ? '-' + className : ''}-${date.replace(/\./g, '-')}.txt`;
-    a.click();
-    URL.revokeObjectURL(url);
+
+    // ── Footer ────────────────────────────────────────────
+    cy += 24;
+    ctx.strokeStyle = 'rgba(255,255,255,0.1)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(PAD, cy); ctx.lineTo(W - PAD, cy); ctx.stroke();
+    cy += 18;
+    ctx.fillStyle = 'rgba(255,255,255,0.28)'; ctx.font = '12px system-ui,sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('EvrikaEdu — Мишень рефлексии', W / 2, cy);
+
+    // Export PNG
+    canvas.toBlob(blob => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `мишень${className ? '-' + className : ''}-${date.replace(/\./g, '-')}.png`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }, 'image/png');
   }
   
   // Реактивность для превью
