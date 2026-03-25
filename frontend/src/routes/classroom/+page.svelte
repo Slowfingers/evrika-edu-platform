@@ -56,6 +56,7 @@
   let saveLayoutName = '';
   let showHistory = false;
   let newStudentName = '';
+  let newStudentGroupColor = null;
   let selectedDeskId = null;
 
   // Drag state
@@ -104,6 +105,8 @@
   }
 
   function groupColor(sid) {
+    const stu = students.find(s => s.id === sid);
+    if (stu?.groupColor) return stu.groupColor;
     const i = groups.findIndex(g => g.some(s => s.id === sid));
     return i >= 0 ? GROUP_COLORS[i % GROUP_COLORS.length] : null;
   }
@@ -214,7 +217,7 @@
   // ==================== STUDENT MANAGEMENT ====================
   function addStudent(name) {
     if (!name.trim()) return;
-    students = [...students, { id: nextStudentId++, name: name.trim(), tags: [], absent: false }];
+    students = [...students, { id: nextStudentId++, name: name.trim(), tags: [], absent: false, groupColor: newStudentGroupColor }];
   }
   function removeStudent(id) {
     const ns = { ...seating }; Object.keys(ns).forEach(k => { if (ns[k] === id) delete ns[k]; }); seating = ns;
@@ -234,6 +237,8 @@
     importText = ''; showImport = false;
   }
   function handleAddStudent() { addStudent(newStudentName); newStudentName = ''; }
+  function handleClearName() { newStudentName = ''; }
+  function handleColorChange(color) { newStudentGroupColor = color; }
 
   // ==================== STUDENT DRAG TO SLOTS ====================
   function onStudentDragStart(e, sid) { dragStudentId = sid; e.dataTransfer.effectAllowed = 'move'; }
@@ -328,12 +333,24 @@
 
   // ==================== GROUPS ====================
   function generateGroups() {
-    let pool = students.filter(s => !s.absent); if (!pool.length) return;
-    const sz = Math.max(2, groupSize);
-    pool = [...pool].sort(() => Math.random() - 0.5);
-    const res = [];
-    for (let i = 0; i < pool.length; i += sz) res.push(pool.slice(i, i + sz));
-    groups = res;
+    let pool = students.filter(s => !s.absent);
+    if (!pool.length) return;
+    const withColors = pool.filter(s => s.groupColor);
+    if (withColors.length > 0) {
+      const colorMap = new Map();
+      pool.forEach(s => {
+        const key = s.groupColor || '__none__';
+        if (!colorMap.has(key)) colorMap.set(key, []);
+        colorMap.get(key).push(s);
+      });
+      groups = [...colorMap.values()];
+    } else {
+      const sz = Math.max(2, groupSize);
+      pool = [...pool].sort(() => Math.random() - 0.5);
+      const res = [];
+      for (let i = 0; i < pool.length; i += sz) res.push(pool.slice(i, i + sz));
+      groups = res;
+    }
   }
   function clearGroups() { groups = []; }
 
@@ -393,6 +410,8 @@
   }
   function deleteLayout(i) { savedLayouts = savedLayouts.filter((_, j) => j !== i); persist(); }
 
+  let _mounted = false;
+
   function persist() {
     if (!browser) return;
     try {
@@ -405,11 +424,11 @@
     try {
       const l = localStorage.getItem('classroom_layouts'); if (l) savedLayouts = JSON.parse(l);
       const c = localStorage.getItem('classroom_current');
-      if (c) { const d = JSON.parse(c); if (d.desks?.length) { desks = d.desks; seating = d.seating || {}; students = d.students || []; nextDeskId = d.nextDeskId || 1; nextStudentId = d.nextStudentId || 1; } }
+      if (c) { const d = JSON.parse(c); desks = d.desks || []; seating = d.seating || {}; students = d.students || []; nextDeskId = d.nextDeskId || 1; nextStudentId = d.nextStudentId || 1; }
     } catch(e) {}
   }
 
-  $: if (browser && (desks || seating || students)) persist();
+  $: if (_mounted && browser && (desks || seating || students)) persist();
 
   function checkMobile() {
     isMobile = browser && window.innerWidth < 768;
@@ -424,6 +443,7 @@
 
   onMount(() => {
     loadFromLocal();
+    _mounted = true;
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
@@ -626,10 +646,12 @@
     <!-- ===== DESKTOP STUDENT PANEL ===== -->
     {#if showStudentPanel && !isMobile}
       <div class="w-60 xl:w-64 flex-shrink-0 flex flex-col overflow-hidden backdrop-blur-xl" style="background:rgba(255,255,255,0.7); border-left:1px solid rgba(255,255,255,0.3);">
-        <ClassroomStudentPanel {students} {seating} {mode} {isMobile} {mobileSelectedStudent} {showImport} {importText} {newStudentName} {groups} {STUDENT_TAGS} {GROUP_COLORS}
+        <ClassroomStudentPanel {students} {seating} {mode} {isMobile} {mobileSelectedStudent} {showImport} {importText} {newStudentName} {newStudentGroupColor} {groups} {STUDENT_TAGS} {GROUP_COLORS}
           on:toggleImport={() => showImport = !showImport}
           on:addStudent={handleAddStudent}
           on:nameChange={(e) => newStudentName = e.detail}
+          on:clearName={handleClearName}
+          on:colorChange={(e) => handleColorChange(e.detail)}
           on:importTextChange={(e) => importText = e.detail}
           on:import={importStudents}
           on:unseatDrop={(e) => onUnseatDrop(e.detail)}
@@ -649,10 +671,12 @@
       <div class="flex items-center justify-center py-1.5">
         <div class="w-10 h-1 rounded-full bg-gray-300"></div>
       </div>
-      <ClassroomStudentPanel {students} {seating} {mode} {isMobile} {mobileSelectedStudent} {showImport} {importText} {newStudentName} {groups} {STUDENT_TAGS} {GROUP_COLORS}
+      <ClassroomStudentPanel {students} {seating} {mode} {isMobile} {mobileSelectedStudent} {showImport} {importText} {newStudentName} {newStudentGroupColor} {groups} {STUDENT_TAGS} {GROUP_COLORS}
         on:toggleImport={() => showImport = !showImport}
         on:addStudent={handleAddStudent}
         on:nameChange={(e) => newStudentName = e.detail}
+        on:clearName={handleClearName}
+        on:colorChange={(e) => handleColorChange(e.detail)}
         on:importTextChange={(e) => importText = e.detail}
         on:import={importStudents}
         on:unseatDrop={(e) => onUnseatDrop(e.detail)}
