@@ -216,7 +216,7 @@
   // ==================== STUDENT MANAGEMENT ====================
   function addStudent(name) {
     if (!name.trim()) return;
-    students = [...students, { id: nextStudentId++, name: name.trim(), tags: [], absent: false, groupColor: newStudentGroupColor }];
+    students = [...students, { id: nextStudentId++, name: name.trim(), tags: [], absent: false, groupColor: null }];
   }
   function removeStudent(id) {
     const ns = { ...seating }; Object.keys(ns).forEach(k => { if (ns[k] === id) delete ns[k]; }); seating = ns;
