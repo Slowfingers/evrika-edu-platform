@@ -46,8 +46,6 @@
       if (response && response.success && Array.isArray(response.data)) {
         // Преобразуем данные карточек для совместимости с frontend компонентами
         catalogCards = response.data.map(transformCardData);
-        console.log('✅ Конструктор: Загружено', catalogCards.length, 'карточек');
-        console.log('🔍 Пример карточки:', catalogCards[0]);
       } else {
         console.error('❌ Конструктор: Неправильный формат ответа API');
         catalogCards = [];

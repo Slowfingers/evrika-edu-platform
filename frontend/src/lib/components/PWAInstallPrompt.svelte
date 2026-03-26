@@ -23,10 +23,6 @@
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
     
-    if (outcome === 'accepted') {
-      console.log('[PWA] Пользователь установил приложение');
-    }
-    
     deferredPrompt = null;
     showPrompt = false;
   }

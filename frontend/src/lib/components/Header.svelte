@@ -61,13 +61,13 @@
       {/if}
 
       <!-- Десктоп: логотип -->
-      <a href="/" class="hidden md:flex items-center gap-2.5 group">
+      <a href="/" class="hidden md:flex items-center gap-2.5 group flex-shrink-0">
         <img src="/logo.png" alt="EvrikaEdu" class="w-8 h-8 rounded-xl object-cover shadow-sm group-hover:shadow-md transition-shadow" />
         <span class="text-lg font-semibold text-gray-900">EvrikaEdu</span>
       </a>
 
       <!-- Десктоп: навигация -->
-      <nav class="hidden md:flex items-center">
+      <nav class="hidden md:flex items-center ml-6">
         <div class="flex items-center gap-0.5 p-1 rounded-full bg-gray-100/80">
           <a href="/" class="px-4 py-1.5 rounded-full text-sm font-medium transition-all {currentPath === '/' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-600 hover:text-gray-900'}">{$t('nav_catalog')}</a>
           <a href="/constructor" class="px-4 py-1.5 rounded-full text-sm font-medium transition-all {currentPath === '/constructor' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-600 hover:text-gray-900'}">{$t('nav_constructor')}</a>
