@@ -835,9 +835,9 @@
       <div class="max-w-4xl mx-auto">
         
         <!-- Заголовок с инструкцией -->
-        <div class="card mb-6">
-          <div class="flex items-start gap-4">
-            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center flex-shrink-0">
+        <div class="card mb-4 md:mb-6">
+          <div class="flex items-start gap-3">
+            <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center flex-shrink-0">
               <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <circle cx="12" cy="12" r="10" stroke-width="2"/>
                 <circle cx="12" cy="12" r="6" stroke-width="2"/>
@@ -845,18 +845,18 @@
               </svg>
             </div>
             <div class="flex-1">
-              <h1 class="text-xl font-bold text-gray-900 mb-1">{$t('target_title')}</h1>
-              <p class="text-gray-500 text-sm mb-3">{$t('target_desc')}</p>
-              <div class="flex flex-wrap gap-2">
-                <span class="px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-600 text-xs font-medium">{$t('target_hint1')}</span>
-                <span class="px-2.5 py-1 rounded-full bg-green-50 text-green-600 text-xs font-medium">{$t('target_hint2')}</span>
-                <span class="px-2.5 py-1 rounded-full bg-amber-50 text-amber-600 text-xs font-medium">{$t('target_hint3')}</span>
+              <h1 class="text-lg md:text-xl font-bold text-gray-900 mb-0.5 md:mb-1">{$t('target_title')}</h1>
+              <p class="text-gray-500 text-xs md:text-sm mb-2 md:mb-3">{$t('target_desc')}</p>
+              <div class="flex flex-wrap gap-1.5 md:gap-2">
+                <span class="px-2 py-0.5 md:px-2.5 md:py-1 rounded-full bg-indigo-50 text-indigo-600 text-[10px] md:text-xs font-medium">{$t('target_hint1')}</span>
+                <span class="px-2 py-0.5 md:px-2.5 md:py-1 rounded-full bg-green-50 text-green-600 text-[10px] md:text-xs font-medium">{$t('target_hint2')}</span>
+                <span class="px-2 py-0.5 md:px-2.5 md:py-1 rounded-full bg-amber-50 text-amber-600 text-[10px] md:text-xs font-medium">{$t('target_hint3')}</span>
               </div>
             </div>
           </div>
         </div>
         
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
           
           <!-- Настройки -->
           <div class="space-y-4">
