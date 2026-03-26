@@ -457,7 +457,7 @@
   <title>{$t('title_classroom')}</title>
 </svelte:head>
 
-<div class="h-[calc(100vh-3.5rem-4rem)] md:h-[calc(100vh-4rem)] flex overflow-hidden relative">
+<div class="h-[calc(100vh-3.5rem-3.5rem)] md:h-[calc(100vh-4rem)] flex overflow-hidden relative">
 
   <!-- Mobile backdrop -->
   {#if isMobile && showSidebar}
