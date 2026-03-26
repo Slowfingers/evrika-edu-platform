@@ -31,12 +31,12 @@
           <span class="text-sm font-medium">{$t('nav_back')}</span>
         </a>
       {:else}
-        <a href="/" class="md:hidden flex items-center gap-2">
-          <img src="/logo.png" alt="EvrikaEdu" class="w-7 h-7 rounded-lg object-cover" />
+        <a href="/" class="md:hidden flex items-center gap-1.5 min-w-0">
+          <img src="/logo.png" alt="EvrikaEdu" class="w-7 h-7 rounded-lg object-cover flex-shrink-0" />
           {#if mobileTitle}
             <span class="text-sm font-semibold text-gray-900 truncate">{mobileTitle}</span>
           {:else}
-            <span class="text-base font-semibold text-gray-900">EvrikaEdu</span>
+            <span class="text-sm font-semibold text-gray-900 hidden xs:inline">EvrikaEdu</span>
           {/if}
         </a>
       {/if}
@@ -63,11 +63,11 @@
       </nav>
 
       <!-- Переключатель языков -->
-      <div class="flex items-center gap-0.5 p-0.5 rounded-full bg-gray-100/80 flex-shrink-0">
+      <div class="flex items-center gap-0.5 p-0.5 rounded-full bg-gray-100/80 flex-shrink-0 ml-auto">
         {#each LANGS as l}
           <button
             on:click={() => lang.set(l.code)}
-            class="px-2.5 py-1 rounded-full text-xs font-bold transition-all
+            class="px-2 py-1 rounded-full text-[11px] font-bold transition-all
               {$lang === l.code ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500 hover:text-gray-800'}"
             title={l.label}
           >

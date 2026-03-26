@@ -38,10 +38,10 @@
     };
   }
 
-  // Загрузка карточек из каталога
+  // Загрузка карточек из каталога (все, без лимита)
   onMount(async () => {
     try {
-      const response = await cardsApi.getAllCards();
+      const response = await cardsApi.getAllCards({ limit: 1000 });
       
       if (response && response.success && Array.isArray(response.data)) {
         // Преобразуем данные карточек для совместимости с frontend компонентами
