@@ -32,7 +32,7 @@
 </script>
 
 <!-- Header -->
-<div class="px-3 pt-3 pb-2.5 flex items-center justify-between flex-shrink-0 border-b" style="border-color:rgba(0,0,0,0.07);">
+<div class="px-3 pt-2 pb-1.5 flex items-center justify-between flex-shrink-0 border-b" style="border-color:rgba(0,0,0,0.07);">
   <span class="text-sm font-bold text-gray-800">
     {$t('students_title')} <span class="text-xs font-normal text-gray-400">({students.length})</span>
   </span>
@@ -45,7 +45,7 @@
 </div>
 
 <!-- Add student -->
-<div class="px-3 py-2.5 border-b flex-shrink-0" style="border-color:rgba(0,0,0,0.07);">
+<div class="px-3 py-2 border-b flex-shrink-0" style="border-color:rgba(0,0,0,0.07);">
 
   <!-- Name input + submit -->
   <form on:submit|preventDefault={() => dispatch('addStudent')} class="flex gap-2">
@@ -201,7 +201,7 @@
 
 <!-- Groups summary (groups mode) -->
 {#if mode === 'groups' && groups.length > 0}
-  <div class="border-t flex-shrink-0 overflow-y-auto max-h-52" style="border-color:rgba(0,0,0,0.07); scrollbar-width:thin;">
+  <div class="border-t flex-shrink-0 overflow-y-auto max-h-36" style="border-color:rgba(0,0,0,0.07); scrollbar-width:thin;">
     <div class="p-2.5">
       <div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">
         {$t('groups_label')} · {groups.length}

@@ -473,7 +473,7 @@
     style="background:rgba(255,255,255,0.78); backdrop-filter:blur(20px); border-right:1px solid rgba(255,255,255,0.35);">
 
     <!-- Header -->
-    <div class="flex items-center gap-1.5 px-4 py-3 flex-shrink-0 border-b" style="border-color:rgba(0,0,0,0.08);">
+    <div class="flex items-center gap-1.5 px-3 py-2 flex-shrink-0 border-b" style="border-color:rgba(0,0,0,0.08);">
       <span class="flex-1 text-sm font-bold text-gray-800">{$t('classroom_title')}</span>
       <button on:click={() => showSaveDialog = true} title={$t('classroom_save')}
         class="p-1.5 rounded-xl text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 transition-all">
@@ -492,7 +492,7 @@
     </div>
 
     <!-- Mode tabs -->
-    <div class="px-3 pt-2.5 pb-2 flex-shrink-0">
+    <div class="px-3 pt-2 pb-1.5 flex-shrink-0">
       <div class="grid grid-cols-3 bg-gray-100/70 rounded-2xl p-1 gap-0.5">
         {#each [['edit','✏️', $t('mode_edit')],['seat','🪑', $t('mode_seat')],['groups','👥', $t('mode_groups')]] as [m, icon, label]}
           <button on:click={() => { mode = m; mobileSelectedStudent = null; }}
@@ -506,7 +506,7 @@
     </div>
 
     <!-- Mode tools -->
-    <div class="px-3 pb-3 flex-shrink-0 border-b" style="border-color:rgba(0,0,0,0.07);">
+    <div class="px-3 pb-2 flex-shrink-0 border-b max-h-40 overflow-y-auto" style="border-color:rgba(0,0,0,0.07);">
 
       {#if mode === 'edit'}
         <div class="grid grid-cols-4 gap-1 mb-2">
