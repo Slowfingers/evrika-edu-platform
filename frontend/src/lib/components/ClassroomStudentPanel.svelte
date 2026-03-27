@@ -110,11 +110,13 @@
             {isMobile ? 'active:scale-95' : 'cursor-grab active:cursor-grabbing'}"
             draggable={!isMobile}
             on:dragstart={(e) => dispatch('studentDragStart', { e, id: s.id })}
-            on:click={() => isMobile && dispatch('mobileSelect', s.id)}>
+            on:click={() => dispatch('mobileSelect', s.id)}
+            on:touchend|stopPropagation|preventDefault={() => dispatch('mobileSelect', s.id)}>
             <div class="w-7 h-7 rounded-full flex items-center justify-center text-white text-[9px] font-bold flex-shrink-0 shadow-sm cursor-pointer"
               style="background:{s.groupColor || '#6366f1'};"
               title={$t('student_color_tip')}
-              on:click|stopPropagation={() => dispatch('cycleColor', s.id)}>
+              on:click|stopPropagation={() => dispatch('cycleColor', s.id)}
+              on:touchend|stopPropagation|preventDefault={() => dispatch('cycleColor', s.id)}>
               {ini(s.name)}
             </div>
             <span class="text-xs text-gray-700 truncate flex-1">{s.name}</span>
@@ -160,11 +162,12 @@
     {:else}
       <div class="p-2 space-y-0.5">
         {#each students as s (s.id)}
-          <div class="group flex items-center gap-2 px-2.5 py-2 rounded-xl hover:bg-white/80 transition-all {s.absent ? 'opacity-40' : ''}">
+          <div class="group flex items-center gap-2 px-2.5 py-2 rounded-xl hover:bg-white/80 transition-all {s.absent ? 'opacity-40' : ''}" role="listitem">
             <div class="w-7 h-7 rounded-full flex items-center justify-center text-white text-[9px] font-bold flex-shrink-0 shadow-sm cursor-pointer"
               style="background:{s.groupColor || '#94a3b8'};"
               title={$t('student_color_tip')}
-              on:click={() => dispatch('cycleColor', s.id)}>
+              on:click={() => dispatch('cycleColor', s.id)}
+              on:touchend|stopPropagation|preventDefault={() => dispatch('cycleColor', s.id)}>
               {ini(s.name)}
             </div>
             <span class="text-xs text-gray-700 truncate flex-1 min-w-0">{s.name}</span>
@@ -172,7 +175,8 @@
             <div class="flex gap-0.5 flex-shrink-0 items-center">
               {#each STUDENT_TAGS as tag}
                 <button on:click={() => dispatch('toggleTag', { sid: s.id, tid: tag.id })}
-                  class="w-3.5 h-3.5 rounded-full border transition-all {s.tags.includes(tag.id) ? 'scale-110' : 'opacity-20 hover:opacity-50'}"
+                  on:touchend|stopPropagation|preventDefault={() => dispatch('toggleTag', { sid: s.id, tid: tag.id })}
+                  class="w-5 h-5 rounded-full border transition-all {s.tags.includes(tag.id) ? 'scale-110' : 'opacity-30 hover:opacity-60'}"
                   style="background:{s.tags.includes(tag.id) ? tag.color : 'transparent'}; border-color:{tag.color};"
                   title={tag.label}></button>
               {/each}
@@ -187,7 +191,8 @@
             </button>
             <!-- Remove -->
             <button on:click={() => dispatch('removeStudent', s.id)}
-              class="p-0.5 flex-shrink-0 rounded-lg text-gray-300 hover:text-red-400 transition-all opacity-0 group-hover:opacity-100">
+              on:touchend|stopPropagation|preventDefault={() => dispatch('removeStudent', s.id)}
+              class="p-0.5 flex-shrink-0 rounded-lg text-gray-300 hover:text-red-400 transition-all md:opacity-0 md:group-hover:opacity-100">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
               </svg>

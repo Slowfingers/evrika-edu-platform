@@ -213,7 +213,8 @@
       e.preventDefault();
       window.removeEventListener('touchmove', onTouchMoveMaybeStartDrag);
       window.removeEventListener('touchend', cancelPendingDrag);
-      _beginDrag(pendingDrag.desk, pendingDrag);
+      // Передаём начальную позицию тапа (startX/startY), не текущую
+      _beginDrag(pendingDrag.desk, { x: pendingDrag.startX, y: pendingDrag.startY });
       pendingDrag = null;
       moveDeskDrag(e);
     }
@@ -749,7 +750,8 @@
                     on:dragover|preventDefault={(e) => onSlotDragOver(e, key)}
                     on:dragleave={onSlotDragLeave}
                     on:drop|preventDefault={(e) => onSlotDrop(e, desk.id, si)}
-                    on:click|stopPropagation={() => { if (mode==='seat' && isMobile) mobilePlaceStudent(desk.id, si); }}>
+                    on:click|stopPropagation={() => { if (mode==='seat') mobilePlaceStudent(desk.id, si); }}
+                    on:touchend|stopPropagation|preventDefault={() => { if (mode==='seat') mobilePlaceStudent(desk.id, si); }}>
                     {#if stu}
                       <div class="w-full h-full rounded-full flex items-center justify-center text-white text-[8px] font-bold leading-none text-center shadow-sm {animatingSeats[key]?'animate-pop':''}"
                         style="background:{gc||dt.color};"
