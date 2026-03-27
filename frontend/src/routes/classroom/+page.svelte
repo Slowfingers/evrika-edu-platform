@@ -378,30 +378,35 @@
   function clearSeating() { seating = {}; animatingSeats = {}; }
 
   // ==================== GROUPS ====================
+  // Реактивные группы по цвету: обновляются автоматически при смене цвета студента
+  $: colorGroups = (() => {
+    const pool = students.filter(s => !s.absent && s.groupColor);
+    if (!pool.length) return [];
+    const colorMap = new Map();
+    pool.forEach(s => {
+      if (!colorMap.has(s.groupColor)) colorMap.set(s.groupColor, []);
+      colorMap.get(s.groupColor).push(s);
+    });
+    return [...colorMap.values()];
+  })();
+
   function generateGroups() {
-    let pool = students.filter(s => !s.absent);
+    const pool = students.filter(s => !s.absent);
     if (!pool.length) return;
-    const withColors = pool.filter(s => s.groupColor);
-    if (withColors.length > 0) {
-      const colorMap = new Map();
-      pool.forEach(s => {
-        const key = s.groupColor || '__none__';
-        if (!colorMap.has(key)) colorMap.set(key, []);
-        colorMap.get(key).push(s);
-      });
-      groups = [...colorMap.values()];
-    } else {
-      const sz = Math.max(2, groupSize);
-      pool = [...pool].sort(() => Math.random() - 0.5);
-      const res = [];
-      for (let i = 0; i < pool.length; i += sz) res.push(pool.slice(i, i + sz));
-      groups = res;
-    }
+    // Случайное разбиение по размеру
+    const sz = Math.max(2, groupSize);
+    const shuffled = [...pool].sort(() => Math.random() - 0.5);
+    const res = [];
+    for (let i = 0; i < shuffled.length; i += sz) res.push(shuffled.slice(i, i + sz));
+    groups = res;
   }
   function clearGroups() { groups = []; }
 
+  // Активные группы: ручные (по цвету) имеют приоритет над случайными
+  $: activeGroups = colorGroups.length > 0 ? colorGroups : groups;
+
   function seatGroupsOnDesks() {
-    if (!groups.length || !desks.length) return;
+    if (!activeGroups.length || !desks.length) return;
     // Only seat onto group-type desks (isGroup flag)
     const groupDesks = desks.filter(d => DESK_TYPES[d.type].isGroup);
     if (!groupDesks.length) return;
@@ -409,7 +414,7 @@
     const anim = {};
     // Match groups to desks by best-fit size
     const usedDesks = new Set();
-    for (const group of groups) {
+    for (const group of activeGroups) {
       // Find best desk: slots >= group size, smallest fit first
       let bestDesk = null;
       let bestDiff = Infinity;
@@ -608,7 +613,26 @@
         </div>
 
       {:else}
-        <div class="flex items-center gap-1 mb-2.5 flex-wrap">
+        <!-- Ручные группы по цвету -->
+        {#if colorGroups.length > 0}
+          <div class="mb-2.5 p-2 rounded-xl bg-white/60 border border-white/80">
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-[11px] font-bold text-gray-600">{$t('tool_color_groups')} · {colorGroups.length}</span>
+              <div class="flex gap-0.5">
+                {#each colorGroups as g}
+                  <div class="w-3 h-3 rounded-full" style="background:{g[0].groupColor};"></div>
+                {/each}
+              </div>
+            </div>
+            <button on:click={seatGroupsOnDesks}
+              class="w-full py-2 rounded-xl bg-emerald-500 text-white text-xs font-bold hover:bg-emerald-600 shadow-sm transition-all">
+              {$t('tool_to_seats')}
+            </button>
+          </div>
+        {/if}
+
+        <!-- Случайное разбиение -->
+        <div class="flex items-center gap-1 mb-2 flex-wrap">
           <span class="text-[11px] text-gray-400 font-medium">{$t('tool_per')}</span>
           {#each [2,3,4,5,6] as sz}
             <button on:click={() => groupSize = sz}
@@ -635,13 +659,15 @@
         </div>
         {#if groups.length > 0}
           <p class="text-[10px] text-gray-400 mt-1.5">{$t('tool_groups_info', groups.length, students.filter(s=>!s.absent).length)}</p>
+        {:else if colorGroups.length === 0}
+          <p class="text-[10px] text-gray-400 mt-1.5">{$t('tool_color_groups_hint')}</p>
         {/if}
       {/if}
     </div>
 
     <!-- Student panel (flex-1) -->
     <div class="flex-1 overflow-hidden flex flex-col min-h-0">
-      <ClassroomStudentPanel {students} {seating} {mode} {isMobile} {mobileSelectedStudent} {showImport} {importText} {newStudentName} {groups} {STUDENT_TAGS} {GROUP_COLORS}
+      <ClassroomStudentPanel {students} {seating} {mode} {isMobile} {mobileSelectedStudent} {showImport} {importText} {newStudentName} groups={activeGroups} {STUDENT_TAGS} {GROUP_COLORS}
         on:toggleImport={() => showImport = !showImport}
         on:addStudent={handleAddStudent}
         on:nameChange={(e) => newStudentName = e.detail}

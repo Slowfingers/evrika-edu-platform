@@ -182,6 +182,8 @@ export const translations = {
     tool_per: 'По',
     tool_people: 'чел.',
     tool_groups_info: (n, m) => `${n} групп · ${m} уч.`,
+    tool_color_groups: 'Группы по цвету',
+    tool_color_groups_hint: 'Назначьте цвет ученикам для создания групп',
 
     // Шаблоны парт
     tmpl_rows: 'Ряды',
@@ -651,6 +653,8 @@ export const translations = {
     tool_per: 'Har',
     tool_people: 'kishi',
     tool_groups_info: (n, m) => `${n} guruh · ${m} o\'q.`,
+    tool_color_groups: 'Rang bo\'yicha guruhlar',
+    tool_color_groups_hint: 'Guruh yaratish uchun o\'quvchilarga rang bering',
 
     // Шаблоны
     tmpl_rows: 'Qatorlar',
@@ -1120,6 +1124,8 @@ export const translations = {
     tool_per: 'By',
     tool_people: 'per gr.',
     tool_groups_info: (n, m) => `${n} groups · ${m} students`,
+    tool_color_groups: 'Color Groups',
+    tool_color_groups_hint: 'Assign colors to students to create groups',
 
     // Шаблоны
     tmpl_rows: 'Rows',
