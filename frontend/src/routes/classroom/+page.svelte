@@ -178,14 +178,56 @@
   }
 
   // ==================== DESK DRAGGING (mouse + touch) ====================
+  let pendingDrag = null; // { desk, startX, startY } — ждем движения прежде чем начать drag
+
   function startDeskDrag(e, desk) {
     if (mode !== 'edit') return;
-    e.preventDefault();
-    e.stopPropagation();
-    draggingDesk = desk.id;
+    // Если тап попал на кнопку управления — не начинаем drag
+    if (e.target && e.target.closest && e.target.closest('.desk-controls')) return;
+
     selectedDeskId = desk.id;
-    const rect = canvasEl.getBoundingClientRect();
+
     const p = getClientPos(e);
+
+    if (e.type === 'touchstart') {
+      // Не вызываем preventDefault сразу — иначе блокируем тапы по кнопкам
+      // Запоминаем потенциальный drag, начнём его только при движении
+      pendingDrag = { desk, startX: p.x, startY: p.y };
+      window.addEventListener('touchmove', onTouchMoveMaybeStartDrag, { passive: false });
+      window.addEventListener('touchend', cancelPendingDrag);
+    } else {
+      // Mouse — сразу начинаем drag
+      e.preventDefault();
+      e.stopPropagation();
+      _beginDrag(desk, p);
+    }
+  }
+
+  function onTouchMoveMaybeStartDrag(e) {
+    if (!pendingDrag) return;
+    const p = getClientPos(e);
+    const dx = p.x - pendingDrag.startX;
+    const dy = p.y - pendingDrag.startY;
+    if (Math.abs(dx) > 4 || Math.abs(dy) > 4) {
+      // Движение подтверждено — начинаем drag
+      e.preventDefault();
+      window.removeEventListener('touchmove', onTouchMoveMaybeStartDrag);
+      window.removeEventListener('touchend', cancelPendingDrag);
+      _beginDrag(pendingDrag.desk, pendingDrag);
+      pendingDrag = null;
+      moveDeskDrag(e);
+    }
+  }
+
+  function cancelPendingDrag() {
+    pendingDrag = null;
+    window.removeEventListener('touchmove', onTouchMoveMaybeStartDrag);
+    window.removeEventListener('touchend', cancelPendingDrag);
+  }
+
+  function _beginDrag(desk, p) {
+    draggingDesk = desk.id;
+    const rect = canvasEl.getBoundingClientRect();
     dragOffsetX = p.x - rect.left + canvasEl.scrollLeft - desk.x;
     dragOffsetY = p.y - rect.top + canvasEl.scrollTop - desk.y;
     window.addEventListener('mousemove', moveDeskDrag);
@@ -675,16 +717,16 @@
               <div class="desk-controls absolute flex items-center gap-0.5 z-40 {isSelected?'desk-controls-visible':''}"
                 style="bottom:calc(100% + 4px); left:50%; transform:translateX(-50%) rotate(-{desk.rotation||0}deg); pointer-events:auto;">
                 <div class="flex items-center gap-0.5 px-1 py-0.5 rounded-lg shadow-lg" style="background:rgba(255,255,255,0.95); border:1px solid rgba(0,0,0,0.08);">
-                  <button on:click|stopPropagation={() => rotateDesk(desk.id,-45)} class="w-5 h-5 rounded-md bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-100 transition-colors" title="−45°">
+                  <button on:click|stopPropagation={() => rotateDesk(desk.id,-45)} on:touchend|stopPropagation|preventDefault={() => rotateDesk(desk.id,-45)} class="w-5 h-5 rounded-md bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-100 transition-colors" title="−45°">
                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 10h4V6"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10a9 9 0 0117.5-2.5"/></svg>
                   </button>
-                  <button on:click|stopPropagation={() => rotateDesk(desk.id,45)} class="w-5 h-5 rounded-md bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-100 transition-colors" title="+45°">
+                  <button on:click|stopPropagation={() => rotateDesk(desk.id,45)} on:touchend|stopPropagation|preventDefault={() => rotateDesk(desk.id,45)} class="w-5 h-5 rounded-md bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-100 transition-colors" title="+45°">
                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 10h-4V6"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 10A9 9 0 003.5 7.5"/></svg>
                   </button>
-                  <button on:click|stopPropagation={() => duplicateDesk(desk.id)} class="w-5 h-5 rounded-md bg-green-50 text-green-600 flex items-center justify-center hover:bg-green-100 transition-colors" title="Копировать">
+                  <button on:click|stopPropagation={() => duplicateDesk(desk.id)} on:touchend|stopPropagation|preventDefault={() => duplicateDesk(desk.id)} class="w-5 h-5 rounded-md bg-green-50 text-green-600 flex items-center justify-center hover:bg-green-100 transition-colors" title="Копировать">
                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
                   </button>
-                  <button on:click|stopPropagation={() => removeDesk(desk.id)} class="w-5 h-5 rounded-md bg-red-50 text-red-600 flex items-center justify-center hover:bg-red-100 transition-colors" title="Удалить">
+                  <button on:click|stopPropagation={() => removeDesk(desk.id)} on:touchend|stopPropagation|preventDefault={() => removeDesk(desk.id)} class="w-5 h-5 rounded-md bg-red-50 text-red-600 flex items-center justify-center hover:bg-red-100 transition-colors" title="Удалить">
                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                   </button>
                 </div>
