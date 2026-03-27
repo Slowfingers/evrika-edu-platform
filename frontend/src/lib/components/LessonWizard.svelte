@@ -734,6 +734,24 @@
         {/each}
       </div>
 
+      <!-- Цели и описание -->
+      {#if lessonData.goals || lessonData.description}
+        <div class="card mb-4 space-y-3">
+          {#if lessonData.goals}
+            <div>
+              <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">{$t('wiz_goals')}</p>
+              <p class="text-sm text-gray-900 leading-relaxed">{lessonData.goals}</p>
+            </div>
+          {/if}
+          {#if lessonData.description}
+            <div>
+              <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">{$t('wiz_description')}</p>
+              <p class="text-sm text-gray-700 leading-relaxed">{lessonData.description}</p>
+            </div>
+          {/if}
+        </div>
+      {/if}
+
       <!-- Этапы урока -->
       <div class="space-y-4 mb-6">
         {#each Object.keys(lessonData.lessonStages) as stageId}
