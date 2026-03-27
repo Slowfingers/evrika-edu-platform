@@ -40,6 +40,55 @@
   // Поиск и фильтрация
   let searchQuery = '';
   
+  // Шаблонные цели урока
+  let selectedGoals = [];
+  let customGoal = '';
+  let showGoalTemplates = false;
+  
+  // Определение шаблонов целей
+  $: goalTemplates = {
+    mastery: [
+      { id: 'basic_understanding', label: $t('goal_basic_understanding') },
+      { id: 'deepen_knowledge', label: $t('goal_deepen_knowledge') },
+      { id: 'systematize', label: $t('goal_systematize') },
+      { id: 'generalize', label: $t('goal_generalize') },
+      { id: 'review_reinforce', label: $t('goal_review_reinforce') }
+    ],
+    activity: [
+      { id: 'explain_new', label: $t('goal_explain_new') },
+      { id: 'practice_skills', label: $t('goal_practice_skills') },
+      { id: 'apply_knowledge', label: $t('goal_apply_knowledge') },
+      { id: 'solve_problems', label: $t('goal_solve_problems') },
+      { id: 'do_exercises', label: $t('goal_do_exercises') },
+      { id: 'lab_research', label: $t('goal_lab_research') }
+    ],
+    skills: [
+      { id: 'critical_thinking', label: $t('goal_critical_thinking') },
+      { id: 'logic_analysis', label: $t('goal_logic_analysis') },
+      { id: 'creativity', label: $t('goal_creativity') },
+      { id: 'communication', label: $t('goal_communication') },
+      { id: 'independence', label: $t('goal_independence') },
+      { id: 'teamwork', label: $t('goal_teamwork') }
+    ]
+  };
+  
+  // Обновление поля goals при изменении выбранных целей
+  $: {
+    const goals = [...selectedGoals.map(id => {
+      for (const category of Object.values(goalTemplates)) {
+        const found = category.find(g => g.id === id);
+        if (found) return found.label;
+      }
+      return '';
+    }).filter(Boolean)];
+    
+    if (customGoal.trim()) {
+      goals.push(customGoal.trim());
+    }
+    
+    lessonData.goals = goals.join('; ');
+  }
+  
   // Текущий выбранный этап урока для добавления карточек
   let currentLessonStage = 'начало-урока';
   
@@ -355,9 +404,86 @@
             placeholder={$t('wiz_topic_ph')} class="input" />
         </div>
         <div class="mt-4">
-          <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5" for="goals">{$t('wiz_goals')}</label>
-          <textarea id="goals" bind:value={lessonData.goals} rows="2"
-            placeholder={$t('wiz_goals_ph')} class="input resize-none"></textarea>
+          <div class="flex items-center justify-between mb-2">
+            <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide">{$t('wiz_goals')}</label>
+            <button type="button" on:click={() => showGoalTemplates = !showGoalTemplates}
+              class="text-xs font-medium text-purple-600 hover:text-purple-700 flex items-center gap-1 transition-colors">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+              </svg>
+              {$t('goal_templates_title')}
+            </button>
+          </div>
+          
+          {#if showGoalTemplates}
+            <div transition:slide={{ duration: 200 }} class="mb-3 p-3 rounded-xl bg-gradient-to-br from-purple-50 to-blue-50 border border-purple-100">
+              <!-- По уровню освоения -->
+              <div class="mb-3">
+                <p class="text-xs font-bold text-gray-700 mb-2">{$t('goal_cat_mastery')}</p>
+                <div class="flex flex-wrap gap-1.5">
+                  {#each goalTemplates.mastery as goal}
+                    <label class="cursor-pointer">
+                      <input type="checkbox" bind:group={selectedGoals} value={goal.id} class="sr-only peer" />
+                      <span class="inline-block px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all
+                        peer-checked:bg-purple-600 peer-checked:text-white peer-checked:shadow-md
+                        bg-white text-gray-700 hover:bg-purple-50 border border-gray-200 peer-checked:border-purple-600">
+                        {goal.label}
+                      </span>
+                    </label>
+                  {/each}
+                </div>
+              </div>
+              
+              <!-- По типу деятельности -->
+              <div class="mb-3">
+                <p class="text-xs font-bold text-gray-700 mb-2">{$t('goal_cat_activity')}</p>
+                <div class="flex flex-wrap gap-1.5">
+                  {#each goalTemplates.activity as goal}
+                    <label class="cursor-pointer">
+                      <input type="checkbox" bind:group={selectedGoals} value={goal.id} class="sr-only peer" />
+                      <span class="inline-block px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all
+                        peer-checked:bg-blue-600 peer-checked:text-white peer-checked:shadow-md
+                        bg-white text-gray-700 hover:bg-blue-50 border border-gray-200 peer-checked:border-blue-600">
+                        {goal.label}
+                      </span>
+                    </label>
+                  {/each}
+                </div>
+              </div>
+              
+              <!-- По развитию навыков -->
+              <div>
+                <p class="text-xs font-bold text-gray-700 mb-2">{$t('goal_cat_skills')}</p>
+                <div class="flex flex-wrap gap-1.5">
+                  {#each goalTemplates.skills as goal}
+                    <label class="cursor-pointer">
+                      <input type="checkbox" bind:group={selectedGoals} value={goal.id} class="sr-only peer" />
+                      <span class="inline-block px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all
+                        peer-checked:bg-emerald-600 peer-checked:text-white peer-checked:shadow-md
+                        bg-white text-gray-700 hover:bg-emerald-50 border border-gray-200 peer-checked:border-emerald-600">
+                        {goal.label}
+                      </span>
+                    </label>
+                  {/each}
+                </div>
+              </div>
+            </div>
+          {/if}
+          
+          <!-- Поле для своей цели -->
+          <div class="mb-2">
+            <input type="text" bind:value={customGoal}
+              placeholder={$t('goal_custom')}
+              class="input text-sm" />
+          </div>
+          
+          <!-- Превью выбранных целей -->
+          {#if lessonData.goals}
+            <div class="p-3 rounded-lg bg-gray-50 border border-gray-200">
+              <p class="text-xs text-gray-500 mb-1 font-medium">{$t('wiz_goals')}:</p>
+              <p class="text-sm text-gray-900">{lessonData.goals}</p>
+            </div>
+          {/if}
         </div>
         <div class="mt-4">
           <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5" for="description">{$t('wiz_description')} <span class="font-normal text-gray-400">({$t('wiz_optional')})</span></label>

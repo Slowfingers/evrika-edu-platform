@@ -362,6 +362,36 @@ export const translations = {
     wiz_edit_techniques: 'Изменить приёмы',
     wiz_save_pdf: 'Сохранить в PDF',
     wiz_save_docx: 'Сохранить в DOCX',
+    
+    // Шаблонные цели урока
+    goal_templates_title: 'Шаблоны целей',
+    goal_custom: 'Своя цель',
+    goal_cat_mastery: 'По уровню освоения материала',
+    goal_cat_activity: 'По типу деятельности',
+    goal_cat_skills: 'По развитию навыков',
+    
+    // По уровню освоения
+    goal_basic_understanding: 'Формирование базового понимания',
+    goal_deepen_knowledge: 'Углубление и расширение знаний',
+    goal_systematize: 'Систематизация знаний',
+    goal_generalize: 'Обобщение темы',
+    goal_review_reinforce: 'Повторение и закрепление',
+    
+    // По типу деятельности
+    goal_explain_new: 'Объяснение нового материала',
+    goal_practice_skills: 'Отработка навыков (тренировка)',
+    goal_apply_knowledge: 'Применение знаний на практике',
+    goal_solve_problems: 'Решение задач / кейсов',
+    goal_do_exercises: 'Выполнение упражнений',
+    goal_lab_research: 'Лабораторная / исследовательская работа',
+    
+    // По развитию навыков
+    goal_critical_thinking: 'Развитие критического мышления',
+    goal_logic_analysis: 'Развитие логики и анализа',
+    goal_creativity: 'Развитие креативности',
+    goal_communication: 'Развитие коммуникативных навыков',
+    goal_independence: 'Развитие самостоятельности',
+    goal_teamwork: 'Развитие навыков работы в группе',
 
     // InteractiveTarget (доп. ключи)
     target_topic: 'Тема',
@@ -801,6 +831,36 @@ export const translations = {
     wiz_edit_techniques: 'Usullarni o\'zgartirish',
     wiz_save_pdf: 'PDF da saqlash',
     wiz_save_docx: 'DOCX da saqlash',
+    
+    // Шаблонные цели урока
+    goal_templates_title: 'Maqsad shablonlari',
+    goal_custom: 'O\'z maqsadingiz',
+    goal_cat_mastery: 'O\'zlashtirish darajasi bo\'yicha',
+    goal_cat_activity: 'Faoliyat turi bo\'yicha',
+    goal_cat_skills: 'Ko\'nikmalarni rivojlantirish bo\'yicha',
+    
+    // По уровню освоения
+    goal_basic_understanding: 'Asosiy tushunchani shakllantirish',
+    goal_deepen_knowledge: 'Bilimlarni chuqurlashtirish va kengaytirish',
+    goal_systematize: 'Bilimlarni tizimlash',
+    goal_generalize: 'Mavzuni umumlashtirish',
+    goal_review_reinforce: 'Takrorlash va mustahkamlash',
+    
+    // По типу деятельности
+    goal_explain_new: 'Yangi materialni tushuntirish',
+    goal_practice_skills: 'Ko\'nikmalarni mashq qilish (trenirovka)',
+    goal_apply_knowledge: 'Bilimlarni amalda qo\'llash',
+    goal_solve_problems: 'Masalalar / keyslarni yechish',
+    goal_do_exercises: 'Mashqlarni bajarish',
+    goal_lab_research: 'Laboratoriya / tadqiqot ishi',
+    
+    // По развитию навыков
+    goal_critical_thinking: 'Tanqidiy fikrlashni rivojlantirish',
+    goal_logic_analysis: 'Mantiq va tahlilni rivojlantirish',
+    goal_creativity: 'Ijodkorlikni rivojlantirish',
+    goal_communication: 'Kommunikativ ko\'nikmalarni rivojlantirish',
+    goal_independence: 'Mustaqillikni rivojlantirish',
+    goal_teamwork: 'Jamoada ishlash ko\'nikmalarini rivojlantirish',
 
     // InteractiveTarget
     target_topic: 'Mavzu',
@@ -1240,6 +1300,36 @@ export const translations = {
     wiz_edit_techniques: 'Edit Techniques',
     wiz_save_pdf: 'Save as PDF',
     wiz_save_docx: 'Save as DOCX',
+    
+    // Шаблонные цели урока
+    goal_templates_title: 'Goal Templates',
+    goal_custom: 'Custom Goal',
+    goal_cat_mastery: 'By Mastery Level',
+    goal_cat_activity: 'By Activity Type',
+    goal_cat_skills: 'By Skills Development',
+    
+    // По уровню освоения
+    goal_basic_understanding: 'Building basic understanding',
+    goal_deepen_knowledge: 'Deepening and expanding knowledge',
+    goal_systematize: 'Systematizing knowledge',
+    goal_generalize: 'Generalizing the topic',
+    goal_review_reinforce: 'Review and reinforcement',
+    
+    // По типу деятельности
+    goal_explain_new: 'Explaining new material',
+    goal_practice_skills: 'Practicing skills (training)',
+    goal_apply_knowledge: 'Applying knowledge in practice',
+    goal_solve_problems: 'Solving problems / cases',
+    goal_do_exercises: 'Doing exercises',
+    goal_lab_research: 'Laboratory / research work',
+    
+    // По развитию навыков
+    goal_critical_thinking: 'Developing critical thinking',
+    goal_logic_analysis: 'Developing logic and analysis',
+    goal_creativity: 'Developing creativity',
+    goal_communication: 'Developing communication skills',
+    goal_independence: 'Developing independence',
+    goal_teamwork: 'Developing teamwork skills',
 
     // InteractiveTarget
     target_topic: 'Topic',
