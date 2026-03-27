@@ -2,9 +2,9 @@ import { formatTimeDisplay } from './time-intervals.js';
 import { getAgeGroupNames, getSkillNames, getStageNames, getTypeNames } from './localization.js';
 
 /**
- * Экспорт урока в PDF через браузерную печать
+ * Экспорт урока в PDF через браузерную печать или прямое скачивание HTML
  */
-export function exportLessonToPDF(lessonData) {
+export function exportLessonToPDF(lessonData, directDownload = false) {
   try {
     // Проверяем, что данные урока корректны
     if (!lessonData) {
@@ -21,7 +21,16 @@ export function exportLessonToPDF(lessonData) {
     // Создаем полный HTML документ
     const fullHTML = createFullHTMLDocument(lessonData, printContent);
     
-    // Открываем новое окно с содержимым для печати
+    // Проверяем, мобильное ли устройство или запрошено прямое скачивание
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    if (directDownload || isMobile) {
+      // На мобильных или при прямом скачивании - сразу скачиваем HTML файл
+      downloadAsHTMLFile(fullHTML, lessonData.topic);
+      return;
+    }
+    
+    // На десктопе - открываем окно печати
     const printWindow = window.open('', '_blank');
     if (!printWindow) {
       // Если всплывающие окна заблокированы, скачиваем как HTML файл
@@ -37,8 +46,6 @@ export function exportLessonToPDF(lessonData) {
     printWindow.onload = function() {
       setTimeout(() => {
         printWindow.print();
-        // Закрываем окно после печати (опционально)
-        // printWindow.close();
       }, 500);
     };
     
@@ -57,14 +64,19 @@ function downloadAsHTMLFile(htmlContent, topicName) {
   
   const link = document.createElement('a');
   link.href = url;
-  link.download = `план-урока-${topicName || 'без-названия'}.html`;
+  link.download = `план-урока-${sanitizeFileName(topicName || 'без-названия')}.html`;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
   
   URL.revokeObjectURL(url);
-  
-  alert('HTML файл плана урока скачан. Откройте его в браузере и используйте Ctrl+P для печати в PDF.');
+}
+
+/**
+ * Очищает имя файла от недопустимых символов
+ */
+function sanitizeFileName(name) {
+  return name.replace(/[^a-zа-яё0-9\s-]/gi, '').replace(/\s+/g, '-').toLowerCase();
 }
 
 /**

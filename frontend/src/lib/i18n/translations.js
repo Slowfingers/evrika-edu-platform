@@ -361,6 +361,7 @@ export const translations = {
     wiz_time_label: 'Время',
     wiz_edit_techniques: 'Изменить приёмы',
     wiz_save_pdf: 'Сохранить в PDF',
+    wiz_save_docx: 'Сохранить в DOCX',
 
     // InteractiveTarget (доп. ключи)
     target_topic: 'Тема',
@@ -799,6 +800,7 @@ export const translations = {
     wiz_time_label: 'Vaqt',
     wiz_edit_techniques: 'Usullarni o\'zgartirish',
     wiz_save_pdf: 'PDF da saqlash',
+    wiz_save_docx: 'DOCX da saqlash',
 
     // InteractiveTarget
     target_topic: 'Mavzu',
@@ -1237,6 +1239,7 @@ export const translations = {
     wiz_time_label: 'Time',
     wiz_edit_techniques: 'Edit Techniques',
     wiz_save_pdf: 'Save as PDF',
+    wiz_save_docx: 'Save as DOCX',
 
     // InteractiveTarget
     target_topic: 'Topic',
