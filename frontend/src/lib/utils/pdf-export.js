@@ -222,7 +222,7 @@ function createFullHTMLDocument(lessonData, printContent) {
  * Создает HTML контент для печати
  */
 function createPrintableContent(lessonData) {
-  const { subject, topic, grade, description, cards, totalTime } = lessonData;
+  const { subject, topic, grade, description, goals, cards, totalTime } = lessonData;
   
   return `
     <div class="header">
@@ -250,6 +250,12 @@ function createPrintableContent(lessonData) {
           <span class="info-value">${totalTime} минут</span>
         </div>
       </div>
+      ${goals ? `
+        <div class="info-item" style="margin-top: 15px;">
+          <span class="info-label">Цели урока:</span>
+          <span class="info-value">${goals}</span>
+        </div>
+      ` : ''}
       ${description ? `
         <div class="info-item" style="margin-top: 15px;">
           <span class="info-label">Описание:</span>
