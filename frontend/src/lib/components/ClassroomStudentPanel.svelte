@@ -213,8 +213,8 @@
       </div>
       <div class="space-y-1.5">
         {#each groups as group, gi}
-          {@const gc = GROUP_COLORS[gi % GROUP_COLORS.length]}
-          <div class="p-2 rounded-xl" style="background:{gc}12; border:1px solid {gc}35;">
+          {@const gc = group[0]?.groupColor || GROUP_COLORS[gi % GROUP_COLORS.length]}
+          <div class="p-2 rounded-xl" style="background:{gc}18; border:1px solid {gc}40;">
             <div class="flex items-center gap-1.5 mb-1.5">
               <div class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background:{gc};"></div>
               <span class="text-[10px] font-bold" style="color:{gc};">{$t('group_n', gi + 1)}</span>
