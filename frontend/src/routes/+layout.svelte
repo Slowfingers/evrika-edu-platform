@@ -2,6 +2,7 @@
   import '../app.css';
   import { page } from '$app/stores';
   import Header from '$lib/components/Header.svelte';
+  import TelegramPopup from '$lib/components/TelegramPopup.svelte';
   import { t } from '$lib/stores/lang.js';
 
   $: currentPath = $page.url.pathname;
@@ -52,6 +53,8 @@
     </div>
   </div>
 {/if}
+
+<TelegramPopup />
 
 <!-- Мобильная нижняя навигация (PWA) -->
 <nav class="mobile-nav">
