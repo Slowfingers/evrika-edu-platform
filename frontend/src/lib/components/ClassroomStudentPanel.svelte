@@ -110,9 +110,9 @@
             {isMobile ? 'active:scale-95' : 'cursor-grab active:cursor-grabbing'}"
             draggable={!isMobile}
             on:dragstart={(e) => dispatch('studentDragStart', { e, id: s.id })}
-            on:click={() => dispatch('mobileSelect', s.id)}
-            on:touchend|stopPropagation|preventDefault={() => dispatch('mobileSelect', s.id)}>
-            <div class="w-7 h-7 rounded-full flex items-center justify-center text-white text-[9px] font-bold flex-shrink-0 shadow-sm cursor-pointer"
+            on:click={(e) => { if (!e.target.closest('.stu-color-icon')) dispatch('mobileSelect', s.id); }}
+            on:touchend|stopPropagation|preventDefault={(e) => { if (!e.target.closest('.stu-color-icon')) dispatch('mobileSelect', s.id); }}>
+            <div class="stu-color-icon w-7 h-7 rounded-full flex items-center justify-center text-white text-[9px] font-bold flex-shrink-0 shadow-sm cursor-pointer"
               style="background:{s.groupColor || '#6366f1'};"
               title={$t('student_color_tip')}
               on:click|stopPropagation={() => dispatch('cycleColor', s.id)}
