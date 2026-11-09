@@ -68,67 +68,12 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Создать карточку (только для админов)
-router.post('/', 
-  AuthService.authenticateToken, 
-  AuthService.requireAdmin, 
-  async (req, res) => {
-    try {
-      const card = await CardService.createCard(req.body);
-      res.status(201).json({
-        success: true,
-        data: card,
-        message: 'Карточка успешно создана'
-      });
-    } catch (error) {
-      res.status(400).json({ 
-        error: error.message 
-      });
-    }
-  }
-);
-
-// Обновить карточку (только для админов)
-router.put('/:id', 
-  AuthService.authenticateToken, 
-  AuthService.requireAdmin, 
-  async (req, res) => {
-    try {
-      const card = await CardService.updateCard(req.params.id, req.body);
-      res.json({
-        success: true,
-        data: card,
-        message: 'Карточка успешно обновлена'
-      });
-    } catch (error) {
-      if (error.message === 'Карточка не найдена') {
-        res.status(404).json({ error: error.message });
-      } else {
-        res.status(400).json({ error: error.message });
-      }
-    }
-  }
-);
-
-// Удалить карточку (только для админов)
-router.delete('/:id', 
-  AuthService.authenticateToken, 
-  AuthService.requireAdmin, 
-  async (req, res) => {
-    try {
-      await CardService.deleteCard(req.params.id);
-      res.json({
-        success: true,
-        message: 'Карточка успешно удалена'
-      });
-    } catch (error) {
-      if (error.message === 'Карточка не найдена') {
-        res.status(404).json({ error: error.message });
-      } else {
-        res.status(500).json({ error: error.message });
-      }
-    }
-  }
-);
+// Catalog writes are intentionally unsupported by the JSON store.
+router.all('/', AuthService.authenticateToken, AuthService.requireAdmin, (req, res) => {
+  res.status(405).json({ error: 'Каталог доступен только для чтения' });
+});
+router.all('/:id', AuthService.authenticateToken, AuthService.requireAdmin, (req, res) => {
+  res.status(405).json({ error: 'Каталог доступен только для чтения' });
+});
 
 module.exports = router;

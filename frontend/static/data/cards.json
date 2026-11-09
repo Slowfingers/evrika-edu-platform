@@ -25,7 +25,13 @@
       "frontal"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Mantiqiy zanjir",
+    "title_en": null,
+    "description_uz": "O‘quvchilar faktlarni muayyan mantiqiy yoki xronologik tartibda joylashtiradilar.",
+    "description_en": null,
+    "content_uz": "O‘quvchilar faktlardan muayyan mantiqiy yoki xronologik tartibda zanjir tuzadilar. Zanjir gaplar, sanalar, qoidalar, qadamlar, harakatlar, iqtiboslar, rasmlar, formulalar, fikrlar, ta’riflar va tamoyillardan tuzilishi mumkin.\n\nDarsda o‘quvchilar quyidagi mavzu bo‘yicha mantiqiy zanjir tuzadilar: ___________________________________________________\n\nUlar quyidagilarni tartib bilan joylashtirishlari kerak: ___________________________________________________\n\nKutiladigan natija:\n- katta hajmdagi axborotni eslab qolish va anglash;\n- voqealar, hodisalar, xususiyatlar yoki jarayonlarning qonuniyatlarini aniqlash;\n- tanqidiy va mantiqiy fikrlash hamda xotirani rivojlantirish.",
+    "content_en": null
   },
   {
     "id": 4,
@@ -50,7 +56,13 @@
       "individual"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Chiqish chiptasi 🎫",
+    "title_en": null,
+    "description_uz": "O‘quvchilarning mavzuni qay darajada o‘zlashtirganini baholash usuli.",
+    "description_en": null,
+    "content_uz": "Har bir o‘quvchiga kichik qog‘oz yoki kartochka — «chipta» beriladi. Unda o‘tilgan mavzuni umumlashtirishga yordam beradigan topshiriq yozilgan bo‘ladi.\n\nO‘quvchilar topshiriqni bajarib, sinfdan chiqishdan oldin «chipta»ni topshiradilar.",
+    "content_en": null
   },
   {
     "id": 5,
@@ -75,7 +87,13 @@
       "individual"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "321",
+    "title_en": null,
+    "description_uz": "O‘tilgan mavzuni umumlashtirishga yordam beradigan usul.",
+    "description_en": null,
+    "content_uz": "Dars yoki mavzu bo‘limi oxirida o‘quvchilar uch guruh savolga yozma javob beradilar:\n\n3 — bugun bilib olgan uchta fakt, g‘oya yoki atama.\n2 — eng qiziqarli yoki muhim deb hisoblagan ikkita jihat.\n1 — javobsiz qolgan bitta savol yoki duch kelgan bitta qiyinchilik.",
+    "content_en": null
   },
   {
     "id": 6,
@@ -101,7 +119,13 @@
       "frontal"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "✈️Parvoz va qo‘nish🛬",
+    "title_en": null,
+    "description_uz": "Mavzuning o‘zlashtirilishini faol harakat orqali tekshirish usuli.",
+    "description_en": null,
+    "content_uz": "O‘tkazish tartibi:\nO‘qituvchi dars mavzusiga oid fikrni o‘qiydi.\nO‘quvchilar fikrni to‘g‘ri deb hisoblasalar, o‘rinlaridan turadilar.\nFikr noto‘g‘ri bo‘lsa, o‘tiradilar yoki o‘tirgan holda qoladilar.",
+    "content_en": null
   },
   {
     "id": 7,
@@ -132,7 +156,13 @@
       "individual"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Vaqtli davra suhbati (Timed round robin)",
+    "title_en": null,
+    "description_uz": "«Davra bo‘ylab navbat bilan so‘zlash» usuli.",
+    "description_en": null,
+    "content_uz": "O‘tkazish sharti: bir stol atrofida 4 nafar o‘quvchi o‘tiradi.\n\nBosqichlar:\n1. O‘qituvchi savol beradi yoki o‘quvchilar gapirib berishi kerak bo‘lgan mavzuni taklif qiladi.\n2. Har bir o‘quvchi javobini tayyorlashi uchun taymer ____ soniyaga qo‘yiladi.\n3. Keyin o‘quvchilar davra bo‘ylab navbat bilan tayyorlagan javoblarini belgilangan vaqt ichida — har biri _____ soniyadan aytadilar.\nMuhim: bir-birini faol tinglash kerak.\n4. Davra tugagach, o‘qituvchi bir necha o‘quvchidan ularning stolidagi boshqa o‘quvchilar nimalar aytganini so‘raydi.",
+    "content_en": null
   },
   {
     "id": 8,
@@ -162,7 +192,13 @@
       "individual"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "O‘yla — juftlikda muhokama qil — baham ko‘r",
+    "title_en": null,
+    "description_uz": "«Think-pair-share» usuli.",
+    "description_en": null,
+    "content_uz": "Bosqichlar:\n1. O‘qituvchi savol beradi yoki yechish uchun topshiriq taklif qiladi.\n2. O‘quvchilar yechim haqida o‘ylashlari uchun taymer ______ soniyaga qo‘yiladi.\n3. So‘ng topshiriqni yozma bajarish uchun taymer _____ soniyaga qo‘yiladi.\n4. O‘quvchilar bajargan topshiriqlarini navbat bilan aytib beradilar. O‘qituvchi qatorlar orasida yurib, javoblarni tinglaydi.\n\nMuhim! O‘quvchilar bir-birlarini faol tinglaydilar.",
+    "content_en": null
   },
   {
     "id": 9,
@@ -190,7 +226,13 @@
       "pair"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Sinkveyn",
+    "title_en": null,
+    "description_uz": "Mavzuni umumlashtirish uchun besh misrali she’riy shakl.",
+    "description_en": null,
+    "content_uz": "Sinkveyn — o‘rganilgan materialni umumlashtirishga yordam beradigan besh misrali she’riy shakl.\n\nTuzilishi:\n1-misra — bitta ot (mavzu).\n2-misra — ikkita sifat (mavzu tavsifi).\n3-misra — uchta fe’l (mavzuga oid harakatlar).\n4-misra — to‘rt so‘zli ibora (mavzuga munosabat).\n5-misra — bitta xulosa so‘zi (mavzuning ma’nodoshi).\n\n«Kitob» mavzusida namuna:\nKitob\nQiziqarli, ma’rifiy\nO‘rgatadi, rivojlantiradi, ilhomlantiradi\nKitob bizning bilim manbaimiz\nDonolik",
+    "content_en": null
   },
   {
     "id": 10,
@@ -219,7 +261,13 @@
       "team"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Klaster",
+    "title_en": null,
+    "description_uz": "Axborotni grafik tarzda tartibga solish usuli.",
+    "description_en": null,
+    "content_uz": "Klaster — o‘quv materialini grafik tarzda tartibga solish usuli.\n\nKlaster tuzish:\n1. Varaq markaziga kalit so‘z yoki mavzu yoziladi.\n2. Uning atrofiga bog‘liq tushunchalar, g‘oyalar va faktlar yoziladi.\n3. Har bir yangi tushuncha markaz yoki boshqa tushunchalar bilan chiziq orqali bog‘lanadi.\n4. Turli toifalar uchun turli ranglardan foydalanish mumkin.\n\nNatija:\n- tushunchalar o‘rtasidagi aloqalarni ko‘rgazmali ifodalash;\n- katta hajmdagi axborotni tartibga solish;\n- assotsiativ fikrlashni rivojlantirish.",
+    "content_en": null
   },
   {
     "id": 11,
@@ -246,7 +294,13 @@
       "pair"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "G‘oyalar savati 🧺",
+    "title_en": null,
+    "description_uz": "O‘quvchilarning mavzuga oid barcha g‘oya va taxminlarini yig‘ish.",
+    "description_en": null,
+    "content_uz": "Dars boshida mavjud bilimlarni faollashtirish usuli.\n\nO‘tkazish tartibi:\n1. O‘qituvchi dars mavzusini aytadi.\n2. Har bir o‘quvchi mavzu haqida bilganlarini yozadi (1–2 daqiqa).\n3. Juftliklarda axborot almashiladi (2–3 daqiqa).\n4. Har bir juftlik avval aytilganlarni takrorlamasdan bittadan fakt aytadi.\n5. Barcha g‘oyalar izohsiz doskadagi «savat»ga yoziladi.\n6. Dars oxirida «savat»ga qaytib, g‘oyalarning to‘g‘riligi tekshiriladi.\n\nMuhim: barcha g‘oyalar, hatto xato fikrlar ham qabul qilinadi — ular dars davomida tuzatiladi.",
+    "content_en": null
   },
   {
     "id": 12,
@@ -273,7 +327,13 @@
       "pair"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Ikki yulduz va bir tilak ⭐⭐💫",
+    "title_en": null,
+    "description_uz": "O‘quvchilar ishlarini o‘zaro baholash usuli.",
+    "description_en": null,
+    "content_uz": "Ishlarni o‘zaro tekshirish uchun shakllantiruvchi baholash usuli.\n\nO‘tkazish tartibi:\n1. O‘quvchilar juftlik yoki guruhlarda ishlarini almashadilar.\n2. Har kim sherigining ishidan IKKI YULDUZ — ikkita ijobiy jihat yoki muvaffaqiyatli yechimni topadi.\n3. Keyin BITTA TILAK — nimani yaxshilash mumkinligini ifodalaydi.\n4. Fikr-mulohaza yozma yoki og‘zaki bildiriladi.\n\nQoidalar:\n- Yulduzlar umumiy («yaxshi») emas, aniq bo‘lishi kerak.\n- Tilak amaliy taklifni o‘z ichiga olishi kerak.\n- Tanqid xayrixoh ruhda bo‘lishi kerak.",
+    "content_en": null
   },
   {
     "id": 13,
@@ -300,7 +360,13 @@
       "team"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Fikrlashning olti qalpog‘i 🎩",
+    "title_en": null,
+    "description_uz": "Edvard de Bononing fikrlashni tashkil etish usuli.",
+    "description_en": null,
+    "content_uz": "Muammoni turli tomonlardan tahlil qilish uchun Edvard de Bononing parallel fikrlash usuli.\n\nOlti qalpoq:\n🤍 Oq — his-tuyg‘ularsiz faktlar, raqamlar va axborot.\n🔴 Qizil — hissiyotlar, tuyg‘ular va ichki sezgi.\n⚫ Qora — tanqid, xavflar va salbiy jihatlar.\n💛 Sariq — nekbinlik, afzalliklar va ijobiy jihatlar.\n💚 Yashil — ijodkorlik, yangi g‘oyalar va muqobil yechimlar.\n💙 Ko‘k — jarayonni boshqarish va xulosalar.\n\nQo‘llash tartibi:\n1. Sinf 6 guruhga bo‘linadi, har biri o‘z «qalpog‘i»ni oladi.\n2. Guruhlar mavzu yoki muammoni o‘z nuqtayi nazaridan tahlil qiladilar.\n3. Har bir guruh o‘z qarashlarini taqdim etadi.\n4. Umumiy muhokama o‘tkazilib, xulosalar chiqariladi.",
+    "content_en": null
   },
   {
     "id": 14,
@@ -329,7 +395,13 @@
       "team"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Blum moychechagi 🌼",
+    "title_en": null,
+    "description_uz": "Blum taksonomiyasi bo‘yicha turli murakkablikdagi savollar.",
+    "description_en": null,
+    "content_uz": "Turli murakkablikdagi savollarni tuzish usuli.\n\nSavol turlari (moychechak yaproqlari):\n1. Oddiy — faktlarga oid savollar (Kim? Nima? Qachon?).\n2. Aniqlashtiruvchi — tushunganlikni tekshirish (Men ... deb to‘g‘ri tushundimmi?).\n3. Izohlovchi — tushuntirish (Nega? Nima uchun?).\n4. Ijodiy — taxmin qilish (Agar ... bo‘lsa, nima bo‘lardi?).\n5. Baholovchi — munosabat bildirish (...ga qanday qaraysiz?).\n6. Amaliy — qo‘llash (...dan qanday foydalanish mumkin?).\n\nQo‘llash:\n- O‘quvchilar yaproqni tanlab, shu turdagi savol tuzadilar.\n- Yoki har bir guruh bir turdagi savollarni tayyorlaydi.",
+    "content_en": null
   },
   {
     "id": 15,
@@ -357,7 +429,13 @@
       "team"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Baliq skeleti (Fishbone) 🐟",
+    "title_en": null,
+    "description_uz": "Sabab va oqibatlarni tahlil qilish uchun «baliq skeleti» diagrammasi.",
+    "description_en": null,
+    "content_uz": "Sabab-oqibat bog‘lanishlarini aniqlashning grafik usuli.\n\nDiagramma tuzilishi:\n- Baliq boshi — muammo yoki savol.\n- Yuqori suyaklar — muammo sabablari.\n- Pastki suyaklar — sabablarni tasdiqlovchi faktlar.\n- Dum — xulosa yoki yechim.\n\nTuzish tartibi:\n1. «Bosh»ga muammo yoki mavzu yoziladi.\n2. Yuqori «suyaklar»ga asosiy sabablar yoki toifalar yoziladi.\n3. Pastki «suyaklar»ga faktlar va dalillar yoziladi.\n4. «Dum»ga xulosa yoki muammo yechimi yoziladi.\n\nTarixiy voqealar, ilmiy hodisalar va adabiy asarlarni tahlil qilish uchun mos.",
+    "content_en": null
   },
   {
     "id": 16,
@@ -382,7 +460,13 @@
       "individual"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "INSERT",
+    "title_en": null,
+    "description_uz": "Matnga belgilar qo‘yib faol o‘qish usuli.",
+    "description_en": null,
+    "content_uz": "Matnga belgilar qo‘yib faol o‘qish usuli.\n\nBelgilar tizimi:\n✓ — buni bilar edim.\n+ — yangi ma’lumot.\n− — boshqacha o‘ylagan edim, bilimlarimga zid.\n? — tushunmadim, savollarim bor.\n\nQo‘llash tartibi:\n1. O‘quvchilar matnni o‘qib, hoshiyaga belgilar qo‘yadilar.\n2. O‘qib bo‘lgach, to‘rt ustunli jadvalni to‘ldiradilar.\n3. Nimalar tasdiqlangani, qanday yangiliklar o‘rganilgani va nimalar hayratlantirgani muhokama qilinadi.\n\nNatija:\n- faol va anglab o‘qish;\n- bilimdagi bo‘shliqlarni aniqlash;\n- tanqidiy fikrlashni rivojlantirish.",
+    "content_en": null
   },
   {
     "id": 17,
@@ -407,7 +491,13 @@
       "frontal"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Qaynoq stul 🪑🔥",
+    "title_en": null,
+    "description_uz": "O‘quvchi qahramon yoki tushuncha nomidan sinf savollariga javob beradi.",
+    "description_en": null,
+    "content_uz": "Mavzuni chuqur o‘rganish uchun rolli usul.\n\nO‘tkazish tartibi:\n1. Bir o‘quvchi sinf oldidagi «qaynoq stul»ga o‘tiradi.\n2. U tarixiy shaxs, adabiy qahramon yoki hatto ilmiy tushuncha rolini ijro etadi.\n3. Qolgan o‘quvchilar unga savollar beradilar.\n4. «Qahramon» shaxs yoki mavzu haqidagi bilimlariga tayanib, birinchi shaxs nomidan javob beradi.\n\nVariantlar:\n- Tarixiy shaxs bilan suhbat.\n- Adabiy qahramonni savolga tutish.\n- «Men — suv molekulasiman» (tabiiy fanlar uchun).\n\nHamdardlik, mavzuni chuqur tushunish va badihago‘ylik ko‘nikmalarini rivojlantiradi.",
+    "content_en": null
   },
   {
     "id": 18,
@@ -433,7 +523,13 @@
       "team"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Karusel 🎠",
+    "title_en": null,
+    "description_uz": "Guruhlarning topshiriqli bekatlar bo‘ylab almashinib ishlashi.",
+    "description_en": null,
+    "content_uz": "Bekatlarni almashtirib guruh ishini tashkil etish usuli.\n\nTayyorgarlik:\n1. Mavzuga oid turli topshiriqlar bilan 4–6 ta bekat tayyorlang.\n2. Sinfni bekatlar soniga mos guruhlarga bo‘ling.\n3. Har bir bekatda ishlash vaqtini belgilang (5–7 daqiqa).\n\nO‘tkazish tartibi:\n1. Guruhlar o‘z bekatlarida ish boshlaydilar.\n2. Ishora berilgach, davra bo‘ylab keyingi bekatga o‘tadilar.\n3. Har bekatda oldingi guruh ishini davom ettiradilar yoki yangi topshiriq bajaradilar.\n4. To‘liq aylana tugagach, natijalar birgalikda muhokama qilinadi.\n\nTakrorlash, mustahkamlash va loyiha ishlari uchun mos.",
+    "content_en": null
   },
   {
     "id": 19,
@@ -459,7 +555,13 @@
       "frontal"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Svetofor 🚦",
+    "title_en": null,
+    "description_uz": "Rangli belgilar yordamida tezkor fikr-mulohaza olish.",
+    "description_en": null,
+    "content_uz": "Butun sinfdan tezkor fikr-mulohaza olish usuli.\n\nKerakli materiallar:\n- Har bir o‘quvchi uchun uch rangli (qizil, sariq, yashil) kartochkalar.\n- Yoki stakanchalar, kubiklar va ishora kartochkalari.\n\nMa’nolari:\n🟢 Yashil — hammasi tushunarli, davom etishim mumkin.\n🟡 Sariq — biroz qiyinchilik bor, aniqlashtirish kerak.\n🔴 Qizil — tushunmayapman, yordam kerak.\n\nQachon qo‘llanadi:\n- Yangi mavzu tushuntirilgandan keyin.\n- Mustaqil ish davomida.\n- Keyingi bosqichga tayyorlikni tekshirish uchun.\n\nO‘qituvchi kimga yordam kerakligini darhol ko‘radi.",
+    "content_en": null
   },
   {
     "id": 20,
@@ -485,7 +587,13 @@
       "frontal"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Ha yoki yo‘q",
+    "title_en": null,
+    "description_uz": "Javobi «ha» yoki «yo‘q» bo‘lgan savollar orqali tushunchani topish.",
+    "description_en": null,
+    "content_uz": "Mantiqiy fikrlashni rivojlantiradigan o‘yin usuli.\n\nQoidalar:\n1. O‘qituvchi yoki o‘quvchi dars mavzusiga oid tushuncha, qahramon yoki buyumni yashiradi.\n2. Sinf faqat «ha» yoki «yo‘q» deb javob berish mumkin bo‘lgan savollarni beradi.\n3. Maqsad — imkon qadar kam savol bilan yashirilgan narsani topish.\n\nStrategiyalar:\n- Umumiy savollardan boshlash (Bu tirikmi? Bu insonmi?).\n- Qidiruv doirasini toraytirish (Bu XX asrda bo‘lganmi?).\n- Variantlarni teng ikkiga ajratish usulidan foydalanish.\n\nVariantlar:\n- Tarixiy shaxsni topish.\n- Adabiy qahramonni topish.\n- Ilmiy atamani topish.",
+    "content_en": null
   },
   {
     "id": 21,
@@ -511,7 +619,13 @@
       "frontal"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Tugallanmagan gap",
+    "title_en": null,
+    "description_uz": "Bilimni tekshirish yoki refleksiya uchun boshlangan gaplarni davom ettirish.",
+    "description_en": null,
+    "content_uz": "Refleksiya va tushunganlikni tekshirish uchun universal usul.\n\nGap boshlanmalariga misollar:\nRefleksiya uchun:\n- Bugun men ...ni bilib oldim.\n- ... qiziqarli bo‘ldi.\n- ... qiyin bo‘ldi.\n- Endi men ... qila olaman.\n- Meni ... hayratlantirdi.\n- Men ...ni xohladim.\n\nBilimni tekshirish uchun:\n- ...ning asosiy sababi — ...\n- ...ning ...dan farqi — ...\n- Agar ..., unda ...\n\nQo‘llash:\n- Navbat bilan og‘zaki.\n- Kartochkalarda yozma.\n- Juftliklarda muhokama bilan.",
+    "content_en": null
   },
   {
     "id": 22,
@@ -538,7 +652,13 @@
       "team"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Galereya 🖼️",
+    "title_en": null,
+    "description_uz": "Guruh ishlarini aylanib ko‘rish va izohlash orqali taqdim etish.",
+    "description_en": null,
+    "content_uz": "Guruh ishlarini taqdim etish va baholash usuli.\n\nTayyorgarlik:\n1. Guruhlar ijodiy topshiriq bajaradilar (plakat, sxema, loyiha).\n2. Ishlar galereyadagi kabi sinf bo‘ylab osib chiqiladi.\n\nO‘tkazish tartibi:\n1. Har bir guruhdan bittadan «yo‘lboshchi» qoladi.\n2. Qolgan o‘quvchilar «galereya»ni aylanib, taqdimotlarni tinglaydilar.\n3. Tashrif buyuruvchilar stikerlarda fikrlarini qoldiradilar.\n4. 5 daqiqadan so‘ng «yo‘lboshchilar» almashadilar.\n\nBaholash variantlari:\n- Izoh yozilgan stikerlar.\n- Nuqtalar bilan ovoz berish.\n- «Ikki yulduz va bir tilak».",
+    "content_en": null
   },
   {
     "id": 23,
@@ -566,7 +686,13 @@
       "frontal"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Aqliy hujum 🧠⚡",
+    "title_en": null,
+    "description_uz": "Tanqidsiz imkon qadar ko‘p g‘oya yaratish.",
+    "description_en": null,
+    "content_uz": "G‘oyalar yaratishning klassik usuli.\n\nAqliy hujum qoidalari:\n1. Tanqid yo‘q — barcha g‘oyalar qabul qilinadi.\n2. Eng noodatiy g‘oyalar ham rag‘batlantiriladi.\n3. Miqdor sifatdan muhimroq.\n4. Boshqalarning g‘oyalarini birlashtiring va takomillashtiring.\n\nBosqichlar:\n1. Muammoni qo‘yish (2 daqiqa).\n2. G‘oyalar yaratish (5–10 daqiqa) — BARCHA g‘oyalar yoziladi.\n3. G‘oyalarni toifalar bo‘yicha guruhlash (3 daqiqa).\n4. Eng yaxshi g‘oyalarni baholash va tanlash (5 daqiqa).\n\nVariantlar:\n- Teskari aqliy hujum (qanday qilib yomonlashtirish mumkin?).\n- 635 (6 kishi, 3 g‘oya, 5 daqiqa).\n- Yozma aqliy hujum.",
+    "content_en": null
   },
   {
     "id": 24,
@@ -591,7 +717,13 @@
       "team"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Jigsaw (Pazl) 🧩",
+    "title_en": null,
+    "description_uz": "Har bir o‘quvchi mavzuning o‘ziga berilgan qismi bo‘yicha ekspert bo‘ladi.",
+    "description_en": null,
+    "content_uz": "Har kim ekspert bo‘ladigan hamkorlikda o‘qitish usuli.\n\nBosqichlar:\n1. ASOSIY GURUHLAR: sinf 4–6 kishilik guruhlarga bo‘linadi.\n2. EKSPERT GURUHLARI: har bir a’zo materialning o‘ziga ajratilgan qismini oladi va boshqa guruhlardagi shu qismni olgan o‘quvchilar bilan birlashadi.\n3. O‘RGANISH: ekspertlar materialning o‘z qismini birga o‘rganadilar.\n4. QAYTISH: ekspertlar asosiy guruhlariga qaytadilar.\n5. O‘RGATISH: har bir ekspert o‘z guruhiga materialning o‘z qismini o‘rgatadi.\n\nNatija:\n- Har bir o‘quvchi faol qatnashadi.\n- Guruh a’zolari bir-biriga bog‘liq holda ishlaydilar.\n- Tushuntirish ko‘nikmalari rivojlanadi.",
+    "content_en": null
   },
   {
     "id": 25,
@@ -619,7 +751,13 @@
       "pair"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Ijobiy — salbiy — qiziqarli",
+    "title_en": null,
+    "description_uz": "Mavzuni uch nuqtayi nazardan tahlil qilish: ijobiy, salbiy va qiziqarli jihatlar.",
+    "description_en": null,
+    "content_uz": "Axborotni tanqidiy tahlil qilish usuli.\n\nTuzilishi:\nO‘quvchilar uch ustunli jadvalni to‘ldiradilar:\n+ IJOBIY — yaxshi, ijobiy va foydali jihatlar.\n− SALBIY — yomon, salbiy yoki shubha uyg‘otadigan jihatlar.\n? QIZIQARLI — qiziq tuyulgan, ko‘proq bilishni istagan jihatlar.\n\nQo‘llanishi:\n- Tarixiy voqeani tahlil qilish.\n- Ilmiy kashfiyotni baholash.\n- Adabiy asarni tahlil qilish.\n- Dars refleksiyasi.\n\nYakka tartibda, juftlik yoki guruhlarda, keyingi muhokama bilan qo‘llash mumkin.",
+    "content_en": null
   },
   {
     "id": 26,
@@ -645,7 +783,13 @@
       "frontal"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Akvarium 🐠",
+    "title_en": null,
+    "description_uz": "Ichki davra muhokama qiladi, tashqi davra kuzatadi va tahlil qiladi.",
+    "description_en": null,
+    "content_uz": "Kuzatish bilan birga munozara tashkil etish usuli.\n\nTashkil etish:\n1. Sinf ikki guruhga bo‘linadi.\n2. Ichki davra («baliqchalar») — munozaraning faol ishtirokchilari.\n3. Tashqi davra («kuzatuvchilar») — tinglaydi va tahlil qiladi.\n\nO‘tkazish tartibi:\n1. Ichki davra mavzu yoki muammoni muhokama qiladi (5–10 daqiqa).\n2. Tashqi davra quyidagi mezonlar bo‘yicha kuzatadi:\n   - Qanday dalillar ishlatildi?\n   - Kim eng ishonarli gapirdi?\n   - Qaysi g‘oyalar aytilmay qoldi?\n3. Kuzatuvchilar fikr-mulohaza bildiradilar.\n4. Guruhlar o‘rin almashadilar.\n\nDalillash va faol tinglash ko‘nikmalarini rivojlantiradi.",
+    "content_en": null
   },
   {
     "id": 27,
@@ -672,7 +816,13 @@
       "team"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Qor uyumi ❄️",
+    "title_en": null,
+    "description_uz": "Axborotni o‘quvchidan o‘quvchiga bosqichma-bosqich ko‘paytirish.",
+    "description_en": null,
+    "content_uz": "Axborotni eslab qolish va takrorlash usuli.\n\n1-variant — To‘plash:\n1. Birinchi o‘quvchi mavzuga oid bitta so‘z yoki fakt aytadi.\n2. Ikkinchisi birinchining so‘zini takrorlab, o‘zinikini qo‘shadi.\n3. Uchinchisi ikkalasini takrorlab, uchinchi ma’lumotni qo‘shadi.\n4. «Qor uyumi» kattalashguncha shu tarzda davom etiladi.\n\n2-variant — Guruhda:\n1. Yakka ish (1 daqiqa) — har kim o‘z g‘oyalarini yozadi.\n2. Juftlikdagi ish (2 daqiqa) — ro‘yxatlar birlashtiriladi.\n3. To‘rt kishilik guruh ishi (3 daqiqa) — juftliklar ro‘yxatlari birlashtiriladi.\n4. Sinfning umumiy ro‘yxati tuziladi.\n\nAtamalar, sanalar va formulalarni takrorlash uchun mos.",
+    "content_en": null
   },
   {
     "id": 28,
@@ -699,7 +849,13 @@
       "frontal"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Ishonaman — ishonmayman",
+    "title_en": null,
+    "description_uz": "Fikrlarning to‘g‘riligini baholash orqali bilimni tekshirish.",
+    "description_en": null,
+    "content_uz": "Bilimni tekshirish va faollashtirish uchun o‘yin usuli.\n\nO‘tkazish tartibi:\n1. O‘qituvchi mavzuga oid fikrlarni o‘qiydi.\n2. O‘quvchilar fikrning to‘g‘ri yoki noto‘g‘riligini aniqlaydilar.\n3. Javob berish usullari:\n   - Qo‘l ko‘tarish yoki ko‘tarmaslik.\n   - «Ishonaman» yoki «Ishonmayman» kartochkalari.\n   - O‘rindan turish yoki o‘tirgan holda qolish.\n   - Jadvalga yozish.\n\nMuhim:\n- Har bir fikrdan so‘ng muhokama va tushuntirish bo‘ladi.\n- Dars oxirida fikrlarga qaytish mumkin.\n- Noto‘g‘ri fikrlar haqiqatga o‘xshash bo‘lishi kerak.\n\nDars boshida bilimni faollashtirish yoki oxirida tekshirish uchun mos.",
+    "content_en": null
   },
   {
     "id": 29,
@@ -725,7 +881,13 @@
       "pair"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Keng va qisqa javobli savollar",
+    "title_en": null,
+    "description_uz": "Savollarni chuqurligi va murakkabligiga ko‘ra tasniflash.",
+    "description_en": null,
+    "content_uz": "Savol tuzish ko‘nikmalarini rivojlantirish usuli.\n\nQisqa javobli savollar (oddiy, faktlarga oid):\n- Kim...? Nima...? Qachon...? Qayerda...?\n- ... to‘g‘rimi?\n- Siz ...ga qo‘shilasizmi?\n\nKeng javobli savollar (mulohaza talab qiladi):\n- Nega...? Nima uchun...?\n- ...ning farqi nimada?\n- Agar ... bo‘lsa, nima bo‘ladi?\n- Nima sababdan ... ekanini tushuntiring.\n\nQo‘llash tartibi:\n1. O‘quvchilar matnni o‘qiydilar yoki mavzuni o‘rganadilar.\n2. Uchtadan qisqa va keng javobli savol tuzadilar.\n3. Juftliklarda savollarni almashib, javob beradilar.\n4. Eng yaxshi savollar butun sinf bilan muhokama qilinadi.",
+    "content_en": null
   },
   {
     "id": 30,
@@ -751,7 +913,13 @@
       "pair"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Xatoni top! 🎯",
+    "title_en": null,
+    "description_uz": "Matn yoki yechimga ataylab kiritilgan xatolarni topish.",
+    "description_en": null,
+    "content_uz": "Diqqat va tanqidiy fikrlashni rivojlantirish usuli.\n\nTayyorgarlik:\nO‘qituvchi ataylab xatolar kiritilgan matn, masala yechimi yoki fikrlarni tayyorlaydi.\n\nO‘tkazish tartibi:\n1. O‘quvchilarga xatolari bor material beriladi.\n2. Vazifa — barcha xatolarni topish va tuzatish.\n3. Yakka tartibda, juftlik yoki guruhlarda ishlash mumkin.\n4. Qaysi xatolar topilgani va nima uchun ular xato ekani muhokama qilinadi.\n\nVariantlar:\n- Matndagi faktik, mantiqiy va grammatik xatolar.\n- Masala yechimidagi xatolar.\n- Voqealar xronologiyasidagi xatolar.\n- Xaritadagi xatolar.\n\nMuhim: xatolar sonini oldindan aytish yoki aytmaslik mumkin.",
+    "content_en": null
   },
   {
     "id": 31,
@@ -776,7 +944,13 @@
       "frontal"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Assotsiatsiyalar",
+    "title_en": null,
+    "description_uz": "Kalit tushunchaga bog‘liq tasavvurlar qatorini yaratish.",
+    "description_en": null,
+    "content_uz": "Bilimlarni faollashtirish va assotsiativ fikrlashni rivojlantirish usuli.\n\nO‘tkazish tartibi:\n1. O‘qituvchi kalit so‘z yoki dars mavzusini aytadi.\n2. O‘quvchilar navbat bilan o‘z tasavvurlarini aytadilar.\n3. Barcha assotsiatsiyalar doskaga yoziladi.\n4. Nega bunday tasavvurlar paydo bo‘lgani muhokama qilinadi.\n\nVariantlar:\n- Assotsiatsiyalar zanjiri (har bir keyingi javob oldingisiga asoslanadi).\n- Assotsiativ buta (barcha tasavvurlar bitta so‘zga bog‘lanadi).\n- Juftliklarda assotsiatsiyalar tuzish va keyin solishtirish.\n\nQuyidagilar uchun mos:\n- Yangi mavzuga kirish.\n- Dastlabki tasavvurlarni aniqlash.\n- O‘rganishga qiziqish uyg‘otish.",
+    "content_en": null
   },
   {
     "id": 32,
@@ -801,7 +975,13 @@
       "individual"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "O‘zimga maktub ✉️",
+    "title_en": null,
+    "description_uz": "O‘quvchi kelajakdagi o‘ziga maqsadlari va kutayotgan natijalari haqida maktub yozadi.",
+    "description_en": null,
+    "content_uz": "Maqsad qo‘yish va refleksiya usuli.\n\nMavzu, chorak yoki yil boshida:\nO‘quvchilar kelajakdagi o‘zlariga maktub yozadilar:\n- Nimaga erishmoqchiman?\n- Nimalarni bilmoqchiman?\n- Qanday ko‘nikmalarni rivojlantirmoqchiman?\n- Nimadan xavotirdaman?\n\nMaktublar yopilib, o‘qituvchida saqlanadi.\n\nMavzu, chorak yoki yil oxirida:\nMaktublar o‘quvchilarga qaytariladi.\nRefleksiya:\n- Nimalarga erishdim?\n- Nima amalga oshmadi va nega?\n- Qarashlarimda nima o‘zgardi?\n\nVariant: o‘rganilayotgan qahramon nomidan yoki o‘rganilayotgan davrdan maktub yozish.",
+    "content_en": null
   },
   {
     "id": 33,
@@ -829,7 +1009,13 @@
       "team"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "To‘rt burchak",
+    "title_en": null,
+    "description_uz": "O‘z fikriga mos keladigan burchakka borish.",
+    "description_en": null,
+    "content_uz": "Fikr bildirish va munozara uchun faol usul.\n\nTayyorgarlik:\nSinfning to‘rt burchagiga javob variantlari yozilgan belgilar qo‘yiladi:\n- To‘liq qo‘shilaman.\n- Ko‘proq qo‘shilaman.\n- Ko‘proq qo‘shilmayman.\n- Mutlaqo qo‘shilmayman.\n\nYoki savolga to‘rtta turli javob beriladi.\n\nO‘tkazish tartibi:\n1. O‘qituvchi fikr yoki savolni o‘qiydi.\n2. O‘quvchilar o‘z pozitsiyalariga mos burchakka o‘tadilar.\n3. Har burchakdagi guruh o‘z dalillarini muhokama qiladi (2–3 daqiqa).\n4. Har bir guruh vakili o‘z pozitsiyasini aytadi.\n5. Umumiy munozara o‘tkaziladi. Pozitsiyani o‘zgartirish mumkin!",
+    "content_en": null
   },
   {
     "id": 34,
@@ -854,7 +1040,13 @@
       "individual"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Bir daqiqa ⏱️",
+    "title_en": null,
+    "description_uz": "Bir daqiqada asosiy fikrni qisqa yozma bayon qilish.",
+    "description_en": null,
+    "content_uz": "Tushunganlikni tezkor tekshirish usuli.\n\nO‘tkazish tartibi:\nDars oxirida yoki mavzu tushuntirilgach, o‘quvchilar 1 daqiqada savollarga yozma javob beradilar.\n\n1-variant:\n- Bugun bilib olgan eng muhim narsam nima?\n- Qaysi savol javobsiz qoldi?\n\n2-variant:\n- Darsning uchta kalit so‘zi.\n- Bitta xulosa gap.\n\n3-variant:\n- Mavzuni do‘stimga tushuntirsam, ... der edim.\n\nO‘qituvchi javoblarni tez ko‘rib chiqib, nimalar o‘zlashtirilgani va nimalarni takrorlash kerakligini aniqlaydi.",
+    "content_en": null
   },
   {
     "id": 35,
@@ -881,7 +1073,13 @@
       "pair"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Diamanta 💎",
+    "title_en": null,
+    "description_uz": "Tushunchalarni solishtirish uchun yetti misrali she’riy shakl.",
+    "description_en": null,
+    "content_uz": "Ikki qarama-qarshi tushunchani solishtirishning she’riy usuli.\n\nDiamanta tuzilishi (romb shaklidagi 7 misra):\n1-misra — ot (birinchi tushuncha).\n2-misra — birinchi tushunchaga oid ikkita sifat.\n3-misra — birinchi tushunchaga oid uchta fe’l.\n4-misra — birinchi tushunchaga oid ikki so‘z va ikkinchisiga oid ikki so‘z.\n5-misra — ikkinchi tushunchaga oid uchta fe’l.\n6-misra — ikkinchi tushunchaga oid ikkita sifat.\n7-misra — ot (ikkinchi tushuncha, birinchining zid ma’nolisi).\n\nNamuna (Urush — Tinchlik):\nUrush\nShafqatsiz, qonli\nVayron qiladi, o‘ldiradi, mayib qiladi\nQayg‘u, azob — quvonch, baxt\nBunyod etadi, birlashtiradi, ilhomlantiradi\nOsuda, baxtli\nTinchlik",
+    "content_en": null
   },
   {
     "id": 36,
@@ -907,7 +1105,13 @@
       "frontal"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Blum kubigi 🎲",
+    "title_en": null,
+    "description_uz": "Kubik tashlash Blum taksonomiyasi bo‘yicha savol turini belgilaydi.",
+    "description_en": null,
+    "content_uz": "Turli murakkablikdagi savollar bilan ishlashning o‘yin usuli.\n\nKubik tomonlari:\n1. Ayting — faktlarni sanang.\n2. Nega — sabablarni tushuntiring.\n3. Izohlang — tushunchani ochib bering.\n4. Taklif qiling — g‘oya bildiring.\n5. O‘ylab toping — yangi narsa yarating.\n6. Baham ko‘ring — fikringizni ayting.\n\nO‘tkazish tartibi:\n1. O‘quvchi kubikni tashlaydi.\n2. Tushgan tomonga mos savol tuzadi.\n3. O‘zi javob beradi yoki savolni boshqaga uzatadi.",
+    "content_en": null
   },
   {
     "id": 37,
@@ -933,7 +1137,13 @@
       "pair"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Venn doiralari",
+    "title_en": null,
+    "description_uz": "Ikki yoki uch tushunchani grafik tarzda solishtirish.",
+    "description_en": null,
+    "content_uz": "Tushunchalarni solishtirish va tahlil qilish usuli.\n\nTuzilishi:\n- Kesishuvchi ikki yoki uch doira.\n- Har bir doirada tushunchaning o‘ziga xos xususiyatlari.\n- Kesishgan qismda umumiy xususiyatlar.\n\nQo‘llash tartibi:\n1. Kesishuvchi ikki yoki uch doira chizing.\n2. Har bir doiraga solishtiriladigan tushuncha nomini yozing.\n3. Kesishmagan qismlarga o‘ziga xos xususiyatlarni yozing.\n4. Kesishgan qismga umumiy jihatlarni yozing.\n\nMisollar: qahramonlar, davrlar, hodisalar va formulalarni solishtirish.",
+    "content_en": null
   },
   {
     "id": 38,
@@ -959,7 +1169,13 @@
       "individual"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "BBB jadvali",
+    "title_en": null,
+    "description_uz": "Bilaman — Bilishni xohlayman — Bilib oldim.",
+    "description_en": null,
+    "content_uz": "Axborot bilan ishlashni tashkil etish usuli.\n\nJadval tuzilishi:\nB — Bilaman (mavzu haqida avvaldan ma’lum narsalar).\nB — Bilishni xohlayman (mavzuga oid savollar).\nB — Bilib oldim (yangi ma’lumotlar).\n\nBosqichlar:\n1. Dars boshida «Bilaman» va «Bilishni xohlayman» ustunlari to‘ldiriladi.\n2. O‘rganish davomida «Bilib oldim» ustuni to‘ldiriladi.\n3. Dars oxirida kutilgan va erishilgan natijalar solishtiriladi.\n\nMaqsad qo‘yish va refleksiya ko‘nikmalarini rivojlantiradi.",
+    "content_en": null
   },
   {
     "id": 39,
@@ -985,7 +1201,13 @@
       "pair"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Dono boyqushlar 🦉",
+    "title_en": null,
+    "description_uz": "Asosiy axborotni topish orqali matn bilan ishlash.",
+    "description_en": null,
+    "content_uz": "Matnni anglab o‘qish usuli.\n\n«Dono boyqushlar» topshiriqlari:\n1. Matn bilan ishlash asoslari — notanish so‘zlarni topish.\n2. Buni kutmagan edingizmi? — kutilmagan ma’lumotni topish.\n3. Sen buni bilasan — tanish ma’lumotni topish.\n4. Asosiy hayotiy hikmat — bosh g‘oyani ifodalash.\n5. Ma’lum va noma’lum — axborotni ajratish.\n6. Rassom — matnga mos rasm chizish.\n\nO‘quvchilar topshiriqni tanlaydilar yoki oladilar va matn bilan ishlaydilar.",
+    "content_en": null
   },
   {
     "id": 40,
@@ -1011,7 +1233,13 @@
       "team"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Kalit so‘zlar",
+    "title_en": null,
+    "description_uz": "Kalit so‘zlar asosida mazmunni taxmin qilish.",
+    "description_en": null,
+    "content_uz": "Mavzuni o‘rganishdan oldin fikrlashni faollashtirish usuli.\n\nO‘tkazish tartibi:\n1. O‘qituvchi yangi mavzuga oid 5–7 ta kalit so‘z beradi.\n2. O‘quvchilar juftlik yoki guruhlarda mavzu haqida taxmin tuzadilar.\n3. Barcha so‘zlarni ishlatib hikoya tuzish mumkin.\n4. Mavzu o‘rganilgach, taxminlar haqiqiy ma’lumot bilan solishtiriladi.\n\nVariantlar:\n- Kalit so‘zlar asosida mavzuga oid savollar tuzish.\n- So‘zlar o‘rtasidagi bog‘lanishlar sxemasini chizish.\n- Notanish atamalarning ta’riflarini taxmin qilish.",
+    "content_en": null
   },
   {
     "id": 41,
@@ -1038,7 +1266,13 @@
       "team"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Aralashtirilgan mantiqiy zanjirlar",
+    "title_en": null,
+    "description_uz": "Elementlarning to‘g‘ri tartibini tiklash.",
+    "description_en": null,
+    "content_uz": "Ketma-ketlikni tushunishni tekshirish usuli.\n\nTayyorgarlik:\nO‘qituvchi jarayon bosqichlari, voqealar yoki algoritm qadamlarini aralash tartibda kartochkalarga yozadi.\n\nO‘tkazish tartibi:\n1. O‘quvchilar kartochkalar to‘plamini oladilar.\n2. Vazifa — to‘g‘ri tartibni tiklash.\n3. O‘z yechimini asoslab berish.\n\nMisollar:\n- Tarixiy voqea bosqichlari.\n- Masala yechish qadamlari.\n- Asar syujetining rivojlanishi.\n- Tabiiy jarayon bosqichlari.",
+    "content_en": null
   },
   {
     "id": 42,
@@ -1063,7 +1297,13 @@
       "frontal"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "To‘xtab o‘qish",
+    "title_en": null,
+    "description_uz": "Muhokama va taxmin qilish uchun o‘qishni to‘xtatib turish.",
+    "description_en": null,
+    "content_uz": "Badiiy matnni faol o‘qish usuli.\n\nO‘tkazish tartibi:\n1. Matn mazmuniy qismlarga bo‘linadi.\n2. Har qismdan so‘ng to‘xtaladi.\n3. To‘xtash paytidagi savollar:\n   - Nima bo‘ldi? Nega?\n   - Keyin nima bo‘ladi? (Taxmin.)\n   - Qahramon o‘rnida bo‘lsangiz, nima qilardingiz?\n4. Keyingi qism o‘qilib, taxminlar tekshiriladi.\n\nTaxmin qilish, tahlil va hamdardlik ko‘nikmalarini rivojlantiradi.",
+    "content_en": null
   },
   {
     "id": 43,
@@ -1090,7 +1330,13 @@
       "team"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Taxminlar daraxti 🌳",
+    "title_en": null,
+    "description_uz": "Voqealar rivojlanishining mumkin bo‘lgan variantlarini ko‘rgazmali ifodalash.",
+    "description_en": null,
+    "content_uz": "Oldindan taxmin qilish ko‘nikmasini rivojlantirish usuli.\n\nDaraxt tuzilishi:\n- Tana — mavzu, muammo yoki vaziyat.\n- Shoxlar — rivojlanishning mumkin bo‘lgan variantlari.\n- Barglar — dalillar va asoslar.\n\nO‘tkazish tartibi:\n1. Mavzu yoki muammoni yozish (tana).\n2. Rivojlanish variantlarini taklif qilish (shoxlar).\n3. Har bir variantni asoslash (barglar).\n4. Eng ehtimolli natijani muhokama qilish.\n\nAdabiyot, tarix va jamiyatshunoslik fanlari uchun mos.",
+    "content_en": null
   },
   {
     "id": 44,
@@ -1114,7 +1360,13 @@
       "individual"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Kuzatuv jurnali 📓",
+    "title_en": null,
+    "description_uz": "Dars davomida fikr va savollarni qayd etish.",
+    "description_en": null,
+    "content_uz": "O‘z tushunishini kuzatib borish usuli.\n\nJurnal tuzilishi:\nChap ustun: asosiy tushunchalar va faktlar.\nO‘ng ustun: mening fikrlarim, savollarim va bog‘lanishlarim.\n\nO‘tkazish tartibi:\n1. Dars boshida o‘quvchilarga andoza beriladi.\n2. Dars davomida ikkala ustun to‘ldiriladi.\n3. Oxirida yozuvlar muhokama qilinadi.\n\nVariantlar:\n- «Qo‘llash» ustunini qo‘shish.\n- «Hayot bilan bog‘liqligi» ustunini qo‘shish.\n- Uyda o‘qish uchun foydalanish.",
+    "content_en": null
   },
   {
     "id": 45,
@@ -1139,7 +1391,13 @@
       "individual"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Ikki qismli kundalik",
+    "title_en": null,
+    "description_uz": "Matndan iqtibos va shaxsiy izoh.",
+    "description_en": null,
+    "content_uz": "Matn bilan chuqur ishlash usuli.\n\nTuzilishi:\nChap ustun: matndan iqtibos.\nO‘ng ustun: mening izohim (nega tanladim, nima haqida o‘ylashga undadi).\n\nO‘tkazish tartibi:\n1. O‘quvchilar matnni o‘qiydilar.\n2. Muhim iqtiboslarni tanlaydilar.\n3. O‘z mulohazalarini yozadilar.\n4. Juftliklarda yoki sinfda muhokama qiladilar.\n\nTahlil, refleksiya va fikrni ifodalash ko‘nikmalarini rivojlantiradi.",
+    "content_en": null
   },
   {
     "id": 46,
@@ -1164,7 +1422,13 @@
       "individual"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Uch qismli kundalik",
+    "title_en": null,
+    "description_uz": "Iqtibos, izoh va muallifga savol.",
+    "description_en": null,
+    "content_uz": "Ikki qismli kundalikning kengaytirilgan varianti.\n\nTuzilishi:\n1. Matndan iqtibos.\n2. Mening izohim.\n3. Muallifga savol yoki boshqa manbalar bilan bog‘liqligi.\n\nO‘tkazish tartibi:\n1. Matnni o‘qib, asosiy joylarni belgilash.\n2. Uchala ustunni to‘ldirish.\n3. Muallifga berilgan savollarni muhokama qilish.\n4. Boshqa manbalardan javob izlash.\n\nTanqidiy fikrlash va tadqiqot ko‘nikmalarini rivojlantiradi.",
+    "content_en": null
   },
   {
     "id": 47,
@@ -1189,7 +1453,13 @@
       "pair"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Konseptual jadval",
+    "title_en": null,
+    "description_uz": "Bir necha obyektni bir necha mezon asosida solishtirish.",
+    "description_en": null,
+    "content_uz": "Axborotni tizimlashtirish va solishtirish usuli.\n\nTuzilishi:\n- Qatorlar: solishtiriladigan obyektlar.\n- Ustunlar: solishtirish mezonlari.\n- Kataklar: xususiyatlar.\n\nO‘tkazish tartibi:\n1. Solishtiriladigan obyektlarni aniqlash.\n2. Solishtirish mezonlarini tanlash.\n3. Jadvalni to‘ldirish.\n4. O‘xshashlik va farqlar haqida xulosa chiqarish.\n\nMisollar: mamlakatlar, davrlar, qahramonlar va nazariyalarni solishtirish.",
+    "content_en": null
   },
   {
     "id": 48,
@@ -1213,7 +1483,13 @@
       "individual"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "RAFT",
+    "title_en": null,
+    "description_uz": "Ijodiy yozuv uchun rol, auditoriya, shakl va mavzu.",
+    "description_en": null,
+    "content_uz": "Yozma nutqni rivojlantirish usuli.\n\nTarkibiy qismlar:\nR — Rol (kim nomidan yozamiz).\nA — Auditoriya (kim uchun yozamiz).\nF — Forma, ya’ni shakl (matn janri).\nT — Tema, ya’ni mavzu (nima haqida yozamiz).\n\nMisol:\nRol: suv molekulasi.\nAuditoriya: 5-sinf o‘quvchilari.\nShakl: shikoyat maktubi.\nMavzu: suv havzalarining ifloslanishi.\n\nIjodkorlik, hamdardlik va yozish ko‘nikmalarini rivojlantiradi.",
+    "content_en": null
   },
   {
     "id": 49,
@@ -1238,7 +1514,13 @@
       "individual"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Esse",
+    "title_en": null,
+    "description_uz": "Mavzu bo‘yicha erkin yozma mulohaza.",
+    "description_en": null,
+    "content_uz": "Yozma nutq va fikrlashni rivojlantirish usuli.\n\nEsse turlari:\n- 5 daqiqalik esse (dars oxirida).\n- 10 daqiqalik esse (batafsil).\n- Erkin esse (cheklovlarsiz).\n\nEsse mavzulari:\n- Bugun men nimani tushundim...\n- Mavzudagi eng muhim narsa...\n- Agar men ... bo‘lsam...\n- Mening ...ga munosabatim...\n\nMuhim: imlo savodxonligini emas, fikrlarni baholash.",
+    "content_en": null
   },
   {
     "id": 50,
@@ -1262,7 +1544,13 @@
       "individual"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Qisqa eslatma",
+    "title_en": null,
+    "description_uz": "Cheklangan joyda qisqa konspekt yaratish.",
+    "description_en": null,
+    "content_uz": "Materialni tizimlashtirish va eslab qolish usuli.\n\nQoidalar:\n1. Cheklangan o‘lchamdagi kartochka beriladi (masalan, 5×5 sm).\n2. Mavzudagi eng muhim ma’lumotni unga joylashtirish kerak.\n3. Qisqartmalar, belgilar va sxemalardan foydalanish mumkin.\n4. Eslatmadan nazorat ishida foydalanishga ruxsat beriladi!\n\nNatija:\n- O‘quvchi asosiy fikrni ajratadi.\n- Axborotni tartibga soladi.\n- Eslatmani yaratish davomida eslab qoladi.",
+    "content_en": null
   },
   {
     "id": 51,
@@ -1287,7 +1575,13 @@
       "individual"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Telegramma 📱",
+    "title_en": null,
+    "description_uz": "Asosiy fikrni telegramma shaklida qisqa bayon etish.",
+    "description_en": null,
+    "content_uz": "Asosiy fikrni ajratish usuli.\n\nQoidalar:\n1. Mavzu yoki dars mohiyatini telegramma shaklida bayon qilish.\n2. Cheklov: 10–15 ta so‘z.\n3. Har bir so‘z mazmunli bo‘lishi kerak.\n\nVariantlar:\n- Qahramon nomidan telegramma.\n- Olimga telegramma.\n- O‘tmish yoki kelajakka telegramma.\n- SMS-xabar (zamonaviy variant).\n\nAsosiy fikrni ajratish va lo‘nda ifodalash ko‘nikmalarini rivojlantiradi.",
+    "content_en": null
   },
   {
     "id": 52,
@@ -1313,7 +1607,13 @@
       "team"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Davra bo‘ylab yozish",
+    "title_en": null,
+    "description_uz": "Matnni davra bo‘ylab uzatib, birgalikda yaratish.",
+    "description_en": null,
+    "content_uz": "Birgalikdagi ijod usuli.\n\nO‘tkazish tartibi:\n1. Har bir o‘quvchi o‘z varag‘ida yozishni boshlaydi.\n2. Ishora berilgach, varaqni yonidagi o‘quvchiga uzatadi.\n3. Qo‘shnisi matnni davom ettiradi.\n4. Varaq muallifiga qaytguncha davom etadi.\n\nVariantlar:\n- Hikoya yozish.\n- Qahramon tavsifini tuzish.\n- Jarayonni tasvirlash.\n- Pozitsiyani dalillash.\n\nMuhim: har kim oldingi ishtirokchining fikrini rivojlantirishi kerak.",
+    "content_en": null
   },
   {
     "id": 53,
@@ -1338,7 +1638,13 @@
       "team"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Munozara",
+    "title_en": null,
+    "description_uz": "Bahsli masalani tartibli muhokama qilish.",
+    "description_en": null,
+    "content_uz": "Dalillash ko‘nikmalarini rivojlantirish usuli.\n\nMunozara qoidalari:\n1. Qarshi tomon fikrini hurmat qilish.\n2. Odamlarni emas, g‘oyalarni tanqid qilish.\n3. Oxirigacha tinglash.\n4. O‘z pozitsiyasini dalillash.\n\nShakllari:\n- Erkin munozara.\n- «Tarafdor» va «qarshi» shaklidagi munozara.\n- Rolli munozara.\n- Debatlar.\n\nO‘qituvchining roli: ishtirokchi emas, moderator.",
+    "content_en": null
   },
   {
     "id": 54,
@@ -1363,7 +1669,13 @@
       "team"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Debatlar",
+    "title_en": null,
+    "description_uz": "Ikki jamoaning belgilangan qoidalar asosidagi bahsi.",
+    "description_en": null,
+    "content_uz": "Omma oldida so‘zlash va dalillash ko‘nikmalarini rivojlantirish usuli.\n\nTuzilishi:\n1. Ikki jamoa: «Tarafdor» va «Qarshi».\n2. Muhokama uchun tezis.\n3. Dalillarni tayyorlash uchun vaqt.\n4. Reglament bo‘yicha chiqishlar.\n5. O‘zaro savollar.\n6. Yakuniy nutqlar.\n\nQoidalar:\n- Qat’iy vaqt reglamenti.\n- Dalillar asoslangan bo‘lishi kerak.\n- Hakamlar dalillash sifatini baholaydilar.",
+    "content_en": null
   },
   {
     "id": 55,
@@ -1388,7 +1700,13 @@
       "pair"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Qarama-qarshi dalillar munozarasi",
+    "title_en": null,
+    "description_uz": "«Tarafdor» va «qarshi» dalillar jadvalini to‘ldirish.",
+    "description_en": null,
+    "content_uz": "Muammoni turli tomonlardan tahlil qilish usuli.\n\nTuzilishi:\n1. Bahsli tezis ifodalanadi.\n2. Jadval: «TARAFDOR dalillar» | «QARSHI dalillar».\n3. Yakka tartibda to‘ldirish.\n4. Juftliklarda muhokama qilish.\n5. Umumiy munozara.\n6. Xulosa chiqarish.\n\nMuhim: shaxsan faqat bir tomonga qo‘shilsangiz ham, IKKALA tomon uchun dalillar topish kerak.",
+    "content_en": null
   },
   {
     "id": 56,
@@ -1415,7 +1733,13 @@
       "frontal"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Burchaklar",
+    "title_en": null,
+    "description_uz": "Hamfikrlar guruhida pozitsiya tanlash va uni himoya qilish.",
+    "description_en": null,
+    "content_uz": "O‘z fikrini ifodalash va himoya qilish usuli.\n\nO‘tkazish tartibi:\n1. O‘qituvchi bir nechta yechim varianti bo‘lgan muammoni aytadi.\n2. Sinfning turli burchaklari turli pozitsiyalarni bildiradi.\n3. O‘quvchilar o‘z fikrlariga mos burchakni tanlaydilar.\n4. Guruhda dalillarni muhokama qiladilar (5 daqiqa).\n5. Har bir guruh vakili pozitsiyani aytadi.\n6. Umumiy munozara o‘tkaziladi.\n\nBoshqa guruhlar dalillaridan so‘ng pozitsiyani o‘zgartirish mumkin.",
+    "content_en": null
   },
   {
     "id": 57,
@@ -1441,7 +1765,13 @@
       "frontal"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "O‘z pozitsiyangni tanla",
+    "title_en": null,
+    "description_uz": "Rozilik shkalasida o‘z o‘rnini egallash.",
+    "description_en": null,
+    "content_uz": "Sinfdagi fikrlarni ko‘rgazmali ifodalash usuli.\n\nO‘tkazish tartibi:\n1. Sinfda «To‘liq qo‘shilaman»dan «Mutlaqo qo‘shilmayman»gacha shkala belgilanadi.\n2. O‘qituvchi fikrni aytadi.\n3. O‘quvchilar shkalada o‘z pozitsiyalarini egallaydilar.\n4. O‘qituvchi shkalaning turli nuqtalaridagi o‘quvchilardan fikr so‘raydi.\n5. Dalillar aytilgach, pozitsiyani o‘zgartirish mumkin.\n\nSinfdagi fikrlar taqsimotini ko‘rgazmali ifodalaydi.",
+    "content_en": null
   },
   {
     "id": 58,
@@ -1466,7 +1796,13 @@
       "team"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Birgalikda izlanish",
+    "title_en": null,
+    "description_uz": "Muammoni guruhda tadqiq qilish.",
+    "description_en": null,
+    "content_uz": "Tadqiqot ishini tashkil etish usuli.\n\nBosqichlar:\n1. Muammoni qo‘yish (o‘qituvchi yoki o‘quvchilar).\n2. Farazlarni ilgari surish (aqliy hujum).\n3. Vazifalarni guruhlar o‘rtasida taqsimlash.\n4. Axborot izlash.\n5. Natijalarni almashish.\n6. Xulosalarni ifodalash.\n\nHar bir guruh muammoning o‘ziga ajratilgan jihatini tadqiq qiladi, keyin barcha natijalardan yaxlit tasavvur hosil qilinadi.",
+    "content_en": null
   },
   {
     "id": 59,
@@ -1491,7 +1827,13 @@
       "team"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Zigzag",
+    "title_en": null,
+    "description_uz": "Ekspert guruhlarida o‘zaro o‘rgatish.",
+    "description_en": null,
+    "content_uz": "Matn bilan ishlash uchun Jigsaw usulining varianti.\n\nBosqichlar:\n1. Matn guruh a’zolari soniga qarab qismlarga bo‘linadi.\n2. Har kim o‘z qismini o‘qiydi.\n3. Bir xil qismni olgan ekspertlar birlashadilar.\n4. Muhokama qilib, asosiy fikrni ajratadilar.\n5. O‘z guruhlariga qaytadilar.\n6. Har kim o‘z qismini aytib beradi.\n\nNatija: hamma butun matnni biladi, har kim ekspert bo‘lib qatnashadi.",
+    "content_en": null
   },
   {
     "id": 60,
@@ -1517,7 +1859,13 @@
       "team"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "IDEAL",
+    "title_en": null,
+    "description_uz": "Muammoni aniqlash, yechimlar izlash, baholash, tanlash va xulosa chiqarish algoritmi.",
+    "description_en": null,
+    "content_uz": "Muammolarni tizimli hal qilish usuli.\n\nIDEAL algoritmi mazmuni:\n1. Qiziq, muammo nimada?\n2. Keling, barcha mumkin bo‘lgan yechimlarni topamiz.\n3. Ular orasida eng yaxshilari bormi?\n4. Endi bittasini tanlaymiz.\n5. Mantiqiy xulosalar: qanday natija chiqdi?\n\nO‘tkazish tartibi:\n1. Muammoni ifodalash.\n2. Yechimlarni yaratish (tanqidsiz).\n3. Har bir yechimni baholash.\n4. Eng yaxshisini tanlash.\n5. Amalga oshirishni rejalashtirish.",
+    "content_en": null
   },
   {
     "id": 61,
@@ -1542,7 +1890,13 @@
       "team"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Muammolar mozaikasi",
+    "title_en": null,
+    "description_uz": "Guruh ishi uchun katta muammoni qismlarga ajratish.",
+    "description_en": null,
+    "content_uz": "Murakkab muammolarni hal qilish usuli.\n\nO‘tkazish tartibi:\n1. Katta muammo kichik muammolarga bo‘linadi.\n2. Har bir guruh o‘z kichik muammosini oladi.\n3. Guruhlar yechim ustida ishlaydilar.\n4. Yechimlar taqdim etiladi.\n5. Qismlardan umumiy yechim yig‘iladi.\n\nMisol: shahar ekologiyasi muammosi.\n- 1-guruh: havoning ifloslanishi.\n- 2-guruh: chiqindilar.\n- 3-guruh: yashil hududlar.\n- 4-guruh: transport.",
+    "content_en": null
   },
   {
     "id": 62,
@@ -1568,7 +1922,13 @@
       "pair"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Masalalar konstruktori",
+    "title_en": null,
+    "description_uz": "O‘quvchilar mavzuga oid masalalarni o‘zlari tuzadilar.",
+    "description_en": null,
+    "content_uz": "Materialni chuqur tushunish usuli.\n\nO‘tkazish tartibi:\n1. O‘quvchilar mavzuni o‘rganadilar.\n2. Har kim mavzuga oid masala yoki savol tuzadi.\n3. Juftliklarda masalalarni almashadilar.\n4. Sherigining masalasini yechadilar.\n5. Muallif yechimni tekshiradi.\n6. Eng yaxshi masalalar umumiy bankka qo‘shiladi.\n\nMurakkablik darajalari:\n- Bilimni tekshiruvchi oddiy savol.\n- Qo‘llashga oid masala.\n- Ijodiy masala.",
+    "content_en": null
   },
   {
     "id": 63,
@@ -1595,7 +1955,13 @@
       "pair"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "So‘roq so‘zlar",
+    "title_en": null,
+    "description_uz": "Barcha so‘roq so‘zlaridan foydalanib savollar tuzish.",
+    "description_en": null,
+    "content_uz": "Mavzuni har tomonlama tahlil qilish usuli.\n\nSo‘roq so‘zlar:\nKim? Nima? Qayerda? Qachon? Nega? Nima uchun? Qanday? Qaysi? Qancha? Qayerdan? Qayerga?\n\nO‘tkazish tartibi:\n1. Markazga mavzuni yozish.\n2. Atrofiga so‘roq so‘zlarni yozish.\n3. Har bir so‘z bilan savol tuzish.\n4. Savollarga javob topish.\n\nMavzuni turli tomonlardan ko‘rishga yordam beradi.",
+    "content_en": null
   },
   {
     "id": 64,
@@ -1621,7 +1987,13 @@
       "individual"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Aqliy xarita 🗺️",
+    "title_en": null,
+    "description_uz": "Axborotni markazdan chetga qarab ko‘rgazmali tashkil etish.",
+    "description_en": null,
+    "content_uz": "Axborotni tartibga solish va eslab qolish usuli.\n\nYaratish qoidalari:\n1. Markaz — asosiy mavzu (so‘z yoki tasvir).\n2. Markazdan asosiy shoxlar (bosh g‘oyalar) chiqadi.\n3. Shoxlardan kichik shoxlar (tafsilotlar) chiqadi.\n4. Ranglar, belgilar va rasmlardan foydalaning.\n5. Gaplar emas, kalit so‘zlar yozing.\n\nVositalar:\n- Qog‘oz va flomasterlar.\n- Onlayn xizmatlar (Miro, MindMeister).\n\nKonspekt tuzish, rejalashtirish va takrorlash uchun mos.",
+    "content_en": null
   },
   {
     "id": 65,
@@ -1647,7 +2019,13 @@
       "pair"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Denotat grafigi",
+    "title_en": null,
+    "description_uz": "Tushunchaning belgilari va harakatlari bilan bog‘lanish sxemasi.",
+    "description_en": null,
+    "content_uz": "Tushunchani tahlil qilish usuli.\n\nTuzilishi:\n1. Kalit tushuncha (markazda yoki yuqorida).\n2. Bog‘lovchi fe’llar (nima qiladi? nima hisoblanadi?).\n3. Muhim belgilar.\n4. Misollar.\n\n«Demokratiya» tushunchasiga misol:\nDEMOKRATIYA\n↓ hisoblanadi\nboshqaruv shakli\n↓ tavsiflanadi\nsaylovlar, so‘z erkinligi bilan\n↓ misollar\nYunoniston, zamonaviy mamlakatlar",
+    "content_en": null
   },
   {
     "id": 66,
@@ -1673,7 +2051,13 @@
       "pair"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Piramida 🔺",
+    "title_en": null,
+    "description_uz": "Axborotni muhimlik darajasiga ko‘ra joylashtirish.",
+    "description_en": null,
+    "content_uz": "Ustuvorliklarni belgilash usuli.\n\nTuzilishi:\n- Cho‘qqi: eng muhim (1 ta element).\n- O‘rta qavat: muhim (2–3 ta element).\n- Asos: kamroq muhim (ko‘p element).\n\nO‘tkazish tartibi:\n1. Tushunchalar, faktlar yoki g‘oyalar ro‘yxatini berish.\n2. O‘quvchilar ularni piramidaga joylashtiradilar.\n3. Tanlovlarini asoslaydilar.\n4. Juftliklarda piramidalarni solishtiradilar.\n\nTahlil va dalillash ko‘nikmalarini rivojlantiradi.",
+    "content_en": null
   },
   {
     "id": 67,
@@ -1697,7 +2081,13 @@
       "individual"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Muvaffaqiyat zinapoyasi 🪜",
+    "title_en": null,
+    "description_uz": "Mavzuni o‘rganishdagi o‘z yutug‘ini baholash.",
+    "description_en": null,
+    "content_uz": "Refleksiya va o‘zini baholash usuli.\n\nTuzilishi:\n5–7 pog‘onali zinapoya:\n- Pastki pog‘ona: «Hech narsani tushunmadim».\n- Yuqori pog‘ona: «Hammasini tushundim, boshqaga tushuntira olaman».\n\nO‘tkazish tartibi:\n1. Zinapoyani chizish.\n2. O‘quvchi o‘z pog‘onasini belgilaydi.\n3. Yuqoriga ko‘tarilish uchun nima kerakligi haqida izoh qo‘shish mumkin.\n\nVariantlar: tushunish, qiziqish va faollik kabi turli mezonlar bo‘yicha zinapoya.",
+    "content_en": null
   },
   {
     "id": 68,
@@ -1722,7 +2112,13 @@
       "frontal"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Nishon 🎯",
+    "title_en": null,
+    "description_uz": "Darsni nishonda bir necha mezon asosida baholash.",
+    "description_en": null,
+    "content_uz": "Ko‘p mezonli refleksiya usuli.\n\nTuzilishi:\nNishon mezonlarga mos sektorlarga bo‘linadi:\n- Mavzuni tushunish.\n- Qiziqish.\n- Mening faolligim.\n- Darsning foydasi.\n\nMarkaz = 5 ball, chet = 1 ball.\n\nO‘tkazish tartibi:\n1. Har kim har bir sektorga nuqta qo‘yadi.\n2. Nuqtalarni chiziq bilan birlashtiradi.\n3. Qayerda qiyinchilik, qayerda muvaffaqiyat bo‘lgani tahlil qilinadi.\n\nSinf uchun umumiy nishon yaratish mumkin.",
+    "content_en": null
   },
   {
     "id": 69,
@@ -1745,7 +2141,13 @@
       "frontal"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Orollar ⛵",
+    "title_en": null,
+    "description_uz": "Kayfiyat yoki tushunishga mos «orol»ni tanlash.",
+    "description_en": null,
+    "content_uz": "Hissiy refleksiya usuli.\n\nOrollar:\n🏝️ Quvonch oroli — dars menga yoqdi.\n🏝️ Bilim oroli — ko‘p yangi narsa o‘rgandim.\n🏝️ Zerikish oroli — qiziqarli bo‘lmadi.\n🏝️ Tushunmaslik oroli — hech narsani tushunmadim.\n🏝️ Kashfiyotlar oroli — kashfiyot qildim.\n\nO‘tkazish tartibi:\n1. Doskada orollar xaritasi ko‘rsatiladi.\n2. O‘quvchilar o‘z «kemacha»larini orolga joylashtiradilar.\n3. Nega aynan shu orol tanlangani muhokama qilinadi.",
+    "content_en": null
   },
   {
     "id": 70,
@@ -1770,7 +2172,13 @@
       "frontal"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Smayliklar 😊😐😢",
+    "title_en": null,
+    "description_uz": "Kayfiyat yoki tushunishni tezkor baholash.",
+    "description_en": null,
+    "content_uz": "Tezkor fikr-mulohaza olishning oddiy usuli.\n\nSmaylik variantlari:\n😊 — hammasi a’lo, tushundim.\n😐 — o‘rtacha, savollarim bor.\n😢 — yomon, tushunmadim.\n\nQo‘llash:\n- Smaylikli kartochkalar.\n- Daftar hoshiyasiga rasm chizish.\n- Barmoq bilan ko‘rsatish (yuqoriga, yonga, pastga).\n- Onlayn ovoz berish.\n\nSinf kayfiyatini tez ko‘rsatadi.",
+    "content_en": null
   },
   {
     "id": 71,
@@ -1796,7 +2204,13 @@
       "frontal"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Termometr 🌡️",
+    "title_en": null,
+    "description_uz": "Tushunish yoki rozilik darajasini baholash shkalasi.",
+    "description_en": null,
+    "content_uz": "Tushunish darajasini ko‘rgazmali ifodalash usuli.\n\nTuzilishi:\n0 dan 100 gacha (yoki sovuqdan issiqqacha) vertikal shkala.\n\nQo‘llanishi:\n- Mavzuni tushunishni baholash.\n- Fikrga qo‘shilish darajasi.\n- Qiziqish darajasi.\n- Javobga ishonch.\n\nO‘tkazish tartibi:\n1. Shkalani ko‘rsatish.\n2. O‘quvchilar o‘z darajalarini belgilaydilar.\n3. Nega shu daraja tanlangani va uni oshirish uchun nima kerakligi muhokama qilinadi.",
+    "content_en": null
   },
   {
     "id": 72,
@@ -1820,7 +2234,13 @@
       "individual"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Qo‘l 🖐️",
+    "title_en": null,
+    "description_uz": "Qo‘lning besh barmog‘i orqali refleksiya.",
+    "description_en": null,
+    "content_uz": "Tartibli refleksiya usuli.\n\nHar bir barmoq — bitta savol:\nBosh barmoq — nima muhim bo‘ldi?\nKo‘rsatkich barmoq — nima yangi bo‘ldi?\nO‘rta barmoq — nima qiyin bo‘ldi?\nNomsiz barmoq — nima yoqdi?\nJimjiloq — nima yetishmadi?\n\nO‘tkazish tartibi:\n1. Varaqda qo‘lning konturini chizish.\n2. Har bir barmoqqa javob yozish.\n3. Juftliklarda yoki sinfda muhokama qilish.",
+    "content_en": null
   },
   {
     "id": 73,
@@ -1845,7 +2265,13 @@
       "individual"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Rangli hoshiyalar",
+    "title_en": null,
+    "description_uz": "O‘qituvchiga fikr-mulohaza bildirish uchun daftar hoshiyasini belgilash.",
+    "description_en": null,
+    "content_uz": "O‘qituvchi bilan so‘zsiz muloqot qilish usuli.\n\nTizim:\nO‘quvchi hoshiyaga rangli chiziq chizadi:\n🟢 Yashil — «Tushundim, tekshiring».\n🟡 Sariq — «Ikkilanyapman, yordam bering».\n🔴 Qizil — «Tushunmadim, tushuntiring».\n\nQo‘llanishi:\n- Mustaqil ishni bajarishda.\n- Konspekt yozishda.\n- Masala yechishda.\n\nO‘qituvchi darsni to‘xtatmasdan kimga yordam kerakligini ko‘radi.",
+    "content_en": null
   },
   {
     "id": 74,
@@ -1871,7 +2297,13 @@
       "pair"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Iltifot 💐",
+    "title_en": null,
+    "description_uz": "Sinfdoshga ijobiy fikr-mulohaza bildirish.",
+    "description_en": null,
+    "content_uz": "Ijobiy muhit yaratish usuli.\n\nVariantlar:\n1. Yonidagi o‘quvchiga darsdagi ishi uchun iltifot aytish.\n2. Guruhga taqdimoti uchun iltifot aytish.\n3. O‘qituvchiga darsi uchun iltifot aytish.\n4. O‘ziga erishgan yutug‘i uchun iltifot aytish.\n\nQoidalar:\n- Iltifot aniq bo‘lishi kerak.\n- Iltifot samimiy bo‘lishi kerak.\n- Avval aytilganlarni takrorlash mumkin emas.\n\nIjobiy muloqot ko‘nikmalarini rivojlantiradi.",
+    "content_en": null
   },
   {
     "id": 75,
@@ -1896,7 +2328,13 @@
       "frontal"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Rahmat aytaman 🙏",
+    "title_en": null,
+    "description_uz": "Dars uchun minnatdorlik bildirish.",
+    "description_en": null,
+    "content_uz": "Darsni ijobiy ruhda yakunlash usuli.\n\nO‘tkazish tartibi:\nDars oxirida har kim aytadi:\n«[Kimga] [nima uchun] rahmat aytaman».\n\nMisollar:\n- «Mashaga qiziqarli savoli uchun rahmat aytaman».\n- «O‘qituvchiga tushunarli izohi uchun rahmat aytaman».\n- «Taslim bo‘lmaganim uchun o‘zimga rahmat aytaman».\n- «Guruhga qo‘llab-quvvatlagani uchun rahmat aytaman».\n\nSinfda minnatdorlik madaniyatini shakllantiradi.",
+    "content_en": null
   },
   {
     "id": 76,
@@ -1921,7 +2359,13 @@
       "frontal"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Mikrofon 🎤",
+    "title_en": null,
+    "description_uz": "Tasavvurdagi mikrofon bilan navbatma-navbat fikr bildirish.",
+    "description_en": null,
+    "content_uz": "Fikr bildirishni tashkil etish usuli.\n\nQoidalar:\n1. Faqat qo‘lida «mikrofon» (buyum) bo‘lgan kishi gapiradi.\n2. Qolganlar bo‘lmasdan tinglaydilar.\n3. Mikrofon keyingi kishiga uzatiladi.\n4. Navbatni o‘tkazib yuborish mumkin.\n\nQo‘llanishi:\n- Dars oxiridagi refleksiya.\n- Savol bo‘yicha fikrlar yig‘ish.\n- Taqdimotdan keyingi fikr-mulohaza.\n\nTinglash va o‘zgalar fikrini hurmat qilishga o‘rgatadi.",
+    "content_en": null
   },
   {
     "id": 77,
@@ -1947,7 +2391,13 @@
       "frontal"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Gapni davom ettir",
+    "title_en": null,
+    "description_uz": "Boshlangan gapni o‘z so‘zlari bilan tugatish.",
+    "description_en": null,
+    "content_uz": "Tezkor refleksiya yoki bilimni tekshirish usuli.\n\nRefleksiya uchun gaplar:\n- Darsda men ... ishladim.\n- O‘z ishimdan men ...\n- Dars menga ... tuyuldi.\n- Dars materiali ... edi.\n- Uy vazifasi ... bo‘ladi.\n\nBilimni tekshirish uchun:\n- Fotosintez — bu ... jarayoni.\n- Urushning sababi ... bo‘ldi.\n- Doira yuzining formulasi ...\n\nOg‘zaki yoki yozma qo‘llash mumkin.",
+    "content_en": null
   },
   {
     "id": 78,
@@ -1971,7 +2421,13 @@
       "individual"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Refleksiya ekrani",
+    "title_en": null,
+    "description_uz": "Refleksiya paytida tanlash uchun gap boshlanmalari.",
+    "description_en": null,
+    "content_uz": "Tartibli refleksiya usuli.\n\nEkran yoki doskada quyidagi gaplar ko‘rsatiladi:\n1. Bugun men ...ni bilib oldim.\n2. ... qiziqarli bo‘ldi.\n3. ... qiyin bo‘ldi.\n4. Men topshiriqlarni ... bajardim.\n5. Men ...ni tushundim.\n6. Endi men ... qila olaman.\n7. Men ...ni his qildim.\n8. Men ...ga ega bo‘ldim.\n9. Men ...ni o‘rgandim.\n10. Men ...ni uddaladim.\n11. Men ... qila oldim.\n12. Meni ... hayratlantirdi.\n13. Men ...ni xohladim.\n\nO‘quvchilar 2–3 ta gapni tanlab, davom ettiradilar.",
+    "content_en": null
   },
   {
     "id": 79,
@@ -1994,7 +2450,13 @@
       "frontal"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Tilaklar zanjiri",
+    "title_en": null,
+    "description_uz": "Bir-biriga navbat bilan tilak bildirish.",
+    "description_en": null,
+    "content_uz": "Darsni ijobiy ruhda yakunlash usuli.\n\nO‘tkazish tartibi:\n1. O‘quvchilar davra bo‘lib turadilar yoki tartib bilan o‘tiradilar.\n2. Birinchi o‘quvchi yonidagi o‘quvchiga tilak bildiradi.\n3. U rahmat aytib, keyingi o‘quvchiga tilak bildiradi.\n4. Zanjir to‘liq aylanib chiqadi.\n\nTilak variantlari:\n- Dars mavzusiga oid.\n- O‘qishga oid.\n- Umumiy ezgu tilaklar.\n\nSinfda iliq muhit yaratadi.",
+    "content_en": null
   },
   {
     "id": 80,
@@ -2019,7 +2481,13 @@
       "frontal"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Ijobiy va salbiy",
+    "title_en": null,
+    "description_uz": "Darsda nima yoqdi va nima yoqmadi?",
+    "description_en": null,
+    "content_uz": "Fikr-mulohaza olishning oddiy usuli.\n\nO‘tkazish tartibi:\nO‘quvchilar yozadilar yoki aytadilar:\n+ (ijobiy) — darsda nima yoqdi.\n− (salbiy) — nima yoqmadi yoki qiyin bo‘ldi.\n\nVariantlar:\n- Navbat bilan og‘zaki.\n- Stikerlarda yozma.\n- Doskada ikki ustunda.\n\nO‘qituvchiga darslarni yaxshilashga yordam beradi.",
+    "content_en": null
   },
   {
     "id": 81,
@@ -2043,7 +2511,13 @@
       "individual"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "So‘rovnoma",
+    "title_en": null,
+    "description_uz": "Fikr-mulohaza olish uchun yozma so‘rov.",
+    "description_en": null,
+    "content_uz": "Batafsil fikr-mulohaza olish usuli.\n\nSavollarga misollar:\n1. Darsda qanday yangi narsa o‘rganding?\n2. Qaysi topshiriq eng qiziqarli bo‘ldi?\n3. Qaysi topshiriq qiyinchilik tug‘dirdi?\n4. Nimani batafsilroq o‘rganishni xohlarding?\n5. Darsdagi ishingni bahola (1–5).\n6. Darsni umumiy bahola (1–5).\n\nOnlayn shakllardan (Google Forms) foydalanish mumkin.",
+    "content_en": null
   },
   {
     "id": 82,
@@ -2067,7 +2541,13 @@
       "pair"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Uch jihat: fikr, usul, orzu",
+    "title_en": null,
+    "description_uz": "Darsning uch jihati: asosiy fikr, yoqqan usul va kelgusi orzu.",
+    "description_en": null,
+    "content_uz": "Chuqur refleksiya usuli.\n\nUch jihat:\nFikr — darsning asosiy fikri.\nUsul — qaysi ishlash usuli yoqdi?\nOrzu — yana nimani o‘rganishni istardim?\n\nO‘tkazish tartibi:\n1. Varaqda uch jihatni yozish.\n2. Juftliklarda muhokama qilish.\n3. Bir necha kishi sinf bilan baham ko‘radi.\n\nDarsni turli tomonlardan anglashga yordam beradi.",
+    "content_en": null
   },
   {
     "id": 83,
@@ -2090,7 +2570,13 @@
       "individual"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Yaxshi — qiziqarli — to‘sqinlik — o‘zimga olaman",
+    "title_en": null,
+    "description_uz": "Darsni to‘rt yo‘nalishda baholash usuli (XIMS).",
+    "description_en": null,
+    "content_uz": "Tartibli refleksiya usuli.\n\nTo‘rt yo‘nalish:\nYaxshi — darsda nima yaxshi bo‘ldi?\nQiziqarli — nima qiziqarli bo‘ldi?\nTo‘sqinlik — ishlashga nima xalaqit berdi?\nO‘zimga olaman — o‘zim uchun nimani olaman?\n\nO‘tkazish tartibi:\n1. To‘rt ustunli jadvalni to‘ldirish.\n2. Istakka ko‘ra muhokama qilish.\n\nDars qanday qabul qilingani haqida to‘liq tasavvur beradi.",
+    "content_en": null
   },
   {
     "id": 84,
@@ -2117,7 +2603,13 @@
       "pair"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Akrostix",
+    "title_en": null,
+    "description_uz": "Misralarning bosh harflari bir so‘z hosil qiladigan she’r.",
+    "description_en": null,
+    "content_uz": "Mavzuni mustahkamlashning ijodiy usuli.\n\nQoidalar:\n1. Mavzuga oid kalit so‘zni tanlash.\n2. Uni vertikal yozish.\n3. Har bir harf bilan mavzuga oid misra boshlash.\n\nMoslashtirilgan namuna («SUV» so‘zi):\nS — Suvsiz hayot bo‘lmaydi.\nU — U barcha tirik mavjudot uchun zarur.\nV — Vujudimizga hayot bag‘ishlaydi.\n\nIjodkorlik va mavzuni tushunishni rivojlantiradi.",
+    "content_en": null
   },
   {
     "id": 85,
@@ -2141,7 +2633,13 @@
       "individual"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Hokku (Xayku)",
+    "title_en": null,
+    "description_uz": "Mavzu mohiyatini ifodalash uchun yaponcha uch misrali she’r.",
+    "description_en": null,
+    "content_uz": "Umumlashtirishning she’riy usuli.\n\nHokku tuzilishi:\n1-misra — 5 bo‘g‘in.\n2-misra — 7 bo‘g‘in.\n3-misra — 5 bo‘g‘in.\n\nQoidalar:\n- Mavzu mohiyatini ifodalash.\n- Obraz yaratish.\n- His-tuyg‘uni ifodalash.\n\nMoslashtirilgan namuna («Kuz» mavzusi):\nYaproq aylanar (5)\nOltin gilam to‘shalar (7)\nKuz kelib qoldi (5)\n\nObrazli fikrlash va lo‘ndalikni rivojlantiradi.",
+    "content_en": null
   },
   {
     "id": 86,
@@ -2166,7 +2664,13 @@
       "pair"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Limerik",
+    "title_en": null,
+    "description_uz": "Muayyan qofiya tartibiga ega hazilomuz besh misrali she’r.",
+    "description_en": null,
+    "content_uz": "Mavzuni ijodiy mustahkamlashning hazilomuz usuli.\n\nLimerik tuzilishi:\n- 5 misra.\n- Qofiya tartibi: AABBA.\n- 1-, 2- va 5-misralar uzun.\n- 3- va 4-misralar qisqa.\n\nMoslashtirilgan namuna:\nBir uchburchak yashar ekan, (A)\nGeometriyaga yor ekan. (A)\nUch tomoni, uch burchak, (B)\nHar biri unga kerak, (B)\nO‘zi ajoyib janob ekan! (A)\n\nIjodkorlik va hazil tuyg‘usini rivojlantiradi.",
+    "content_en": null
   },
   {
     "id": 87,
@@ -2192,7 +2696,13 @@
       "individual"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Ranglar bilan ifodalash",
+    "title_en": null,
+    "description_uz": "Mavzuni tushunishni ranglar orqali ifodalash.",
+    "description_en": null,
+    "content_uz": "Idrokni ko‘rgazmali ifodalashning ijodiy usuli.\n\nO‘tkazish tartibi:\n1. O‘quvchilar mavzuga bog‘liq ranglarni tanlaydilar.\n2. Rangli kompozitsiya yaratadilar.\n3. Rang tanlovlarini tushuntiradilar.\n\nVariantlar:\n- Darsdan keyingi kayfiyat rangi.\n- Qahramonni tavsiflash uchun ranglar.\n- Tarixiy davrning ranglar palitrasi.\n- Tushunchaga mos ranglar (urush, tinchlik, muhabbat).\n\nObrazli fikrlash va hissiy intellektni rivojlantiradi.",
+    "content_en": null
   },
   {
     "id": 88,
@@ -2218,7 +2728,13 @@
       "team"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Jonli surat",
+    "title_en": null,
+    "description_uz": "Sahnani so‘z va harakatsiz tasvirlash.",
+    "description_en": null,
+    "content_uz": "Materialni tushunishning teatr usuli.\n\nO‘tkazish tartibi:\n1. Guruh tasvirlash uchun sahna yoki lahzani tanlaydi.\n2. Rollar taqsimlanadi.\n3. O‘quvchilar sahnani gavdalantirib, qimirlamay turadilar.\n4. Boshqa o‘quvchilar nima tasvirlanganini topadilar.\n5. Nega shunday holatlar tanlangani muhokama qilinadi.\n\nMisollar:\n- Adabiy asardan sahna.\n- Tarixiy lahza.\n- Ilmiy hodisa.\n- Ijtimoiy vaziyat.",
+    "content_en": null
   },
   {
     "id": 89,
@@ -2243,7 +2759,13 @@
       "pair"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Intervyu",
+    "title_en": null,
+    "description_uz": "Intervyu shaklidagi rolli o‘yin.",
+    "description_en": null,
+    "content_uz": "Materialni chuqur tushunish usuli.\n\nVariantlar:\n1. Tarixiy shaxs bilan intervyu.\n2. Adabiy qahramon bilan intervyu.\n3. Olim bilan intervyu.\n4. «Tushuncha» bilan intervyu («Men — Fotosintezman»).\n\nO‘tkazish tartibi:\n1. Bir o‘quvchi suhbat oluvchi, ikkinchisi qahramon bo‘ladi.\n2. Savollar tayyorlanadi.\n3. Intervyu o‘tkaziladi.\n4. Qanday yangi ma’lumotlar o‘rganilgani muhokama qilinadi.\n\nHamdardlik va muloqot ko‘nikmalarini rivojlantiradi.",
+    "content_en": null
   },
   {
     "id": 90,
@@ -2267,7 +2789,13 @@
       "frontal"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Matbuot anjumani",
+    "title_en": null,
+    "description_uz": "Bitta ekspert jurnalistlar savollariga javob beradi.",
+    "description_en": null,
+    "content_uz": "Bilimni tekshirish va chuqurlashtirish usuli.\n\nO‘tkazish tartibi:\n1. Bir o‘quvchi yoki o‘qituvchi mavzu bo‘yicha ekspert bo‘ladi.\n2. Qolganlar jurnalistlar bo‘ladilar.\n3. Jurnalistlar savol beradilar.\n4. Ekspert javob beradi.\n5. Ekspertlarni almashtirish mumkin.\n\nQoidalar:\n- Savollar mavzuga oid bo‘lishi kerak.\n- Ekspert «Bilmayman, aniqlashtiraman» deyishi mumkin.\n- Jurnalistlar javoblarni baholaydilar.\n\nOmma oldida so‘zlash ko‘nikmalarini rivojlantiradi.",
+    "content_en": null
   },
   {
     "id": 91,
@@ -2293,7 +2821,13 @@
       "frontal"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Sud",
+    "title_en": null,
+    "description_uz": "Sud majlisi shaklidagi rolli o‘yin.",
+    "description_en": null,
+    "content_uz": "Bahsli masalalarni tahlil qilish usuli.\n\nRollar:\n- Sudya (jarayonni olib boradi).\n- Ayblovchi (qarshi).\n- Himoyachi (tarafdor).\n- Guvohlar (faktlar).\n- Hakamlar hay’ati (qaror).\n\n«Sudlanuvchilar»ga misollar:\n- Tarixiy shaxs.\n- Adabiy qahramon.\n- Ilmiy kashfiyot.\n- Ijtimoiy hodisa.\n\nDalillash va tahlil ko‘nikmalarini rivojlantiradi.",
+    "content_en": null
   },
   {
     "id": 92,
@@ -2320,7 +2854,13 @@
       "individual"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Vaqt mashinasi ⏰",
+    "title_en": null,
+    "description_uz": "O‘tmish yoki kelajakka xayoliy sayohat.",
+    "description_en": null,
+    "content_uz": "Tasavvurni rivojlantirish va vaziyat sharoitini tushunish usuli.\n\nVariantlar:\n1. Bir davrga sayohat (nimalarni ko‘ramiz, eshitamiz, his qilamiz?).\n2. Tarixiy shaxs bilan uchrashuv.\n3. Kelajakdan bizning zamonimizga nazar.\n4. O‘tmish yoki kelajakdan maktub.\n\nO‘tkazish tartibi:\n1. «Vaqt mashinasiga o‘tiramiz».\n2. Qayerga tushganimizni tasvirlaymiz.\n3. Nimalarni ko‘rayotganimiz, eshitayotganimiz va his qilayotganimizni aytamiz.\n4. Qaytib, taassurotlarimizni baham ko‘ramiz.",
+    "content_en": null
   },
   {
     "id": 93,
@@ -2346,7 +2886,13 @@
       "team"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Muzey 🏛️",
+    "title_en": null,
+    "description_uz": "Mavzu bo‘yicha xayoliy ko‘rgazma yaratish.",
+    "description_en": null,
+    "content_uz": "Materialni tizimlashtirish va ijodiy taqdim etish usuli.\n\nO‘tkazish tartibi:\n1. Guruhlar mavzu bo‘yicha «ko‘rgazma» yaratadilar.\n2. «Eksponatlar»ni tanlaydilar (tushunchalar, faktlar, obrazlar).\n3. «Ekskursiya» — eksponatlar haqidagi hikoyani tayyorlaydilar.\n4. Boshqa guruhlar uchun ekskursiya o‘tkazadilar.\n\nVariantlar:\n- Bir qahramon muzeyi.\n- Tarixiy davr muzeyi.\n- Ilmiy kashfiyotlar muzeyi.\n- Xatolar muzeyi.\n\nTaqdimot va tizimlashtirish ko‘nikmalarini rivojlantiradi.",
+    "content_en": null
   },
   {
     "id": 94,
@@ -2373,7 +2919,13 @@
       "pair"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Reklama 📺",
+    "title_en": null,
+    "description_uz": "Tushuncha, kitob yoki hodisa uchun reklama yaratish.",
+    "description_en": null,
+    "content_uz": "Asosiy fikrni ajratishning ijodiy usuli.\n\nTopshiriq:\nQuyidagilar uchun reklama yarating (30 soniya — 1 daqiqa):\n- Kitob.\n- Ilmiy tushuncha.\n- Tarixiy davr.\n- Kasb.\n- Sog‘lom turmush tarzi.\n\nReklama qismlari:\n- Shior.\n- Asosiy afzalliklar.\n- Harakatga undov.\n\nIjodkorlik va ishontirish ko‘nikmalarini rivojlantiradi.",
+    "content_en": null
   },
   {
     "id": 95,
@@ -2398,7 +2950,13 @@
       "team"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Axborot sintezi",
+    "title_en": null,
+    "description_uz": "Turli manbalardan olingan axborotni birlashtirish.",
+    "description_en": null,
+    "content_uz": "Tadqiqot ko‘nikmalarini rivojlantirish usuli.\n\nO‘tkazish tartibi:\n1. Mavzu bo‘yicha 3–4 ta turli manba berish.\n2. Har bir o‘quvchi yoki guruh bitta manba bilan ishlaydi.\n3. Asosiy axborotni ajratadilar.\n4. Axborotni birlashtirib, yaxlit tasavvur hosil qiladilar.\n5. Qarama-qarshilik va mosliklarni topadilar.\n\nTahlil, solishtirish va umumlashtirish ko‘nikmalarini rivojlantiradi.",
+    "content_en": null
   },
   {
     "id": 96,
@@ -2424,7 +2982,13 @@
       "team"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Xayoliy qo‘shimcha",
+    "title_en": null,
+    "description_uz": "Haqiqiy vaziyatga fantastik element qo‘shish.",
+    "description_en": null,
+    "content_uz": "Ijodiy fikrlashni rivojlantirish usuli.\n\nMisollar:\n- Napoleon Vaterlooda g‘alaba qilganida nima bo‘lardi?\n- Ishqalanish kuchi bo‘lmaganida nima bo‘lardi?\n- Qahramon boshqa qaror qabul qilganida nima bo‘lardi?\n- Odamlar 500 yil yashaganida nima bo‘lardi?\n\nO‘tkazish tartibi:\n1. «Agar ... bo‘lsa-chi?» savolini tuzamiz.\n2. Oqibatlarni taxmin qilamiz.\n3. Bu mavzuni tushunishga qanday ta’sir qilishini muhokama qilamiz.\n\nSabab-oqibat asosida fikrlashni rivojlantiradi.",
+    "content_en": null
   },
   {
     "id": 97,
@@ -2449,7 +3013,13 @@
       "frontal"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Kechiktirilgan javob",
+    "title_en": null,
+    "description_uz": "Dars boshida topishmoq, oxirida esa javob.",
+    "description_en": null,
+    "content_uz": "Dars davomida qiziqishni saqlash usuli.\n\nO‘tkazish tartibi:\n1. Dars boshida o‘qituvchi mavzuga oid topishmoq aytadi.\n2. O‘quvchilar taxminlarini bildiradilar.\n3. O‘qituvchi javobni aytmaydi.\n4. Dars davomida yordamchi ma’lumotlar paydo bo‘ladi.\n5. Dars oxirida javob ochiladi.\n\nTopishmoq variantlari:\n- Hodisaning tavsifi.\n- Ismi aytilmagan tarjimayi hol.\n- Sirli buyum.\n- Paradoks.\n\nSir va o‘rganishga qiziqishni saqlaydi.",
+    "content_en": null
   },
   {
     "id": 98,
@@ -2473,7 +3043,13 @@
       "frontal"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Hayratlantir!",
+    "title_en": null,
+    "description_uz": "Darsni hayratlanarli fakt bilan boshlash.",
+    "description_en": null,
+    "content_uz": "Dars boshida diqqatni jalb qilish usuli.\n\nO‘tkazish tartibi:\n1. O‘qituvchi mavzuga oid hayratlanarli faktdan boshlaydi.\n2. Fakt «Bo‘lishi mumkin emas!» degan munosabat uyg‘otishi kerak.\n3. Nega bunday ekani muhokama qilinadi.\n4. Mavzuni o‘rganishga o‘tiladi.\n\nMisollar:\n- «Miyangiz tanadagi butun energiyaning 20 foizini sarflaydi».\n- «Bir tomchi suvda millionta bakteriya yashaydi».\n- «Kleopatra piramida quruvchilari davriga qaraganda bizning davrimizga yaqinroq yashagan».\n\nO‘rganishga qiziqish uyg‘otadi.",
+    "content_en": null
   },
   {
     "id": 99,
@@ -2498,7 +3074,13 @@
       "frontal"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "Epigraf",
+    "title_en": null,
+    "description_uz": "Mavzuga kirish sifatida iqtibos bilan ishlash.",
+    "description_en": null,
+    "content_uz": "Darsga mos ruhiy tayyorgarlik yaratish usuli.\n\nO‘tkazish tartibi:\n1. Doskaga mavzuga bog‘liq iqtibos yoziladi.\n2. O‘quvchilar uni o‘qib, talqin qiladilar.\n3. Dars mavzusini taxmin qiladilar.\n4. Dars oxirida epigrafga qaytiladi.\n5. Iqtibosni tushunish qanday o‘zgargani muhokama qilinadi.\n\nEpigraf manbalari:\n- Olimlarning fikrlari.\n- Asarlardan iqtiboslar.\n- Maqol va matallar.\n- Hikmatli so‘zlar.",
+    "content_en": null
   },
   {
     "id": 100,
@@ -2522,6 +3104,12 @@
       "frontal"
     ],
     "created_at": "2026-03-22 05:44:24",
-    "updated_at": "2026-03-22 05:44:24"
+    "updated_at": "2026-03-22 05:44:24",
+    "title_uz": "G‘oyalar savati 2.0 🧺",
+    "title_en": null,
+    "description_uz": "Onlayn vositalar orqali g‘oyalarni yig‘ishning raqamli varianti.",
+    "description_en": null,
+    "content_uz": "«G‘oyalar savati» usulining zamonaviy varianti.\n\nVositalar:\n- Mentimeter.\n- Padlet.\n- Google Jamboard.\n- Miro.\n\nO‘tkazish tartibi:\n1. O‘qituvchi onlayn doska yaratadi.\n2. O‘quvchilar o‘z qurilmalaridan g‘oyalar qo‘shadilar.\n3. Hamma g‘oyalarni real vaqt rejimida ko‘radi.\n4. G‘oyalar guruhlanib, muhokama qilinadi.\n\nAfzalliklar:\n- Zarur bo‘lsa, anonimlik.\n- Hamma bir vaqtda qatnashadi.\n- Natijalarni saqlash.",
+    "content_en": null
   }
 ]

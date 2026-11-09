@@ -1,3 +1,4 @@
+import forms from '@tailwindcss/forms';
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./src/**/*.{html,js,svelte,ts}'],
@@ -81,10 +82,5 @@ export default {
       }
     }
   },
-  plugins: [
-    require('@tailwindcss/forms'),
-    require('@tailwindcss/typography'),
-    require('@tailwindcss/aspect-ratio'),
-    require('@tailwindcss/line-clamp')
-  ]
+  plugins: [forms]
 };

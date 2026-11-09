@@ -1,0 +1,14 @@
+.git
+.history
+**/node_modules
+**/.env
+**/.env.*
+**/.svelte-kit
+**/.vercel
+**/build
+**/coverage
+**/*.db
+**/*.sqlite
+**/*.sqlite3
+**/*.log
+**/.DS_Store

@@ -1,3 +1,4 @@
+const normalizeSearch = value => String(value || '').normalize('NFC').trim().toLowerCase().replace(/[ʻʼ’‘`´]/g, "'");
 // Сервис для работы с карточками через JSON (для Vercel serverless)
 const path = require('path');
 const fs = require('fs');
@@ -134,28 +135,28 @@ class CardServiceJSON {
 
     // Поиск по названию и описанию (все языки)
     if (filters.search) {
-      const searchLower = filters.search.toLowerCase();
+      const searchLower = normalizeSearch(filters.search);
       result = result.filter(card => 
-        card.title.toLowerCase().includes(searchLower) ||
-        card.description.toLowerCase().includes(searchLower) ||
-        (card.content && card.content.toLowerCase().includes(searchLower)) ||
-        (card.title_uz && card.title_uz.toLowerCase().includes(searchLower)) ||
-        (card.title_en && card.title_en.toLowerCase().includes(searchLower)) ||
-        (card.description_uz && card.description_uz.toLowerCase().includes(searchLower)) ||
-        (card.description_en && card.description_en.toLowerCase().includes(searchLower))
+        normalizeSearch(card.title).includes(searchLower) ||
+        normalizeSearch(card.description).includes(searchLower) ||
+        (card.content && normalizeSearch(card.content).includes(searchLower)) ||
+        (card.title_uz && normalizeSearch(card.title_uz).includes(searchLower)) ||
+        (card.title_en && normalizeSearch(card.title_en).includes(searchLower)) ||
+        (card.description_uz && normalizeSearch(card.description_uz).includes(searchLower)) ||
+        (card.description_en && normalizeSearch(card.description_en).includes(searchLower)) ||
+        (card.content_uz && normalizeSearch(card.content_uz).includes(searchLower)) ||
+        (card.content_en && normalizeSearch(card.content_en).includes(searchLower))
       );
     }
 
     // Сортировка по дате создания (новые первые)
     result.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-    // Пагинация
-    const total = result.length;
-    if (filters.limit) {
-      const offset = parseInt(filters.offset) || 0;
-      const limit = parseInt(filters.limit);
-      result = result.slice(offset, offset + limit);
-    }
+    // Invalid or negative query values must never become negative Array.slice indexes.
+    const rawLimit=Number(filters.limit),rawOffset=Number(filters.offset);
+    const limit=Number.isSafeInteger(rawLimit)&&rawLimit>0?Math.min(1000,rawLimit):result.length;
+    const offset=Number.isSafeInteger(rawOffset)&&rawOffset>=0?rawOffset:0;
+    result=result.slice(offset,offset+limit);
 
     // Преобразуем JSON строки в массивы
     return result.map(card => ({
@@ -176,7 +177,8 @@ class CardServiceJSON {
 
   // Получить карточку по ID
   async getCardById(id) {
-    const card = cardsData.find(c => c.id === parseInt(id));
+    if(!/^\d+$/.test(String(id)))return null;
+    const card = cardsData.find(c => c.id === Number(id));
     if (!card) return null;
     
     return {

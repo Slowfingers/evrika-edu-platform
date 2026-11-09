@@ -5,16 +5,22 @@
   let deferredPrompt = null;
   
   onMount(() => {
-    window.addEventListener('beforeinstallprompt', (e) => {
+    const beforeInstall = (e) => {
       e.preventDefault();
       deferredPrompt = e;
       showPrompt = true;
-    });
+    };
     
-    window.addEventListener('appinstalled', () => {
+    const installed = () => {
       showPrompt = false;
       deferredPrompt = null;
-    });
+    };
+    window.addEventListener('beforeinstallprompt', beforeInstall);
+    window.addEventListener('appinstalled', installed);
+    return () => {
+      window.removeEventListener('beforeinstallprompt', beforeInstall);
+      window.removeEventListener('appinstalled', installed);
+    };
   });
   
   async function installPWA() {

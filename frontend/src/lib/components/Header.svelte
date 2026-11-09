@@ -1,111 +1,25 @@
 <script>
-  import { page } from '$app/stores';
-  import { t, lang, LANGS } from '$lib/stores/lang.js';
-
-  const toolRoutes = ['/timer', '/noisemeter', '/classroom', '/target'];
-  const navRoutes = ['/', '/constructor', '/timer', '/noisemeter', '/classroom', '/target'];
-  
-  let showLangDropdown = false;
-  
-  function toggleLangDropdown() {
-    showLangDropdown = !showLangDropdown;
-  }
-  
-  function selectLang(code) {
-    lang.set(code);
-    showLangDropdown = false;
-  }
-  
-  function handleClickOutside(event) {
-    if (showLangDropdown && !event.target.closest('.lang-dropdown')) {
-      showLangDropdown = false;
-    }
-  }
-
-  $: currentPath = $page.url.pathname;
-  $: isCardDetail = currentPath.match(/^\/\d+$/);
-  $: isMobileRoot = navRoutes.includes(currentPath);
-
-  $: mobileTitle = {
-    '/timer': $t('mobile_timer'),
-    '/noisemeter': $t('mobile_noisemeter'),
-    '/classroom': $t('mobile_classroom'),
-    '/constructor': $t('mobile_constructor'),
-    '/target': $t('mobile_target')
-  }[currentPath] || null;
+ import {page} from '$app/state';import {afterNavigate} from '$app/navigation';
+ import {t,lang,LANGS} from '#lib/stores/lang.js';import {worksheetLabel} from '#lib/utils/worksheet-labels.js';import {designLabel} from '#lib/utils/design-labels.js';import UiIcon from './UiIcon.svelte';
+ let languagesOpen=$state(false),toolsOpen=$state(false);
+ let path=$derived(page.url.pathname);
+ let ui=$derived(key=>designLabel($lang,key));
+ let tools=$derived([{href:'/timer',label:$t('nav_timer'),icon:'clock'},{href:'/target',label:$t('nav_target'),icon:'target'},{href:'/classroom',label:$t('nav_class'),icon:'room'},{href:'/noisemeter',label:$t('nav_noise'),icon:'mic'}]);
+ afterNavigate(()=>{languagesOpen=false;toolsOpen=false;});
+ function outside(e){if(!e.target.closest('.language-picker'))languagesOpen=false;if(!e.target.closest('.desktop-tools'))toolsOpen=false;}
+ function keys(e){if(e.key==='Escape'){languagesOpen=false;toolsOpen=false;}}
 </script>
-
-<svelte:window on:click={handleClickOutside} />
-
-<header class="sticky top-0 z-50 backdrop-blur-2xl backdrop-saturate-150" style="background: rgba(255,255,255,0.72); border-bottom: 1px solid rgba(0,0,0,0.06); box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
-  <div class="max-w-7xl mx-auto px-4 md:px-6">
-    <div class="flex items-center justify-between h-12 md:h-14">
-
-      <!-- Мобильный: логотип или назад -->
-      {#if isCardDetail}
-        <a href="/" class="md:hidden flex items-center gap-1 text-gray-600 hover:text-gray-900 transition-colors -ml-1">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-          </svg>
-          <span class="text-sm font-medium">{$t('nav_back')}</span>
-        </a>
-      {:else}
-        <a href="/" class="md:hidden flex items-center gap-1.5 min-w-0">
-          <img src="/logo.png" alt="EvrikaEdu" class="w-7 h-7 rounded-lg object-cover flex-shrink-0" />
-          {#if mobileTitle}
-            <span class="text-sm font-semibold text-gray-900 truncate">{mobileTitle}</span>
-          {:else}
-            <span class="text-sm font-semibold text-gray-900 hidden xs:inline">EvrikaEdu</span>
-          {/if}
-        </a>
-      {/if}
-
-      <!-- Десктоп: логотип -->
-      <a href="/" class="hidden md:flex items-center gap-2.5 group flex-shrink-0">
-        <img src="/logo.png" alt="EvrikaEdu" class="w-8 h-8 rounded-xl object-cover shadow-sm group-hover:shadow-md transition-shadow" />
-        <span class="text-lg font-semibold text-gray-900">EvrikaEdu</span>
-      </a>
-
-      <!-- Десктоп: навигация -->
-      <nav class="hidden md:flex items-center ml-6">
-        <div class="flex items-center gap-0.5 p-1 rounded-full bg-gray-100/80">
-          <a href="/" class="px-4 py-1.5 rounded-full text-sm font-medium transition-all {currentPath === '/' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-600 hover:text-gray-900'}">{$t('nav_catalog')}</a>
-          <a href="/constructor" class="px-4 py-1.5 rounded-full text-sm font-medium transition-all {currentPath === '/constructor' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-600 hover:text-gray-900'}">{$t('nav_constructor')}</a>
-        </div>
-        <div class="w-px h-5 bg-gray-200 mx-3"></div>
-        <div class="flex items-center gap-0.5 p-1 rounded-full bg-gray-100/80">
-          <a href="/timer" class="px-3 py-1.5 rounded-full text-sm font-medium transition-all {currentPath === '/timer' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500 hover:text-gray-900'}">{$t('nav_timer')}</a>
-          <a href="/noisemeter" class="px-3 py-1.5 rounded-full text-sm font-medium transition-all {currentPath === '/noisemeter' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500 hover:text-gray-900'}">{$t('nav_noise')}</a>
-          <a href="/classroom" class="px-3 py-1.5 rounded-full text-sm font-medium transition-all {currentPath === '/classroom' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500 hover:text-gray-900'}">{$t('nav_class')}</a>
-          <a href="/target" class="px-3 py-1.5 rounded-full text-sm font-medium transition-all {currentPath === '/target' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500 hover:text-gray-900'}">{$t('nav_target')}</a>
-        </div>
-      </nav>
-
-      <!-- Переключатель языков (dropdown) -->
-      <div class="relative ml-auto flex-shrink-0 lang-dropdown">
-        <button
-          on:click={toggleLangDropdown}
-          class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-100/80 hover:bg-gray-200/80 transition-colors text-sm font-medium text-gray-700"
-        >
-          <span class="text-xs md:text-sm">{LANGS.find(l => l.code === $lang)?.label || 'Рус'}</span>
-          <svg class="w-3 h-3 transition-transform {showLangDropdown ? 'rotate-180' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-          </svg>
-        </button>
-        
-        {#if showLangDropdown}
-          <div class="absolute right-0 top-full mt-1 w-32 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
-            {#each LANGS as l}
-              <button
-                on:click={() => selectLang(l.code)}
-                class="w-full px-3 py-2 text-left text-sm hover:bg-gray-50 transition-colors {$lang === l.code ? 'bg-gray-100 font-semibold text-gray-900' : 'text-gray-700'}"
-              >
-                {l.label}
-              </button>
-            {/each}
-          </div>
-        {/if}
-      </div>
-    </div>
-  </div>
-</header>
+<svelte:window onclick={outside} onkeydown={keys}/>
+<header class="app-header"><div class="header-inner">
+ <a class="brand" href="/" aria-label="EvrikaEdu"><img src="/brand-mark.svg" alt="" width="38" height="38"/><span>evrikaedu</span></a>
+ <nav class="desktop-navigation" aria-label={$t('nav_menu')}>
+  <a href="/" class:active={path==='/'} aria-current={path==='/'?'page':undefined}><UiIcon name="grid"/>{$t('nav_catalog')}</a>
+  <a href="/constructor" class:active={path==='/constructor'} aria-current={path==='/constructor'?'page':undefined}><UiIcon name="lesson"/>{$t('nav_constructor')}</a>
+  <a href="/worksheets" class:active={path==='/worksheets'} aria-current={path==='/worksheets'?'page':undefined}><UiIcon name="sheet"/>{worksheetLabel($lang,'nav')}</a>
+  <div class="desktop-tools"><button class:active={tools.some(tool=>tool.href===path)} aria-expanded={toolsOpen} onclick={()=>toolsOpen=!toolsOpen}><UiIcon name="spark"/>{ui('tools')}<UiIcon name="down" size={14}/></button>{#if toolsOpen}<div class="header-dropdown">{#each tools as tool}<a href={tool.href}><UiIcon name={tool.icon}/>{tool.label}</a>{/each}</div>{/if}</div>
+ </nav>
+ <div class="language-picker"><button aria-label={`${ui('language')}: ${LANGS.find(l=>l.code===$lang)?.label}`} aria-expanded={languagesOpen} aria-controls="language-list" onclick={()=>languagesOpen=!languagesOpen}><span>{LANGS.find(l=>l.code===$lang)?.label}</span><UiIcon name="down" size={14}/></button>{#if languagesOpen}<div id="language-list" class="header-dropdown">{#each LANGS as language}<button class:current={$lang===language.code} onclick={()=>{lang.set(language.code);languagesOpen=false;}}>{language.label}<span>{$lang===language.code?'✓':''}</span></button>{/each}</div>{/if}</div>
+</div></header>
+<style>
+ .app-header{position:sticky;top:0;z-index:50;background:#ffffffee;border-bottom:1px solid #e9e2f3;backdrop-filter:blur(12px);}.header-inner{max-width:1280px;margin:auto;padding:0 24px;display:flex;align-items:center;gap:36px;min-height:74px;}.brand{display:flex;align-items:center;gap:9px;flex-shrink:0;}.brand span{font-size:24px;font-weight:800;letter-spacing:-1px;color:#28144d;}.brand img{width:38px;height:38px;}.desktop-navigation{display:flex;align-items:center;gap:5px;flex:1;}.desktop-navigation>a,.desktop-tools>button{display:flex;align-items:center;gap:8px;min-height:42px;padding:10px 13px;font-size:12px;font-weight:600;color:#67577d;border-radius:12px;white-space:nowrap;}.desktop-navigation>a:hover,.desktop-tools>button:hover{background:#f4eefb;}.desktop-navigation .active{background:#eee3ff;color:#7331d8;}.desktop-tools,.language-picker{position:relative;}.language-picker{margin-left:auto;}.language-picker>button{display:flex;align-items:center;gap:8px;min-height:44px;padding:8px 11px;border:1px solid #dfd2f0;border-radius:10px;background:#fbf9ff;color:#4c306f;font-size:12px;font-weight:600;}.header-dropdown{position:absolute;right:0;top:calc(100% + 10px);background:white;border:1px solid #e5d9f2;border-radius:15px;padding:6px;min-width:180px;box-shadow:0 10px 35px #40276315;}.header-dropdown>a,.header-dropdown>button{display:flex;align-items:center;gap:10px;width:100%;padding:11px 12px;border-radius:9px;text-align:left;font-size:13px;color:#665176;min-height:44px;}.header-dropdown>a:hover,.header-dropdown>button:hover,.header-dropdown .current{background:#f4edfc;}.header-dropdown>button{justify-content:space-between;}.language-picker .header-dropdown{min-width:120px;}@media(max-width:1050px){.header-inner{gap:18px;}.brand span{font-size:21px;}.desktop-navigation>a,.desktop-tools>button{font-size:11px;padding:9px 10px;gap:5px;}}@media(max-width:767px){.header-inner{min-height:60px;padding:0 16px;}.brand span{font-size:21px;}.brand img{width:32px;height:32px;}.desktop-navigation{display:none;}.language-picker>button{min-height:44px;}.header-dropdown>button{min-height:44px;}}
+</style>

@@ -1,15 +1,31 @@
 <script>
   import { createEventDispatcher } from 'svelte';
+  import { createLessonStages, recalculateLesson, removeLessonCard, lessonHasContent, stageHasContent, worksheetFromLesson } from '#lib/utils/lesson-state.js';
   import { slide } from 'svelte/transition';
   import { quintOut } from 'svelte/easing';
   import ConstructorCard from './ConstructorCard.svelte';
   import DetailedLessonCard from './DetailedLessonCard.svelte';
-  import { formatTimeDisplay } from '$lib/utils/time-intervals.js';
-  import { exportLessonToPDF } from '$lib/utils/pdf-export.js';
-  import { exportLessonToDOCX } from '$lib/utils/docx-export.js';
-  import { t, lang } from '$lib/stores/lang.js';
-  import { localizeCard } from '$lib/utils/localization.js';
+  import { formatTimeDisplay } from '#lib/utils/time-intervals.js';
+  import { exportLessonToPDF } from '#lib/utils/pdf-export.js';
 
+  import { t, lang } from '#lib/stores/lang.js';
+  import { localizeCard } from '#lib/utils/localization.js';
+  import { normalizeSearch } from '#lib/api/base.api.js';
+
+  import WorksheetBuilder from './WorksheetBuilder.svelte';
+  import { lessonLabel, stageLabel } from '#lib/utils/lesson-labels.js';
+  $: l = key => lessonLabel($lang, key);
+  let exporting=null;
+  let exportErrorText='';
+  let lastExportedLesson='';
+  let catalogueVisible=false;
+  let worksheetOpened=false;
+  let worksheetOpen=false;
+  let worksheetSeed=null;
+  function openWorksheet(){if(!worksheetOpened){worksheetSeed=worksheetFromLesson(lessonData,$lang);worksheetOpened=true;}worksheetOpen=true;}
+  function updateStage(key,value){lessonData=recalculateLesson({...lessonData,lessonStages:{...lessonData.lessonStages,[currentLessonStage]:{...lessonData.lessonStages[currentLessonStage],[key]:value}}});}
+  import { useUnsavedChanges } from '#lib/utils/unsaved.js';
+  useUnsavedChanges(()=>((lessonHasContent(lessonData)||!!lessonData.topic.trim()||!!lessonData.subject.trim()||!!lessonData.grade.trim()||!!lessonData.description.trim()||!!lessonData.goals.trim()||lessonData.lessonDuration!==45||Object.values(lessonData.lessonStages).some((stage,index)=>stage.duration!==[3,12,10,15,5][index]))&&JSON.stringify(lessonData)!==lastExportedLesson)||worksheetOpened,()=>$lang);
   const dispatch = createEventDispatcher();
 
   // Состояние wizard'а
@@ -24,27 +40,24 @@
     description: '',
     goals: '',
     selectedCards: [],
-    totalTime: 0,
-    lessonStages: {
-      'начало-урока': { cards: [], totalTime: 0 },
-      'объяснение-нового-материала': { cards: [], totalTime: 0 },
-      'закрепление': { cards: [], totalTime: 0 },
-      'конец-урока': { cards: [], totalTime: 0 }
-    }
+    totalTime: 45,
+    lessonDuration: 45,
+    lessonStages: createLessonStages()
   };
 
   // Каталог карточек
   export let catalogCards = [];
   export let isLoading = false;
+  export let catalogError=false;
 
   // Поиск и фильтрация
   let searchQuery = '';
-  
+
   // Шаблонные цели урока
   let selectedGoals = [];
   let customGoal = '';
   let showGoalTemplates = false;
-  
+
   // Определение шаблонов целей
   $: goalTemplates = {
     mastery: [
@@ -71,7 +84,7 @@
       { id: 'teamwork', label: $t('goal_teamwork') }
     ]
   };
-  
+
   // Обновление поля goals при изменении выбранных целей
   $: {
     const goals = [...selectedGoals.map(id => {
@@ -81,24 +94,19 @@
       }
       return '';
     }).filter(Boolean)];
-    
+
     if (customGoal.trim()) {
       goals.push(customGoal.trim());
     }
-    
+
     lessonData.goals = goals.join('; ');
   }
-  
+
   // Текущий выбранный этап урока для добавления карточек
   let currentLessonStage = 'начало-урока';
-  
+
   // Названия этапов урока для отображения
-  $: lessonStageNames = {
-    'начало-урока': $t('stage_start'),
-    'объяснение-нового-материала': $t('stage_explain'),
-    'закрепление': $t('stage_consolidate'),
-    'конец-урока': $t('stage_end')
-  };
+  $: lessonStageNames = Object.fromEntries(Object.keys(lessonData.lessonStages).map(id=>[id,stageLabel(id,$lang)]));
   let timeFilter = 'all'; // all, short (до 15 мин), medium (15-30 мин), long (30+ мин)
   let selectedAgeGroups = [];
   let selectedSkills = [];
@@ -106,10 +114,10 @@
   let selectedTypes = [];
   let showFilters = false;
   let filteredCards = [];
-  
+
   // Управление этапами урока на втором шаге
   let showStageCards = {}; // Для отображения карточек каждого этапа
-  
+
   // Предопределенные данные для фильтров (реактивные при смене языка)
   $: predefinedAgeGroups = [
     { id: 'начальные-классы', name: $t('age_primary') },
@@ -142,21 +150,21 @@
   // Улучшенная фильтрация карточек с расширенными фильтрами
   $: {
     let filtered = catalogCards;
-    
+
     // Фильтр по поисковому запросу (все языки)
     if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(card => 
-        card.title?.toLowerCase().includes(query) ||
-        card.description?.toLowerCase().includes(query) ||
-        card.content?.toLowerCase().includes(query) ||
-        card.title_uz?.toLowerCase().includes(query) ||
-        card.title_en?.toLowerCase().includes(query) ||
-        card.description_uz?.toLowerCase().includes(query) ||
-        card.description_en?.toLowerCase().includes(query)
+      const query = normalizeSearch(searchQuery);
+      filtered = filtered.filter(card =>
+        normalizeSearch(card.title).includes(query) ||
+        normalizeSearch(card.description).includes(query) ||
+        normalizeSearch(card.content).includes(query) ||
+        normalizeSearch(card.title_uz).includes(query) ||
+        normalizeSearch(card.title_en).includes(query) ||
+        normalizeSearch(card.description_uz).includes(query) ||
+        normalizeSearch(card.description_en).includes(query)
       );
     }
-    
+
     // Фильтр по времени
     if (timeFilter !== 'all') {
       filtered = filtered.filter(card => {
@@ -169,66 +177,58 @@
         }
       });
     }
-    
+
     // Фильтр по возрастным группам
     if (selectedAgeGroups.length > 0) {
       filtered = filtered.filter(card => {
         if (!card.ageGroups || !Array.isArray(card.ageGroups)) return false;
-        return selectedAgeGroups.some(selectedId => 
+        return selectedAgeGroups.some(selectedId =>
           card.ageGroups.includes(selectedId)
         );
       });
     }
-    
+
     // Фильтр по навыкам
     if (selectedSkills.length > 0) {
       filtered = filtered.filter(card => {
         if (!card.skillIds || !Array.isArray(card.skillIds)) return false;
-        return selectedSkills.some(selectedId => 
+        return selectedSkills.some(selectedId =>
           card.skillIds.includes(selectedId)
         );
       });
     }
-    
+
     // Фильтр по этапам урока
     if (selectedStages.length > 0) {
       filtered = filtered.filter(card => {
         if (!card.stageIds || !Array.isArray(card.stageIds)) return false;
-        return selectedStages.some(selectedId => 
+        return selectedStages.some(selectedId =>
           card.stageIds.includes(selectedId)
         );
       });
     }
-    
+
     // Фильтр по типам работы
     if (selectedTypes.length > 0) {
       filtered = filtered.filter(card => {
         if (!card.typeIds || !Array.isArray(card.typeIds)) return false;
-        return selectedTypes.some(selectedId => 
+        return selectedTypes.some(selectedId =>
           card.typeIds.includes(selectedId)
         );
       });
     }
-    
+
     filteredCards = filtered;
   }
-
-  // Вычисление общего времени (поддерживаем оба формата)
-  $: lessonData.totalTime = lessonData.selectedCards.reduce((sum, card) => {
-    const cardTime = card.timeMinutes || card.time_minutes || 0;
-    return sum + cardTime;
-  }, 0);
-
-
 
   // Навигация по шагам
   function nextStep() {
     // Проверяем валидацию для текущего шага
     if (currentStep === 2 && !step2ButtonEnabled) {
-      alert('⚠️ Пожалуйста, выберите хотя бы одну карточку для создания плана урока.');
+      alert(l('emptyLesson'));
       return;
     }
-    
+
     if (currentStep < totalSteps) {
       currentStep++;
     }
@@ -247,86 +247,66 @@
   // Работа с карточками
   function addCard(card) {
     const cardTime = card.timeMinutes || card.time_minutes || 0;
-    
+
     // Проверяем, не добавлена ли уже карточка в текущий этап
     const isAlreadyInCurrentStage = lessonData.lessonStages[currentLessonStage].cards.some(c => c.id === card.id);
     if (isAlreadyInCurrentStage) {
       alert('Эта карточка уже добавлена в данный этап урока');
       return;
     }
-    
-    // Проверяем общий лимит времени
-    if (lessonData.totalTime + cardTime > 45) {
-      alert('Превышен лимит времени урока (45 минут)');
-      return;
-    }
-    
-    // Добавляем карточку к текущему этапу урока
-    lessonData.lessonStages[currentLessonStage].cards = [...lessonData.lessonStages[currentLessonStage].cards, card];
-    lessonData.lessonStages[currentLessonStage].totalTime += cardTime;
-    
-    // Обновляем общие данные (добавляем карточку в общий список, даже если она уже есть в других этапах)
-    lessonData.selectedCards = [...lessonData.selectedCards, card];
-    lessonData.totalTime += cardTime;
+
+    lessonData=recalculateLesson({...lessonData,lessonStages:{...lessonData.lessonStages,[currentLessonStage]:{...lessonData.lessonStages[currentLessonStage],cards:[...lessonData.lessonStages[currentLessonStage].cards,card]}}});
   }
 
   function removeCard(cardId, stageId = null) {
-    // Находим карточку для получения времени
-    const cardToRemove = lessonData.selectedCards.find(card => card.id === cardId);
-    if (!cardToRemove) return;
-    
-    const cardTime = cardToRemove.timeMinutes || cardToRemove.time_minutes || 0;
-    
-    // Если указан этап, удаляем из конкретного этапа
-    if (stageId && lessonData.lessonStages[stageId]) {
-      lessonData.lessonStages[stageId].cards = lessonData.lessonStages[stageId].cards.filter(card => card.id !== cardId);
-      lessonData.lessonStages[stageId].totalTime -= cardTime;
-    } else {
-      // Иначе ищем во всех этапах
-      Object.keys(lessonData.lessonStages).forEach(stage => {
-        const cardIndex = lessonData.lessonStages[stage].cards.findIndex(card => card.id === cardId);
-        if (cardIndex !== -1) {
-          lessonData.lessonStages[stage].cards.splice(cardIndex, 1);
-          lessonData.lessonStages[stage].totalTime -= cardTime;
-        }
-      });
-    }
-    
-    // Обновляем общие данные
-    lessonData.selectedCards = lessonData.selectedCards.filter(card => card.id !== cardId);
-    lessonData.totalTime -= cardTime;
+    lessonData = removeLessonCard(lessonData, cardId, stageId);
   }
 
   // Экспорт PDF
-  function handleExportPDF() {
+  async function handleExportPDF() {
+    if(exporting)return;exporting='pdf';exportErrorText='';
+    const exportedSnapshot=JSON.stringify(lessonData);
     const exportData = {
       ...lessonData,
-      cards: lessonData.selectedCards,
+      language: $lang,
+      lessonStages: Object.fromEntries(Object.entries(lessonData.lessonStages).map(([id, stage]) => [id, {
+        ...stage, cards: stage.cards.map(card => localizeCard(catalogCards.find(item => item.id === card.id) || card, $lang))
+      }])),
+      cards: lessonData.selectedCards.map(card => localizeCard(catalogCards.find(item => item.id === card.id) || card, $lang)),
       totalTime: lessonData.totalTime
     };
-    
+
     try {
-      exportLessonToPDF(exportData);
+      await exportLessonToPDF(exportData);
+      lastExportedLesson=exportedSnapshot;
     } catch (error) {
       console.error('Error exporting PDF:', error);
-      alert('Ошибка при экспорте в PDF: ' + error.message);
-    }
+      exportErrorText=$lang==='uz'?'Fayl yuklanmadi. Qayta urinib ko‘ring.':$lang==='en'?'Could not download the file. Please try again.':'Не удалось скачать файл. Попробуйте ещё раз.';
+    } finally {exporting=null;}
   }
 
   // Экспорт DOCX
   async function handleExportDOCX() {
+    if(exporting)return;exporting='docx';exportErrorText='';
+    const exportedSnapshot=JSON.stringify(lessonData);
     const exportData = {
       ...lessonData,
-      cards: lessonData.selectedCards,
+      language: $lang,
+      lessonStages: Object.fromEntries(Object.entries(lessonData.lessonStages).map(([id, stage]) => [id, {
+        ...stage, cards: stage.cards.map(card => localizeCard(catalogCards.find(item => item.id === card.id) || card, $lang))
+      }])),
+      cards: lessonData.selectedCards.map(card => localizeCard(catalogCards.find(item => item.id === card.id) || card, $lang)),
       totalTime: lessonData.totalTime
     };
-    
+
     try {
+      const {exportLessonToDOCX}=await import('#lib/utils/docx-export.js');
       await exportLessonToDOCX(exportData);
+      lastExportedLesson=exportedSnapshot;
     } catch (error) {
       console.error('Error exporting DOCX:', error);
-      alert('Ошибка при экспорте в DOCX: ' + error.message);
-    }
+      exportErrorText=$lang==='uz'?'Fayl yuklanmadi. Qayta urinib ko‘ring.':$lang==='en'?'Could not download the file. Please try again.':'Не удалось скачать файл. Попробуйте ещё раз.';
+    } finally {exporting=null;}
   }
 
   // Валидация шагов
@@ -335,16 +315,17 @@
   }
 
   function canProceedFromStep2() {
-    return lessonData.selectedCards.length > 0;
+    return lessonHasContent(lessonData);
   }
 
   // Реактивная переменная для состояния кнопки на шаге 2
-  $: step2ButtonEnabled = lessonData.selectedCards.length > 0;
-  
+  $: step2ButtonEnabled = lessonHasContent(lessonData);
+
 
 </script>
 
-<div class="max-w-4xl mx-auto pb-24 md:pb-8">
+<div class="max-w-4xl mx-auto pb-24 md:pb-8" class:hidden={worksheetOpen}>
+  <p class="text-xs text-purple-800/70 mb-5">{l('memory')}</p>
 
   <!-- Прогресс-шаги -->
   <div class="mb-6">
@@ -355,8 +336,9 @@
         {@const active = currentStep === stepNum}
         <button
           type="button"
+          disabled={stepNum===3&&!step2ButtonEnabled}
           on:click={() => goToStep(stepNum)}
-          class="flex flex-col items-center gap-1.5 group"
+          class="flex flex-col items-center gap-1.5 group disabled:opacity-40 disabled:cursor-not-allowed"
         >
           <div class="w-9 h-9 rounded-full flex items-center justify-center font-semibold text-sm transition-all duration-300
             {done ? 'bg-gray-900 text-white' : active ? 'bg-gray-900 text-white scale-110 shadow-lg' : 'bg-white/60 text-gray-400 border border-gray-200'}">
@@ -367,7 +349,7 @@
             {:else}{stepNum}{/if}
           </div>
           <span class="text-[10px] font-medium {active ? 'text-gray-900' : 'text-gray-400'}">
-            {#if i === 0}{$t('wiz_step_info')}{:else if i === 1}{$t('wiz_step_techniques')}{:else}{$t('wiz_step_plan')}{/if}
+            {#if i === 0}{l('stepInfo')}{:else if i === 1}{l('stepFlow')}{:else}{l('stepPlan')}{/if}
           </span>
         </button>
         {#if i < totalSteps - 1}
@@ -405,7 +387,7 @@
         </div>
         <div class="mt-4">
           <div class="flex items-center justify-between mb-2">
-            <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide">{$t('wiz_goals')}</label>
+            <span class="block text-xs font-semibold text-gray-500 uppercase tracking-wide">{$t('wiz_goals')}</span>
             <button type="button" on:click={() => showGoalTemplates = !showGoalTemplates}
               class="text-xs font-medium text-purple-600 hover:text-purple-700 flex items-center gap-1 transition-colors">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -414,7 +396,7 @@
               {$t('goal_templates_title')}
             </button>
           </div>
-          
+
           {#if showGoalTemplates}
             <div transition:slide={{ duration: 200 }} class="mb-3 p-3 rounded-xl bg-gradient-to-br from-purple-50 to-blue-50 border border-purple-100">
               <!-- По уровню освоения -->
@@ -433,7 +415,7 @@
                   {/each}
                 </div>
               </div>
-              
+
               <!-- По типу деятельности -->
               <div class="mb-3">
                 <p class="text-xs font-bold text-gray-700 mb-2">{$t('goal_cat_activity')}</p>
@@ -450,7 +432,7 @@
                   {/each}
                 </div>
               </div>
-              
+
               <!-- По развитию навыков -->
               <div>
                 <p class="text-xs font-bold text-gray-700 mb-2">{$t('goal_cat_skills')}</p>
@@ -469,14 +451,14 @@
               </div>
             </div>
           {/if}
-          
+
           <!-- Поле для своей цели -->
           <div class="mb-2">
             <input type="text" bind:value={customGoal}
               placeholder={$t('goal_custom')}
               class="input text-sm" />
           </div>
-          
+
           <!-- Превью выбранных целей -->
           {#if lessonData.goals}
             <div class="p-3 rounded-lg bg-gray-50 border border-gray-200">
@@ -492,9 +474,11 @@
         </div>
       </div>
 
+      <label class="lesson-length">{l('lessonDuration')}<input type="number" min="10" max="240" bind:value={lessonData.lessonDuration} on:change={()=>lessonData.lessonDuration=Math.max(10,Math.min(240,Number(lessonData.lessonDuration)||45))} /></label>
+
       <div class="flex justify-end">
         <button class="btn btn-primary" on:click={nextStep}>
-          {$t('wiz_choose_techniques')}
+          {l('nextFlow')}
           <svg class="w-4 h-4 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
           </svg>
@@ -510,24 +494,24 @@
       <div class="card mb-4">
         <div class="flex items-center justify-between flex-wrap gap-3">
           <div>
-            <h2 class="text-lg font-bold text-gray-900">{$t('wiz_choose_by_stage')}</h2>
-            <p class="text-sm text-gray-500">{$t('wiz_choose_by_stage_desc')}</p>
+            <h2 class="text-lg font-bold text-gray-900">{l('flow')}</h2>
+            <p class="text-sm text-gray-500">{l('flowHint')}</p>
           </div>
           <div class="flex items-center gap-2 px-4 py-2 rounded-2xl" style="background: rgba(0,0,0,0.04)">
             <span class="text-sm font-bold text-gray-900">{lessonData.totalTime} {$t('wiz_min')}</span>
             <span class="text-gray-400 text-sm">/</span>
-            <span class="text-sm text-gray-500">45 {$t('wiz_min')}</span>
+            <span class="text-sm text-gray-500">{lessonData.lessonDuration} {$t('wiz_min')}</span>
             <div class="w-20 h-1.5 rounded-full bg-gray-200 overflow-hidden">
               <div class="h-full rounded-full transition-all duration-500
-                {lessonData.totalTime > 40 ? 'bg-red-400' : lessonData.totalTime > 30 ? 'bg-amber-400' : 'bg-gray-900'}"
-                style="width: {Math.min(100, (lessonData.totalTime / 45) * 100)}%"></div>
+                {lessonData.totalTime > lessonData.lessonDuration ? 'bg-red-400' : lessonData.totalTime > lessonData.lessonDuration * 0.8 ? 'bg-amber-400' : 'bg-gray-900'}"
+                style="width: {Math.min(100, (lessonData.totalTime / lessonData.lessonDuration) * 100)}%"></div>
             </div>
           </div>
         </div>
       </div>
 
       <!-- Навигация по этапам -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-2 mb-4">
         {#each Object.keys(lessonData.lessonStages) as stageId}
           {@const stage = lessonData.lessonStages[stageId]}
           <button
@@ -546,6 +530,17 @@
         {/each}
       </div>
 
+      <div class="card mb-5 stage-editor">
+        <div class="stage-editor-heading"><div><span class="stage-eyebrow">{l('flow')}</span><h3>{lessonStageNames[currentLessonStage]}</h3></div>
+          <label class="stage-duration">{l('duration')}<input type="number" min="0" max="180" value={lessonData.lessonStages[currentLessonStage].duration} on:change={(e)=>updateStage('duration',Math.max(0,Math.min(180,Number(e.currentTarget.value)||0)))} /></label>
+        </div>
+        <label>{l('notes')}<textarea rows="7" maxlength="8000" value={lessonData.lessonStages[currentLessonStage].notes} placeholder={l('notesHint')} on:input={(e)=>updateStage('notes',e.currentTarget.value)}></textarea></label>
+        <label>{l('task')}<textarea rows="4" maxlength="8000" value={lessonData.lessonStages[currentLessonStage].studentTask} placeholder={l('taskHint')} on:input={(e)=>updateStage('studentTask',e.currentTarget.value)}></textarea></label>
+        <label>{l('resources')}<input maxlength="1500" value={lessonData.lessonStages[currentLessonStage].resources} placeholder={l('resourcesHint')} on:input={(e)=>updateStage('resources',e.currentTarget.value)} /></label>
+        <p class="stage-help">{l('stageTimeHint')} {lessonData.lessonStages[currentLessonStage].cardTime||0} {$t('wiz_min')} · {l('cardTime')}</p>
+      </div>
+      {#if lessonData.totalTime>lessonData.lessonDuration}<p class="p-3 mb-4 bg-amber-50 rounded-xl text-sm text-amber-800" role="status">{l('overrun')}</p>{/if}
+
       <!-- Добавленные карточки текущего этапа -->
       {#if lessonData.lessonStages[currentLessonStage].cards.length > 0}
         <div class="card !p-4 mb-4" style="border-left: 3px solid #1f2937;">
@@ -556,8 +551,8 @@
             {#each lessonData.lessonStages[currentLessonStage].cards as card}
               <div class="flex items-center gap-3 py-2 px-3 rounded-xl bg-white/60">
                 <span class="flex-1 text-sm font-medium text-gray-900 truncate">{localizeCard(card, $lang).title}</span>
-                <span class="text-xs text-gray-400 flex-shrink-0">{formatTimeDisplay(card.timeMinutes || card.time_minutes)}</span>
-                <button on:click={() => removeCard(card.id, currentLessonStage)}
+                <span class="text-xs text-gray-400 flex-shrink-0">{formatTimeDisplay(card.timeMinutes || card.time_minutes, $lang)}</span>
+                <button aria-label={`${$t('wiz_remove')}: ${localizeCard(card,$lang).title}`} on:click={() => removeCard(card.id, currentLessonStage)}
                   class="w-6 h-6 rounded-full bg-red-50 text-red-400 hover:bg-red-100 flex items-center justify-center flex-shrink-0 transition-colors">
                   <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -569,6 +564,8 @@
         </div>
       {/if}
 
+      <button class="btn btn-secondary w-full mb-4" aria-expanded={catalogueVisible} on:click={()=>catalogueVisible=!catalogueVisible}>＋ {l(catalogueVisible?'hideCatalog':'catalog')} <span class="text-xs ml-3 opacity-60">{l('optional')}</span></button>
+      {#if catalogueVisible}
       <!-- Поиск и фильтры каталога -->
       <div class="card !p-4 mb-4">
         <div class="relative mb-3">
@@ -578,7 +575,7 @@
           <input type="text" bind:value={searchQuery} placeholder={$t('wiz_search_ph')}
             class="input !pl-10 !pr-10" />
           {#if searchQuery}
-            <button on:click={() => searchQuery = ''}
+            <button aria-label={$lang==='uz'?'Qidiruvni tozalash':$lang==='en'?'Clear search':'Очистить поиск'} on:click={() => searchQuery = ''}
               class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -650,7 +647,9 @@
       </div>
 
       <!-- Сетка карточек -->
-      {#if isLoading}
+      {#if catalogError}
+        <div class="card text-center py-6" role="alert"><p>{$lang==='uz'?'Katalog yuklanmadi. Darsga o‘z yozuvlaringizni qo‘shishingiz mumkin.':$lang==='en'?'Catalog could not load. You can still write your lesson.':'Каталог не загрузился. Вы можете продолжить писать урок самостоятельно.'}</p><button class="btn btn-secondary mt-3" on:click={()=>dispatch('retryCatalog')}>{$lang==='uz'?'Qayta urinish':$lang==='en'?'Retry':'Попробовать снова'}</button></div>
+      {:else if isLoading}
         <div class="text-center py-12">
           <div class="w-8 h-8 border-2 border-gray-300 border-t-gray-900 rounded-full animate-spin mx-auto mb-3"></div>
           <p class="text-sm text-gray-500">{$t('wiz_loading')}</p>
@@ -672,6 +671,8 @@
         </div>
       {/if}
 
+      {/if}
+
       <!-- Навигация на десктопе -->
       <div class="hidden md:flex items-center justify-between gap-3">
         <button class="btn btn-secondary" on:click={prevStep}>
@@ -689,7 +690,7 @@
       </div>
 
       <!-- Фиксированная панель навигации на мобильных -->
-      <div class="md:hidden fixed bottom-24 left-4 right-4 z-[100] p-3 rounded-2xl border border-white/60" style="background: rgba(255,255,255,0.92); backdrop-filter: blur(20px); box-shadow: 0 -4px 30px rgba(200,168,233,0.2), 0 4px 20px rgba(0,0,0,0.08);">
+      <div class="md:hidden mt-6 p-3 rounded-2xl border border-white/60" style="background: rgba(255,255,255,0.92); backdrop-filter: blur(20px); box-shadow: 0 -4px 30px rgba(200,168,233,0.2), 0 4px 20px rgba(0,0,0,0.08);">
         <div class="flex items-center gap-3">
           <button class="btn btn-secondary !px-5 !py-2.5 text-sm font-semibold" on:click={prevStep}>
             <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -698,8 +699,7 @@
             {$t('btn_back')}
           </button>
           <button class="btn btn-primary flex-1 !py-2.5 text-sm font-semibold" disabled={!step2ButtonEnabled} on:click={nextStep}>
-            {$t('btn_next')}
-            <span class="ml-2 px-2 py-0.5 rounded-full text-xs bg-white/20 font-bold">{lessonData.selectedCards.length}</span>
+            {l('stepPlan')}
             <svg class="w-4 h-4 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
             </svg>
@@ -707,7 +707,7 @@
         </div>
       </div>
       <!-- Отступ для фиксированной панели на мобильных -->
-      <div class="md:hidden h-32"></div>
+
     </div>
 
   <!-- ШАГ 3: Готовый план -->
@@ -724,7 +724,7 @@
         {#each [
           [$t('wiz_subject'), lessonData.subject],
           [$t('wiz_grade'), lessonData.grade],
-          [$t('wiz_techniques_label'), lessonData.selectedCards.length],
+          [$lang==='uz'?'Bosqichlar':$lang==='en'?'Stages':'Этапов', Object.keys(lessonData.lessonStages).length],
           [$t('wiz_time_label'), `${lessonData.totalTime} ${$t('wiz_min')}`]
         ] as [label, value]}
           <div class="card !p-3">
@@ -755,16 +755,21 @@
       <!-- Этапы урока -->
       <div class="space-y-4 mb-6">
         {#each Object.keys(lessonData.lessonStages) as stageId}
-          {#if lessonData.lessonStages[stageId].cards.length > 0}
+          {#if stageHasContent(lessonData.lessonStages[stageId]) || lessonData.lessonStages[stageId].duration>0}
             <div>
               <div class="flex items-center gap-2 mb-2">
                 <h3 class="text-sm font-bold text-gray-900">{lessonStageNames[stageId]}</h3>
                 <span class="badge-count !text-xs">{lessonData.lessonStages[stageId].totalTime} {$t('wiz_min')}</span>
               </div>
+              <div class="stage-review card mb-3">
+                {#each ['notes','studentTask','resources'] as field}
+                  {#if lessonData.lessonStages[stageId][field]?.trim()}<div class="stage-review-field"><h4>{l(field==='studentTask'?'task':field)}</h4><p>{lessonData.lessonStages[stageId][field]}</p></div>{/if}
+                {/each}
+              </div>
               <div class="space-y-2">
                 {#each lessonData.lessonStages[stageId].cards as card, index (`${stageId}-${card.id}-${index}`)}
                   <DetailedLessonCard
-                    {card}
+                    card={localizeCard(catalogCards.find(item => item.id === card.id) || card, $lang)}
                     index={index + 1}
                     on:remove={() => removeCard(card.id, stageId)}
                   />
@@ -775,25 +780,28 @@
         {/each}
       </div>
 
+      {#if exportErrorText}<p role="alert" class="p-3 mb-4 bg-rose-50 rounded-xl text-sm text-rose-700">{exportErrorText}</p>{/if}
+      <div class="worksheet-invite card mb-6"><span class="worksheet-invite-icon">▤</span><div><h3>{l('worksheetTitle')} <span>{l('optional')}</span></h3><p>{l('worksheetHint')}</p><button class="btn btn-primary mt-4" on:click={openWorksheet}>{l(worksheetOpened?'openWorksheet':'createWorksheet')} ↗</button></div></div>
+
       <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
         <button class="btn btn-secondary w-full md:w-auto" on:click={prevStep}>
           <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
           </svg>
-          {$t('wiz_edit_techniques')}
+          {l('flow')}
         </button>
         <div class="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
-          <button class="btn btn-primary w-full sm:w-auto" on:click={handleExportPDF}>
+          <button class="btn btn-primary w-full sm:w-auto" disabled={!!exporting} on:click={handleExportPDF}>
             <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
             </svg>
-            {$t('wiz_save_pdf')}
+            {exporting==='pdf'?$t('loading'):$t('wiz_save_pdf')}
           </button>
-          <button class="btn btn-primary w-full sm:w-auto" on:click={handleExportDOCX}>
+          <button class="btn btn-primary w-full sm:w-auto" disabled={!!exporting} on:click={handleExportDOCX}>
             <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
             </svg>
-            {$t('wiz_save_docx')}
+            {exporting==='docx'?$t('loading'):$t('wiz_save_docx')}
           </button>
         </div>
       </div>
@@ -802,3 +810,15 @@
 
 </div>
 
+
+{#if worksheetOpened}
+  <section class:hidden={!worksheetOpen}>
+    <button class="btn btn-secondary mb-5" on:click={()=>worksheetOpen=false}>← {l('returnLesson')}</button>
+    <WorksheetBuilder initialSheet={worksheetSeed} embedded />
+  </section>
+{/if}
+
+<style>
+.stage-editor-heading{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:22px;}.stage-editor-heading h3{font-size:22px;font-weight:700;color:#473259;}.stage-eyebrow{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#a08bb0;}.stage-editor label{display:block;font-size:12px;font-weight:600;color:#7e668e;margin:16px 0;}.stage-editor textarea,.stage-editor input,.lesson-length input{display:block;width:100%;border:1px solid #ddcfe8;border-radius:12px;background:#ffffffa6;padding:12px 14px;margin-top:8px;font-size:14px;line-height:1.7;font-weight:400;color:#42384b;}.stage-editor textarea{resize:vertical;min-height:100px;}.stage-editor textarea:focus,.stage-editor input:focus{outline:2px solid #c7aadf;outline-offset:2px;}.stage-editor .stage-duration{max-width:145px;flex-shrink:0;font-size:10px;}.stage-duration input{text-align:center;font-size:20px;font-weight:600;padding:7px;}.stage-help{font-size:11px;line-height:1.6;color:#9a84aa;}.stage-review-field+ .stage-review-field{margin-top:20px;}.stage-review h4{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#9a80af;margin-bottom:8px;}.stage-review p{white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;line-height:1.8;color:#4d4357;}.stage-review:empty{display:none;}.worksheet-invite{display:flex;gap:20px;background:#f7f1fc!important;border:1px solid #e8dcf2;}.worksheet-invite-icon{font-size:40px;color:#aa84c4;}.worksheet-invite h3{font-size:18px;font-weight:700;color:#694b7f;}.worksheet-invite h3 span{font-size:9px;font-weight:500;background:white;border-radius:6px;padding:5px 7px;margin-left:8px;}.worksheet-invite p{font-size:13px;line-height:1.7;color:#947da4;margin-top:8px;}.lesson-length{display:flex;align-items:center;gap:16px;font-size:12px;color:#8f769f;padding:0 14px 20px;}.lesson-length input{width:90px;margin:0;padding:8px 12px;}
+@media(max-width:600px){.stage-editor-heading h3{font-size:18px;}.stage-editor .stage-duration{max-width:100px;}.stage-editor textarea,.stage-editor input{font-size:16px;}.worksheet-invite{gap:12px;}.worksheet-invite h3{font-size:16px;}}
+</style>

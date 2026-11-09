@@ -1,6 +1,6 @@
 <script>
   import { createEventDispatcher } from 'svelte';
-  import { t } from '$lib/stores/lang.js';
+  import { t } from '#lib/stores/lang.js';
 
   export let students = [];
   export let seating = {};
@@ -92,7 +92,7 @@
 </div>
 
 <!-- Student list -->
-<div class="flex-1 overflow-y-auto" style="scrollbar-width:thin; -webkit-overflow-scrolling:touch;"
+<div role="group" class="flex-1 overflow-y-auto" style="scrollbar-width:thin; -webkit-overflow-scrolling:touch;"
   on:dragover|preventDefault
   on:drop={(e) => dispatch('unseatDrop', e)}>
 
@@ -103,7 +103,7 @@
           {$t('students_unseated')} · {unseatedList.length}
         </div>
         {#each unseatedList as s (s.id)}
-          <div class="flex items-center gap-2 px-2.5 py-2 rounded-xl border transition-all select-none
+          <div role="button" tabindex="0" on:keydown={(e) => { if (e.target === e.currentTarget && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); e.currentTarget.click(); } }} class="flex items-center gap-2 px-2.5 py-2 rounded-xl border transition-all select-none
             {mobileSelectedStudent === s.id
               ? 'bg-indigo-100 border-indigo-300 ring-1 ring-indigo-300 shadow-sm'
               : 'bg-white/70 border-white/60 hover:bg-white hover:border-gray-200 hover:shadow-sm'}
@@ -112,7 +112,7 @@
             on:dragstart={(e) => dispatch('studentDragStart', { e, id: s.id })}
             on:click={(e) => { if (!e.target.closest('.stu-color-icon')) dispatch('mobileSelect', s.id); }}
             on:touchend|stopPropagation|preventDefault={(e) => { if (!e.target.closest('.stu-color-icon')) dispatch('mobileSelect', s.id); }}>
-            <div class="stu-color-icon w-7 h-7 rounded-full flex items-center justify-center text-white text-[9px] font-bold flex-shrink-0 shadow-sm cursor-pointer"
+            <div role="button" tabindex="0" on:keydown={(e) => { if (e.target === e.currentTarget && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); e.currentTarget.click(); } }} class="stu-color-icon w-7 h-7 rounded-full flex items-center justify-center text-white text-[9px] font-bold flex-shrink-0 shadow-sm cursor-pointer"
               style="background:{s.groupColor || '#6366f1'};"
               title={$t('student_color_tip')}
               on:click|stopPropagation={() => dispatch('cycleColor', s.id)}
@@ -137,7 +137,7 @@
           {$t('students_seated')} · {seatedList.length}
         </div>
         {#each seatedList as s (s.id)}
-          <div class="flex items-center gap-2 px-2.5 py-2 rounded-xl border border-gray-100/80 bg-gray-50/40 opacity-50
+          <div role="group" class="flex items-center gap-2 px-2.5 py-2 rounded-xl border border-gray-100/80 bg-gray-50/40 opacity-50
             {isMobile ? '' : 'cursor-grab'}"
             draggable={!isMobile}
             on:dragstart={(e) => dispatch('studentDragStart', { e, id: s.id })}>
@@ -163,7 +163,7 @@
       <div class="p-2 space-y-0.5">
         {#each students as s (s.id)}
           <div class="group flex items-center gap-2 px-2.5 py-2 rounded-xl hover:bg-white/80 transition-all {s.absent ? 'opacity-40' : ''}" role="listitem">
-            <div class="w-7 h-7 rounded-full flex items-center justify-center text-white text-[9px] font-bold flex-shrink-0 shadow-sm cursor-pointer"
+            <div role="button" tabindex="0" on:keydown={(e) => { if (e.target === e.currentTarget && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); e.currentTarget.click(); } }} class="w-7 h-7 rounded-full flex items-center justify-center text-white text-[9px] font-bold flex-shrink-0 shadow-sm cursor-pointer"
               style="background:{s.groupColor || '#94a3b8'};"
               title={$t('student_color_tip')}
               on:click={() => dispatch('cycleColor', s.id)}

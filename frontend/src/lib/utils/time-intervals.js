@@ -33,7 +33,14 @@ export function getIntervalById(id) {
  * @param {number} minutes - количество минут
  * @returns {string} - отформатированная строка
  */
-export function formatTimeDisplay(minutes) {
+export function formatTimeDisplay(minutes, language = 'ru') {
+  if (language === 'uz' || language === 'en') {
+    const interval = getIntervalByMinutes(minutes);
+    const unit = language === 'uz' ? 'daqiqa' : 'min';
+    if (interval?.id === 'up-to-2') return language === 'uz' ? '2 daqiqagacha' : 'up to 2 min';
+    if (interval?.id === 'full-lesson') return language === 'uz' ? 'butun dars' : 'full lesson';
+    return `${interval ? interval.id : minutes} ${unit}`;
+  }
   const interval = getIntervalByMinutes(minutes);
   if (interval) {
     return interval.label;

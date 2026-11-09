@@ -1,71 +1,21 @@
 <script>
-  import { formatTimeDisplay } from '$lib/utils/time-intervals.js';
-  import { getAgeGroupNames, getSkillNames, getStageNames, getTypeNames, getSkillName, localizeCard } from '$lib/utils/localization.js';
-  import { lang } from '$lib/stores/lang.js';
-  
-  export let card;
-
-  $: lcard = localizeCard(card, $lang);
-  
-  // Генерация случайного пастельного градиента для каждой карточки
-  const gradients = [
-    'linear-gradient(135deg, rgba(224, 195, 252, 0.4) 0%, rgba(142, 197, 252, 0.4) 100%)',
-    'linear-gradient(135deg, rgba(142, 197, 252, 0.4) 0%, rgba(168, 237, 234, 0.4) 100%)',
-    'linear-gradient(135deg, rgba(168, 237, 234, 0.4) 0%, rgba(254, 214, 227, 0.4) 100%)',
-    'linear-gradient(135deg, rgba(254, 214, 227, 0.4) 0%, rgba(255, 209, 163, 0.4) 100%)',
-    'linear-gradient(135deg, rgba(255, 209, 163, 0.4) 0%, rgba(224, 195, 252, 0.4) 100%)',
-  ];
-  
-  const randomGradient = gradients[Math.floor(Math.random() * gradients.length)];
+ import {formatTimeDisplay} from '#lib/utils/time-intervals.js';
+ import {getSkillName,getTypeName,localizeCard} from '#lib/utils/localization.js';
+ import {lang} from '#lib/stores/lang.js';
+ import {cardTone,displayCardTitle} from '#lib/utils/design-labels.js';
+ import TechniqueIcon from './TechniqueIcon.svelte';
+ import UiIcon from './UiIcon.svelte';
+ export let card;
+ export let returnTo='/';
+ $: lcard=localizeCard(card,$lang);
 </script>
-
-<a href="/{card.id}" class="group card-modern flex flex-col h-full relative overflow-hidden no-select" style="background: {randomGradient};">
-  <!-- Иконки в верхней части -->
-  <div class="flex items-center justify-between mb-4">
-    <div class="icon-box">
-      <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-      </svg>
-    </div>
-    <span class="badge-count">
-      {formatTimeDisplay(card.time_minutes)}
-    </span>
-  </div>
-
-  <!-- Заголовок -->
-  <h3 class="text-lg font-bold text-gray-900 mb-2 card-title">
-    {lcard.title}
-  </h3>
-
-  <!-- Описание -->
-  <p class="text-gray-600 text-sm card-description leading-relaxed flex-grow">
-    {lcard.description}
-  </p>
-
-  <!-- Стрелка вперёд -->
-  <div class="mt-4 flex justify-end">
-    <span class="text-gray-400 group-hover:text-gray-700 group-hover:translate-x-1 transition-all duration-200">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-      </svg>
-    </span>
-  </div>
+<a href={`/${card.id}${returnTo!=='/'?'?catalog='+encodeURIComponent(returnTo):''}`} class={`technique-card tone-${cardTone(card.id)}`}>
+ <div class="card-heading"><TechniqueIcon id={card.id}/><h3>{displayCardTitle(lcard.title)}</h3></div>
+ <p class="description">{lcard.description}</p>
+ <div class="card-meta"><span><UiIcon name="clock" size={14}/>{formatTimeDisplay(card.time_minutes,$lang)}</span>{#if card.types?.length}<span><UiIcon name="team" size={14}/>{getTypeName(card.types[0],$lang)}</span>{/if}</div>
+ <div class="card-footer">{#if card.skills?.length}<span class="skill">{getSkillName(card.skills[0],$lang)}</span>{/if}<span class="open-arrow"><UiIcon name="arrow" size={18}/></span></div>
 </a>
-
 <style>
-  .card-title {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .card-description {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
+ .technique-card{display:flex;flex-direction:column;min-width:0;border:1px solid var(--card-border,#e0d3f3);background:linear-gradient(140deg,#fff 10%,var(--card-tint,#f3ebfc));border-radius:20px;padding:20px;box-shadow:0 2px 5px #33204c05;color:#27163f;transition:border-color .15s,box-shadow .15s;}.technique-card:hover{border-color:#b88cfa;box-shadow:0 5px 16px #6931ab0f;}.card-heading{display:flex;align-items:center;gap:13px;margin-bottom:14px;}.card-heading h3{font-size:16px;line-height:1.4;font-weight:750;letter-spacing:-.3px;overflow-wrap:anywhere;}p{font-size:13px;line-height:1.7;color:#736680;}.description{display:-webkit-box;-webkit-line-clamp:3;line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin:0 0 18px;flex:1;}.card-meta{display:flex;align-items:center;flex-wrap:wrap;gap:6px;}.card-meta>span{display:inline-flex;align-items:center;gap:5px;font-size:10px;color:#655373;background:#ffffffbf;border:1px solid #ffffff;border-radius:20px;padding:4px 7px;line-height:1.4;}.card-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:13px;}.skill{display:inline-block;font-size:10px;line-height:1.5;font-weight:500;border-radius:20px;padding:4px 10px;background:#dbf2eb;color:#377367;}.open-arrow{width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:white;color:#733aab;border:1px solid #ede4f7;margin-left:auto;flex-shrink:0;}.tone-lilac{--card-tint:#f0e6fd;--card-border:#e3d2f8;}.tone-sky{--card-tint:#e8f2fd;--card-border:#d5e4f6;}.tone-peach{--card-tint:#fff0df;--card-border:#f0dfca;}.tone-mint{--card-tint:#eaf6f1;--card-border:#d8e9e0;}.tone-rose{--card-tint:#fbeaf3;--card-border:#efd8e5;}
+ @media(max-width:767px){.technique-card{padding:18px;border-radius:18px;}.card-heading{gap:13px;margin-bottom:10px;}.card-heading h3{font-size:17px;line-height:1.45;}.description{font-size:13px;margin-bottom:15px;-webkit-line-clamp:2;line-clamp:2;}.card-meta>span{font-size:11px;padding:4px 8px;}.skill{font-size:11px;}.card-footer{margin-top:11px;}.open-arrow{width:32px;height:32px;}}
 </style>

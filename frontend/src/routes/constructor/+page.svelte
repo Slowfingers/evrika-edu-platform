@@ -1,12 +1,13 @@
 <script>
   import { onMount } from 'svelte';
-  import { cardsApi } from '$lib/api/cards.api.js';
-  import LessonWizard from '$lib/components/LessonWizard.svelte';
-  import { t } from '$lib/stores/lang.js';
+  import { cardsApi } from '#lib/api/cards.api.js';
+  import LessonWizard from '#lib/components/LessonWizard.svelte';
+  import { t } from '#lib/stores/lang.js';
 
   // Состояние каталога
   let catalogCards = [];
   let isLoading = true;
+  let catalogError=false;
 
   // Маппинги английских ID → русских для нормализации данных из БД
   const EN_TO_RU = {
@@ -39,10 +40,12 @@
   }
 
   // Загрузка карточек из каталога (все, без лимита)
-  onMount(async () => {
+  onMount(loadCatalog);
+  async function loadCatalog() {
+    isLoading=true;catalogError=false;
     try {
       const response = await cardsApi.getAllCards({ limit: 1000 });
-      
+
       if (response && response.success && Array.isArray(response.data)) {
         // Преобразуем данные карточек для совместимости с frontend компонентами
         catalogCards = response.data.map(transformCardData);
@@ -51,19 +54,21 @@
         catalogCards = [];
       }
     } catch (error) {
+      catalogError=true;
       console.error('❌ Конструктор: Ошибка загрузки карточек:', error);
       catalogCards = [];
     } finally {
       isLoading = false;
     }
-  });
+  }
 </script>
 
 <svelte:head>
   <title>{$t('title_constructor')}</title>
 </svelte:head>
 
-<LessonWizard 
-  {catalogCards} 
+<LessonWizard on:retryCatalog={loadCatalog}
+  {catalogError}
+  {catalogCards}
   {isLoading}
 />

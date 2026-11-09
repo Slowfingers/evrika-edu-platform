@@ -4,12 +4,14 @@
   "description": "Каталог педагогических приёмов и конструктор уроков для учителей",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#c8a8e9",
-  "theme_color": "#c8a8e9",
-  "orientation": "portrait-primary",
+  "background_color": "#f7f6fb",
+  "theme_color": "#f7f6fb",
+  "orientation": "any",
   "scope": "/",
   "lang": "ru",
-  "categories": ["education"],
+  "categories": [
+    "education"
+  ],
   "icons": [
     {
       "src": "/icon-192.png",
@@ -30,13 +32,23 @@
       "name": "Каталог приёмов",
       "short_name": "Каталог",
       "url": "/",
-      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     },
     {
       "name": "Конструктор урока",
       "short_name": "Конструктор",
       "url": "/constructor",
-      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
   ]
 }

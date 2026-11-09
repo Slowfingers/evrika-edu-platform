@@ -1,3 +1,7 @@
+import { lessonHasContent, stageHasContent } from './lesson-state.js';
+import { stageLabel } from './lesson-labels.js';
+import { stageTextSections } from './lesson-export.js';
+import { translateLabel } from './export-labels.js';
 import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } from 'docx';
 import { saveAs } from 'file-saver';
 import { formatTimeDisplay } from './time-intervals.js';
@@ -12,7 +16,7 @@ export async function exportLessonToDOCX(lessonData) {
       throw new Error('Данные урока отсутствуют');
     }
     
-    if (!lessonData.cards || lessonData.cards.length === 0) {
+    if (!lessonHasContent(lessonData) && !lessonData.cards?.length) {
       throw new Error('В уроке нет выбранных приёмов');
     }
 
@@ -42,14 +46,14 @@ function sanitizeFileName(name) {
  * Создает DOCX документ
  */
 function createDocxDocument(lessonData) {
-  const { subject, topic, grade, description, goals, cards, totalTime, lessonStages } = lessonData;
+  const { subject, topic, grade, description, goals, cards = [], totalTime, lessonStages, language = "ru" } = lessonData;
   
   const sections = [];
   
   // Заголовок документа
   sections.push(
     new Paragraph({
-      text: 'ПЛАН УРОКА',
+      text: translateLabel("ПЛАН УРОКА", language),
       heading: HeadingLevel.HEADING_1,
       alignment: AlignmentType.CENTER,
       spacing: { after: 200 }
@@ -59,7 +63,7 @@ function createDocxDocument(lessonData) {
   // Информация об уроке
   sections.push(
     new Paragraph({
-      text: 'Информация об уроке',
+      text: translateLabel("Информация об уроке", language),
       heading: HeadingLevel.HEADING_2,
       spacing: { before: 200, after: 100 }
     })
@@ -69,8 +73,8 @@ function createDocxDocument(lessonData) {
   sections.push(
     new Paragraph({
       children: [
-        new TextRun({ text: 'Предмет: ', bold: true }),
-        new TextRun({ text: subject || 'Не указан' })
+        new TextRun({ text: translateLabel("Предмет: ", language), bold: true }),
+        new TextRun({ text: subject || translateLabel("Не указан", language) })
       ],
       spacing: { after: 100 }
     })
@@ -79,8 +83,8 @@ function createDocxDocument(lessonData) {
   sections.push(
     new Paragraph({
       children: [
-        new TextRun({ text: 'Класс: ', bold: true }),
-        new TextRun({ text: grade || 'Не указан' })
+        new TextRun({ text: translateLabel("Класс: ", language), bold: true }),
+        new TextRun({ text: grade || translateLabel("Не указан", language) })
       ],
       spacing: { after: 100 }
     })
@@ -90,8 +94,8 @@ function createDocxDocument(lessonData) {
   sections.push(
     new Paragraph({
       children: [
-        new TextRun({ text: 'Тема урока: ', bold: true }),
-        new TextRun({ text: topic || 'Не указана' })
+        new TextRun({ text: translateLabel("Тема урока: ", language), bold: true }),
+        new TextRun({ text: topic || translateLabel("Не указана", language) })
       ],
       spacing: { after: 100 }
     })
@@ -101,8 +105,8 @@ function createDocxDocument(lessonData) {
   sections.push(
     new Paragraph({
       children: [
-        new TextRun({ text: 'Общее время: ', bold: true }),
-        new TextRun({ text: `${totalTime} минут` })
+        new TextRun({ text: translateLabel("Общее время: ", language), bold: true }),
+        new TextRun({ text: `${totalTime} ${language === "uz" ? "daqiqa" : language === "en" ? "min" : "минут"}` })
       ],
       spacing: { after: 100 }
     })
@@ -113,7 +117,7 @@ function createDocxDocument(lessonData) {
     sections.push(
       new Paragraph({
         children: [
-          new TextRun({ text: 'Цели урока: ', bold: true }),
+          new TextRun({ text: translateLabel("Цели урока: ", language), bold: true }),
           new TextRun({ text: goals })
         ],
         spacing: { after: 100 }
@@ -126,7 +130,7 @@ function createDocxDocument(lessonData) {
     sections.push(
       new Paragraph({
         children: [
-          new TextRun({ text: 'Описание: ', bold: true }),
+          new TextRun({ text: translateLabel("Описание: ", language), bold: true }),
           new TextRun({ text: description })
         ],
         spacing: { after: 200 }
@@ -137,27 +141,31 @@ function createDocxDocument(lessonData) {
   // Приёмы урока по этапам
   if (lessonStages) {
     const stageNames = {
-      'начало-урока': 'Начало урока',
-      'объяснение-нового-материала': 'Объяснение нового материала',
-      'закрепление': 'Закрепление',
-      'конец-урока': 'Конец урока'
+      'начало-урока': translateLabel("Начало урока", language),
+      'объяснение-нового-материала': translateLabel("Объяснение нового материала", language),
+      'закрепление': translateLabel("Закрепление", language),
+      'конец-урока': translateLabel("Конец урока", language)
     };
     
     Object.keys(lessonStages).forEach(stageId => {
       const stage = lessonStages[stageId];
-      if (stage.cards && stage.cards.length > 0) {
+      if (stageHasContent(stage) || stage.duration>0) {
         // Заголовок этапа
         sections.push(
           new Paragraph({
-            text: `${stageNames[stageId]} (${stage.totalTime} мин)`,
+            text: `${stageLabel(stageId, language)} (${stage.totalTime} ${language === "uz" ? "daq" : language === "en" ? "min" : "мин"})`,
             heading: HeadingLevel.HEADING_2,
             spacing: { before: 300, after: 150 }
           })
         );
         
+        for (const field of stageTextSections(stage, language)) {
+          sections.push(new Paragraph({children:[new TextRun({text:field.label,bold:true})],spacing:{before:180,after:80}}));
+          for (const line of field.text.split('\n')) sections.push(new Paragraph({text:line,spacing:{after:80}}));
+        }
         // Карточки этапа
         stage.cards.forEach((card, index) => {
-          sections.push(...createCardParagraphs(card, index + 1));
+          sections.push(...createCardParagraphs(card, index + 1, language));
         });
       }
     });
@@ -172,14 +180,14 @@ function createDocxDocument(lessonData) {
     );
     
     cards.forEach((card, index) => {
-      sections.push(...createCardParagraphs(card, index + 1));
+      sections.push(...createCardParagraphs(card, index + 1, language));
     });
   }
   
   // Сводка
   sections.push(
     new Paragraph({
-      text: 'Сводка урока',
+      text: translateLabel("Сводка урока", language),
       heading: HeadingLevel.HEADING_2,
       spacing: { before: 400, after: 150 }
     })
@@ -188,7 +196,7 @@ function createDocxDocument(lessonData) {
   sections.push(
     new Paragraph({
       children: [
-        new TextRun({ text: 'Количество приёмов: ', bold: true }),
+        new TextRun({ text: translateLabel("Количество приёмов: ", language), bold: true }),
         new TextRun({ text: `${cards.length}` })
       ],
       spacing: { after: 100 }
@@ -198,8 +206,8 @@ function createDocxDocument(lessonData) {
   sections.push(
     new Paragraph({
       children: [
-        new TextRun({ text: 'Общее время: ', bold: true }),
-        new TextRun({ text: `${totalTime} минут` })
+        new TextRun({ text: translateLabel("Общее время: ", language), bold: true }),
+        new TextRun({ text: `${totalTime} ${language === "uz" ? "daqiqa" : language === "en" ? "min" : "минут"}` })
       ],
       spacing: { after: 100 }
     })
@@ -209,8 +217,8 @@ function createDocxDocument(lessonData) {
     sections.push(
       new Paragraph({
         children: [
-          new TextRun({ text: 'Средняя продолжительность приёма: ', bold: true }),
-          new TextRun({ text: `${Math.round(totalTime / cards.length)} минут` })
+          new TextRun({ text: translateLabel("Средняя продолжительность приёма: ", language), bold: true }),
+          new TextRun({ text: `${Math.round(cards.reduce((sum,card)=>sum+(card.timeMinutes??card.time_minutes??0),0) / cards.length)} ${language === "uz" ? "daqiqa" : language === "en" ? "min" : "минут"}` })
         ],
         spacing: { after: 100 }
       })
@@ -231,7 +239,7 @@ function createDocxDocument(lessonData) {
 /**
  * Создает параграфы для одной карточки
  */
-function createCardParagraphs(card, index) {
+function createCardParagraphs(card, index, language = "ru") {
   const paragraphs = [];
   const timeMinutes = card.timeMinutes || card.time_minutes || 0;
   
@@ -239,8 +247,8 @@ function createCardParagraphs(card, index) {
   paragraphs.push(
     new Paragraph({
       children: [
-        new TextRun({ text: `${index}. ${card.title || 'Без названия'}`, bold: true, size: 28 }),
-        new TextRun({ text: ` (${formatTimeDisplay(timeMinutes)})`, italics: true, size: 24 })
+        new TextRun({ text: `${index}. ${card.title || translateLabel("Без названия", language)}`, bold: true, size: 28 }),
+        new TextRun({ text: ` (${formatTimeDisplay(timeMinutes, language)})`, italics: true, size: 24 })
       ],
       spacing: { before: 200, after: 100 }
     })
@@ -261,7 +269,7 @@ function createCardParagraphs(card, index) {
     paragraphs.push(
       new Paragraph({
         children: [
-          new TextRun({ text: 'Содержание: ', bold: true })
+          new TextRun({ text: translateLabel('Содержание:', language) + ' ', bold: true })
         ],
         spacing: { before: 100, after: 50 }
       })
@@ -279,23 +287,23 @@ function createCardParagraphs(card, index) {
   const metadata = [];
   
   if (card.ageGroups && Array.isArray(card.ageGroups)) {
-    const ageText = getAgeGroupNames(card.ageGroups);
-    if (ageText) metadata.push(`Возраст: ${ageText}`);
+    const ageText = getAgeGroupNames(card.ageGroups, language);
+    if (ageText) metadata.push(`${language === "uz" ? "Yosh:" : language === "en" ? "Age:" : "Возраст:"} ${ageText}`);
   }
   
   if (card.stageIds && Array.isArray(card.stageIds)) {
-    const stagesText = getStageNames(card.stageIds);
-    if (stagesText) metadata.push(`Этапы: ${stagesText}`);
+    const stagesText = getStageNames(card.stageIds, language);
+    if (stagesText) metadata.push(`${language === "uz" ? "Bosqichlar:" : language === "en" ? "Stages:" : "Этапы:"} ${stagesText}`);
   }
   
   if (card.typeIds && Array.isArray(card.typeIds)) {
-    const typesText = getTypeNames(card.typeIds);
-    if (typesText) metadata.push(`Типы работы: ${typesText}`);
+    const typesText = getTypeNames(card.typeIds, language);
+    if (typesText) metadata.push(`${language === "uz" ? "Ish shakllari:" : language === "en" ? "Format:" : "Типы работы:"} ${typesText}`);
   }
   
   if (card.skillIds && Array.isArray(card.skillIds)) {
-    const skillsText = getSkillNames(card.skillIds);
-    if (skillsText) metadata.push(`Навыки: ${skillsText}`);
+    const skillsText = getSkillNames(card.skillIds, language);
+    if (skillsText) metadata.push(`${language === "uz" ? "Ko‘nikmalar:" : language === "en" ? "Skills:" : "Навыки:"} ${skillsText}`);
   }
   
   if (metadata.length > 0) {

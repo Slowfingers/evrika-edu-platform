@@ -1,390 +1,86 @@
 <script>
-  import { onMount } from 'svelte';
-  import { cardsApi } from '$lib/api/cards.api.js';
-  import { metadataApi } from '$lib/api/metadata.api.js';
-  import CardItem from '$lib/components/CardItem.svelte';
-  import FilterPanel from '$lib/components/FilterPanel.svelte';
-  import { convertRussianToEnglishId } from '$lib/utils/localization.js';
-  import { t } from '$lib/stores/lang.js';
-
-  let cards = [];
-  let loading = true;
-  let error = null;
-
-  // Фильтры
-  let selectedAgeGroups = [];
-  let selectedSkills = [];
-  let selectedStages = [];
-  let selectedTypes = [];
-  let selectedTimeRange = '';
-  let searchQuery = '';
-  
-  // Состояние спойлера фильтров для мобильных устройств
-  let filtersExpanded = false;
-
-  // Пагинация
-  let currentPage = 1;
-  let totalCards = 0;
-  const cardsPerPage = 12;
-
-  // Предопределенные данные с русскими ID
-  $: predefinedAgeGroups = [
-    { id: 'начальные-классы', name: $t('age_primary') },
-    { id: 'старшие-классы', name: $t('age_secondary') }
-  ];
-
-  $: predefinedSkills = [
-    { id: 'критическое-мышление', name: $t('skill_critical') },
-    { id: 'командная-работа', name: $t('skill_teamwork') },
-    { id: 'рефлексия', name: $t('skill_reflection') },
-    { id: 'креативное-мышление', name: $t('skill_creative') },
-    { id: 'систематизация', name: $t('skill_systematization') },
-    { id: 'коммуникация', name: $t('skill_communication') }
-  ];
-
-  $: predefinedStages = [
-    { id: 'начало-урока', name: $t('stage_start') },
-    { id: 'объяснение-нового-материала', name: $t('stage_explanation') },
-    { id: 'закрепление', name: $t('stage_practice') },
-    { id: 'конец-урока', name: $t('stage_end') }
-  ];
-
-  $: predefinedTypes = [
-    { id: 'индивидуальная', name: $t('type_individual') },
-    { id: 'парная', name: $t('type_pair') },
-    { id: 'командная', name: $t('type_team') },
-    { id: 'фронтальная', name: $t('type_frontal') }
-  ];
-
-  $: timeRanges = [
-    { id: 'up-to-2', name: $t('time_up2') },
-    { id: '3-5', name: $t('time_3_5') },
-    { id: '5-10', name: $t('time_5_10') },
-    { id: '15-20', name: $t('time_15_20') },
-    { id: '25-30', name: $t('time_25_30') },
-    { id: 'full-lesson', name: $t('time_full') }
-  ];
-
-  // Функция convertRussianToEnglishId теперь импортируется из localization.js
-
-  onMount(async () => {
-    await loadMetadata();
-  });
-
-  // Данные фильтров реактивно привязаны к predefined* выше
-  $: ageGroups = predefinedAgeGroups;
-  $: skills = predefinedSkills;
-  $: stages = predefinedStages;
-  $: types = predefinedTypes;
-
-  async function loadMetadata() {
-    // Данные берутся из реактивных predefined* переменных выше
-  }
-
-  async function loadCards() {
-    loading = true;
-    error = null;
-
-    try {
-      // Отправляем фильтры как есть — в базе уже русские значения
-      const filters = {
-        ageGroupIds: selectedAgeGroups && selectedAgeGroups.length > 0 ? selectedAgeGroups : undefined,
-        skillIds: selectedSkills && selectedSkills.length > 0 ? selectedSkills : undefined,
-        stageIds: selectedStages && selectedStages.length > 0 ? selectedStages : undefined,
-        typeIds: selectedTypes && selectedTypes.length > 0 ? selectedTypes : undefined,
-        timeRange: selectedTimeRange || undefined,
-        search: searchQuery || undefined,
-        limit: cardsPerPage,
-        offset: (currentPage - 1) * cardsPerPage
-      };
-
-// Отправляем фильтры на backend
-      const response = await cardsApi.getAllCards(filters);
-
-      if (response.success) {
-        cards = response.data;
-        totalCards = response.total;
-      }
-    } catch (err) {
-      error = err.message;
-      console.error('Error loading cards:', err);
-    } finally {
-      loading = false;
-    }
-  }
-
-  // Обработчики для поиска и очистки фильтров
-  let searchTimeout;
-
-  function handleSearch() {
-    currentPage = 1;
-    loadCards();
-  }
-
-  // Реактивный поиск с debounce
-  $: {
-    if (searchTimeout) clearTimeout(searchTimeout);
-    searchTimeout = setTimeout(() => {
-      if (ageGroups.length > 0) {
-        currentPage = 1;
-        loadCards();
-      }
-    }, 300);
-    searchQuery;
-  }
-
-  function clearFilters() {
-    selectedAgeGroups = [];
-    selectedSkills = [];
-    selectedStages = [];
-    selectedTypes = [];
-    selectedTimeRange = '';
-    searchQuery = '';
-    currentPage = 1;
-    loadCards();
-  }
-
-  // Реактивность для фильтров
-  $: hasActiveFilters = 
-    (selectedAgeGroups && selectedAgeGroups.length > 0) || 
-    (selectedSkills && selectedSkills.length > 0) || 
-    (selectedStages && selectedStages.length > 0) || 
-    (selectedTypes && selectedTypes.length > 0) || 
-    !!selectedTimeRange || 
-    !!searchQuery;
-
-  $: {
-    // Перезагружаем карточки при любом изменении фильтров (кроме поиска)
-    if (ageGroups.length > 0) {
-      currentPage = 1;
-      loadCards();
-    }
-    // Зависимости для реактивности
-    selectedAgeGroups; selectedSkills; selectedStages; selectedTypes; selectedTimeRange;
-  }
-
-  // Пагинация
-  $: totalPages = Math.ceil(totalCards / cardsPerPage);
-
-  function goToPage(page) {
-    currentPage = page;
-    loadCards();
-  }
+ import {onDestroy,tick} from 'svelte';import {afterNavigate,goto} from '$app/navigation';import {cardsApi} from '#lib/api/cards.api.js';
+ import {t,lang} from '#lib/stores/lang.js';import {designLabel} from '#lib/utils/design-labels.js';
+ import CardItem from '#lib/components/CardItem.svelte';import FilterPanel from '#lib/components/FilterPanel.svelte';import UiIcon from '#lib/components/UiIcon.svelte';
+ import {lockBodyScroll} from '#lib/utils/scroll-lock.js';import {dialogFocus} from '#lib/utils/dialog-focus.js';
+ let cards=[],loading=true,error=null,selectedAgeGroups=[],selectedSkills=[],selectedStages=[],selectedTypes=[],selectedTimeRange='',searchQuery='',filtersExpanded=false,currentPage=1,totalCards=0;
+ let catalogUrl='/',ready=false,previousSignature=null,searchTimeout,requestVersion=0,filterTrigger;
+ const cardsPerPage=12;
+ $: ui=key=>designLabel($lang,key);
+ $: ageGroups=[{id:'начальные-классы',name:$t('age_primary')},{id:'старшие-классы',name:$t('age_secondary')}];
+ $: skills=[{id:'критическое-мышление',name:$t('skill_critical')},{id:'командная-работа',name:$t('skill_teamwork')},{id:'рефлексия',name:$t('skill_reflection')},{id:'креативное-мышление',name:$t('skill_creative')},{id:'систематизация',name:$t('skill_systematization')},{id:'коммуникация',name:$t('skill_communication')}];
+ $: stages=[{id:'начало-урока',name:$t('stage_start')},{id:'объяснение-нового-материала',name:$t('stage_explanation')},{id:'закрепление',name:$t('stage_practice')},{id:'конец-урока',name:$t('stage_end')}];
+ $: types=[{id:'индивидуальная',name:$t('type_individual')},{id:'парная',name:$t('type_pair')},{id:'командная',name:$t('type_team')},{id:'фронтальная',name:$t('type_frontal')}];
+ $: timeRanges=[{id:'up-to-2',name:$t('time_up2')},{id:'3-5',name:$t('time_3_5')},{id:'5-10',name:$t('time_5_10')},{id:'15-20',name:$t('time_15_20')},{id:'25-30',name:$t('time_25_30')},{id:'full-lesson',name:$t('time_full')}];
+ function readCatalogUrl(){
+  const p=new URLSearchParams(location.search);
+  const query=(p.get('q')||'').slice(0,200);
+  const values=(key,items)=>[...new Set(p.getAll(key))].filter(id=>items.some(item=>item.id===id));
+  const age=values('age',ageGroups),skill=values('skill',skills),stage=values('stage',stages),type=values('type',types);
+  const time=timeRanges.some(item=>item.id===p.get('time'))?p.get('time'):'';
+  const page=Math.max(1,Math.min(100,parseInt(p.get('page'))||1));
+  const nextSignature=JSON.stringify([age,skill,stage,type,time,query]);
+  if(!ready||nextSignature!==signature){previousSignature=null;searchQuery=query;selectedAgeGroups=age;selectedSkills=skill;selectedStages=stage;selectedTypes=type;selectedTimeRange=time;currentPage=page;ready=true;}
+  else if(page!==currentPage){currentPage=page;clearTimeout(searchTimeout);loadCards();}
+ }
+ afterNavigate(readCatalogUrl);
+ onDestroy(()=>{clearTimeout(searchTimeout);requestVersion++;});
+ $: signature=JSON.stringify([selectedAgeGroups,selectedSkills,selectedStages,selectedTypes,selectedTimeRange,searchQuery]);
+ $: if(ready&&signature!==previousSignature){if(previousSignature!==null)currentPage=1;previousSignature=signature;clearTimeout(searchTimeout);searchTimeout=setTimeout(loadCards,180);}
+ $: filterCount=selectedAgeGroups.length+selectedSkills.length+selectedStages.length+selectedTypes.length+(selectedTimeRange?1:0);
+ $: hasActiveFilters=filterCount>0||!!searchQuery;
+ $: totalPages=Math.ceil(totalCards/cardsPerPage);
+ $: activeTags=[...selectedAgeGroups.map(id=>({kind:'age',id,name:ageGroups.find(i=>i.id===id)?.name})),...selectedSkills.map(id=>({kind:'skill',id,name:skills.find(i=>i.id===id)?.name})),...selectedStages.map(id=>({kind:'stage',id,name:stages.find(i=>i.id===id)?.name})),...selectedTypes.map(id=>({kind:'type',id,name:types.find(i=>i.id===id)?.name})),...(selectedTimeRange?[{kind:'time',id:selectedTimeRange,name:timeRanges.find(i=>i.id===selectedTimeRange)?.name}]:[])];
+ function updateUrl(){const p=new URLSearchParams();if(searchQuery.trim())p.set('q',searchQuery.trim());for(const [key,values] of [['age',selectedAgeGroups],['skill',selectedSkills],['stage',selectedStages],['type',selectedTypes]])for(const value of values)p.append(key,value);if(selectedTimeRange)p.set('time',selectedTimeRange);if(currentPage>1)p.set('page',String(currentPage));catalogUrl=p.size?'/?'+p.toString():'/';goto(catalogUrl,{shallow:true,replace:true,reset:false}).catch(()=>{});}
+ async function loadCards(){const version=++requestVersion;loading=true;error=null;try{const response=await cardsApi.getAllCards({ageGroupIds:selectedAgeGroups,skillIds:selectedSkills,stageIds:selectedStages,typeIds:selectedTypes,timeRange:selectedTimeRange||undefined,search:searchQuery.trim()||undefined,limit:cardsPerPage,offset:(currentPage-1)*cardsPerPage});if(version!==requestVersion)return;if(!response.success)throw new Error($t('retry'));totalCards=response.total;if(currentPage>Math.max(1,Math.ceil(totalCards/cardsPerPage))){currentPage=Math.max(1,Math.ceil(totalCards/cardsPerPage));await loadCards();return;}cards=response.data;updateUrl();}catch(e){if(version===requestVersion)error=$t('not_found');}finally{if(version===requestVersion)loading=false;}}
+ function clearFilters(clearSearch=true){selectedAgeGroups=[];selectedSkills=[];selectedStages=[];selectedTypes=[];selectedTimeRange='';if(clearSearch)searchQuery='';}
+ function removeTag(tag){if(tag.kind==='age')selectedAgeGroups=selectedAgeGroups.filter(id=>id!==tag.id);if(tag.kind==='skill')selectedSkills=selectedSkills.filter(id=>id!==tag.id);if(tag.kind==='stage')selectedStages=selectedStages.filter(id=>id!==tag.id);if(tag.kind==='type')selectedTypes=selectedTypes.filter(id=>id!==tag.id);if(tag.kind==='time')selectedTimeRange='';}
+ function quick(key){if(key==='all')clearFilters(false);if(key==='short')selectedTimeRange=selectedTimeRange==='3-5'?'':'3-5';if(key==='team')selectedTypes=selectedTypes.includes('командная')?selectedTypes.filter(id=>id!=='командная'):[...selectedTypes,'командная'];if(key==='reflection')selectedSkills=selectedSkills.includes('рефлексия')?selectedSkills.filter(id=>id!=='рефлексия'):[...selectedSkills,'рефлексия'];}
+ async function goToPage(page){clearTimeout(searchTimeout);currentPage=page;await loadCards();await tick();document.getElementById('catalog-results')?.scrollIntoView({behavior:'smooth',block:'start'});}
 </script>
-
-<svelte:head>
-  <title>{$t('title_catalog')}</title>
-</svelte:head>
-
-<!-- Мобильная шторка фильтров -->
-{#if filtersExpanded}
-  <div class="fixed inset-0 z-40 md:hidden">
-    <button class="absolute inset-0 bg-black/30 backdrop-blur-sm w-full h-full" on:click={() => filtersExpanded = false} aria-label="Закрыть фильтры"></button>
-    <div class="absolute bottom-24 left-4 right-4 rounded-3xl max-h-[65vh] flex flex-col border border-white/60" style="background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); box-shadow: 0 -4px 30px rgba(200,168,233,0.2), 0 4px 20px rgba(0,0,0,0.1);">
-      <div class="flex items-center justify-between p-5 pb-3">
-        <h2 class="text-lg font-bold text-purple-900">{$t('filters')}</h2>
-        <button on:click={() => filtersExpanded = false} aria-label={$t('close_filters')} class="p-2 rounded-full hover:bg-purple-50 transition-colors">
-          <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-          </svg>
-        </button>
-      </div>
-      <div class="flex-1 overflow-y-auto px-5 pb-3">
-        <div class="space-y-5">
-          <FilterPanel
-            {ageGroups} {skills} {stages} {types} {timeRanges}
-            bind:selectedAgeGroups bind:selectedSkills bind:selectedStages
-            bind:selectedTypes bind:selectedTimeRange
-          />
-        </div>
-      </div>
-      <div class="p-4 flex gap-3 border-t border-purple-100/50 rounded-b-3xl" style="background: rgba(255,255,255,0.95);">
-        <button on:click={() => { clearFilters(); filtersExpanded = false; }} class="btn btn-secondary !px-5 !py-2.5 text-sm font-semibold">
-          <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-          </svg>
-          {$t('reset_filters')}
-        </button>
-        <button on:click={() => filtersExpanded = false} class="btn btn-primary flex-1 !py-2.5 text-sm font-semibold">
-          <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-          </svg>
-          {$t('apply')}
-        </button>
-      </div>
-    </div>
+<svelte:head><title>{$t('title_catalog')}</title><meta name="description" content={ui('heroSub')}/></svelte:head>
+<div class="catalog-layout">
+ <aside class="filter-sidebar"><div class="sidebar-head"><h2><UiIcon name="filter"/>{$t('filters')}</h2>{#if hasActiveFilters}<button on:click={()=>clearFilters()}>{$t('reset_all')}</button>{/if}</div><p>{ui('filterHint')}</p><FilterPanel {ageGroups} {skills} {stages} {types} {timeRanges} instance="desktop" bind:selectedAgeGroups bind:selectedSkills bind:selectedStages bind:selectedTypes bind:selectedTimeRange/></aside>
+ <div class="catalog-main">
+  <section class="catalog-hero" aria-labelledby="catalog-heading">
+   <div class="hero-copy"><h1 id="catalog-heading"><span class="hero-lead">{ui('heroLead')}</span> {ui('heroBridge')} <span class="hero-highlight">{ui('heroAccent')}</span>{ui('heroEnding')}</h1><p>{ui('heroSub')}</p></div>
+   <div class="hero-art" aria-hidden="true"><img src="/images/hero-teacher.webp" alt="" width="1050" height="700" fetchpriority="high"/><span class="hero-spark">✦</span></div>
+  </section>
+  <div class="search-row"><form role="search" on:submit|preventDefault={()=>{clearTimeout(searchTimeout);currentPage=1;loadCards();}}><UiIcon name="search" size={21}/><input type="search" maxlength="200" aria-label={ui('search')} placeholder={ui('search')} bind:value={searchQuery}/>{#if searchQuery}<button class="clear-search" type="button" aria-label={ui('clearSearch')} on:click={()=>searchQuery=''}><UiIcon name="close" size={17}/></button>{/if}</form><button bind:this={filterTrigger} class="filters-trigger" aria-label={$t('filters')} aria-expanded={filtersExpanded} on:click={()=>filtersExpanded=true}><UiIcon name="filter" size={21}/><span>{$t('filters')}</span>{#if filterCount}<b>{filterCount}</b>{/if}</button></div>
+  <div class="quick-filters" aria-label={$t('filters')}>
+   {#each [['all','grid'],['short','clock'],['team','team'],['reflection','leaf']] as [key,icon]}{@const active=key==='all'?filterCount===0:key==='short'?selectedTimeRange==='3-5':key==='team'?selectedTypes.includes('командная'):selectedSkills.includes('рефлексия')}<button class:active aria-pressed={active} on:click={()=>quick(key)}><UiIcon name={icon} size={16}/>{ui(key)}</button>{/each}
   </div>
-{/if}
-
-<div class="flex gap-6 items-start">
-
-  <!-- Сайдбар с фильтрами (только десктоп) -->
-  <aside class="hidden md:flex flex-col gap-4 w-64 flex-shrink-0 sticky top-24">
-    <div class="card-modern !p-5">
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="font-bold text-purple-900">{$t('filters')}</h2>
-        {#if hasActiveFilters}
-          <button on:click={clearFilters} class="text-xs text-purple-700 font-bold hover:text-purple-900 transition-colors">
-          {$t('reset_filters')}
-        </button>
-        {/if}
-      </div>
-      <div class="space-y-6">
-        <FilterPanel
-          {ageGroups} {skills} {stages} {types} {timeRanges}
-          bind:selectedAgeGroups bind:selectedSkills bind:selectedStages
-          bind:selectedTypes bind:selectedTimeRange
-        />
-      </div>
-    </div>
-  </aside>
-
-  <!-- Основной контент -->
-  <div class="flex-1 min-w-0">
-
-    <!-- Поиск + мобильная кнопка фильтров -->
-    <div class="flex gap-3 mb-6">
-      <div class="relative flex-1">
-        <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-        </svg>
-        <input
-          type="text"
-          bind:value={searchQuery}
-          placeholder={$t('search_placeholder')}
-          class="input pl-10"
-          on:keydown={(e) => e.key === 'Enter' && handleSearch()}
-        />
-      </div>
-      <!-- Кнопка фильтров — только на мобильных -->
-      <button
-        on:click={() => filtersExpanded = true}
-        class="md:hidden btn btn-secondary relative flex-shrink-0 px-4"
-      >
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"></path>
-        </svg>
-        {#if hasActiveFilters}
-          <span class="absolute -top-1 -right-1 w-4 h-4 bg-gray-900 rounded-full text-white text-[10px] flex items-center justify-center">
-            {[...selectedAgeGroups, ...selectedSkills, ...selectedStages, ...selectedTypes].length + (selectedTimeRange ? 1 : 0)}
-          </span>
-        {/if}
-      </button>
-    </div>
-
-    <!-- Счётчик результатов -->
-    <div class="flex items-center justify-between mb-4">
-      <p class="text-sm font-bold text-gray-700">
-        {#if loading}{$t('loading')}{:else}{$t('techniques_count', totalCards)}{/if}
-      </p>
-      <!-- Активные теги фильтров -->
-      {#if hasActiveFilters}
-        <button on:click={clearFilters} class="text-xs text-gray-700 font-bold hover:text-indigo-600 md:hidden transition-colors">
-          {$t('reset_all')}
-        </button>
-      {/if}
-    </div>
-
-    <!-- Карточки -->
-    {#if loading}
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {#each Array(6) as _}
-          <div class="card-modern animate-pulse !p-6 h-48">
-            <div class="h-4 bg-gray-200/60 rounded-full w-3/4 mb-3"></div>
-            <div class="h-3 bg-gray-200/60 rounded-full w-full mb-2"></div>
-            <div class="h-3 bg-gray-200/60 rounded-full w-5/6"></div>
-          </div>
-        {/each}
-      </div>
-    {:else if error}
-      <div class="card text-center py-12">
-        <p class="text-gray-600 mb-4">{$t('error_msg', error)}</p>
-        <button on:click={loadCards} class="btn btn-primary">{$t('retry')}</button>
-      </div>
-    {:else if cards.length === 0}
-      <div class="card text-center py-16">
-        <svg class="w-12 h-12 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-        </svg>
-        <p class="text-gray-700 font-medium mb-4">{$t('not_found')}</p>
-        <button on:click={clearFilters} class="btn btn-secondary">{$t('reset_filters_btn')}</button>
-      </div>
-    {:else}
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-        {#each cards as card (card.id)}
-          <CardItem {card} />
-        {/each}
-      </div>
-
-      {#if totalPages > 1}
-        <div class="flex justify-center items-center gap-1.5 md:gap-2 pb-24 md:pb-8">
-          <!-- Кнопка назад -->
-          <button
-            on:click={() => goToPage(currentPage - 1)}
-            disabled={currentPage === 1}
-            class="w-10 h-10 md:w-auto md:h-auto md:px-4 md:py-2 rounded-xl flex items-center justify-center btn btn-secondary disabled:opacity-40"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-            </svg>
-          </button>
-          
-          <!-- Мобильная версия: текущая/всего -->
-          <div class="flex md:hidden items-center gap-2 px-4 py-2 bg-white/60 backdrop-blur-sm rounded-xl border border-white/50">
-            <span class="text-sm font-bold text-purple-700">{currentPage}</span>
-            <span class="text-gray-400">/</span>
-            <span class="text-sm text-gray-600">{totalPages}</span>
-          </div>
-          
-          <!-- Десктоп версия: все страницы -->
-          <div class="hidden md:flex items-center gap-1.5">
-            {#if totalPages <= 7}
-              {#each Array(totalPages) as _, i}
-                <button
-                  on:click={() => goToPage(i + 1)}
-                  class="btn {currentPage === i + 1 ? 'btn-primary' : 'btn-secondary'} !px-4 !py-2"
-                >
-                  {i + 1}
-                </button>
-              {/each}
-            {:else}
-              <!-- Первая страница -->
-              <button on:click={() => goToPage(1)} class="btn {currentPage === 1 ? 'btn-primary' : 'btn-secondary'} !px-4 !py-2">1</button>
-              
-              {#if currentPage > 3}
-                <span class="px-2 text-gray-400">...</span>
-              {/if}
-              
-              <!-- Страницы вокруг текущей -->
-              {#each Array(totalPages) as _, i}
-                {#if i + 1 > 1 && i + 1 < totalPages && Math.abs(i + 1 - currentPage) <= 1}
-                  <button on:click={() => goToPage(i + 1)} class="btn {currentPage === i + 1 ? 'btn-primary' : 'btn-secondary'} !px-4 !py-2">{i + 1}</button>
-                {/if}
-              {/each}
-              
-              {#if currentPage < totalPages - 2}
-                <span class="px-2 text-gray-400">...</span>
-              {/if}
-              
-              <!-- Последняя страница -->
-              <button on:click={() => goToPage(totalPages)} class="btn {currentPage === totalPages ? 'btn-primary' : 'btn-secondary'} !px-4 !py-2">{totalPages}</button>
-            {/if}
-          </div>
-          
-          <!-- Кнопка вперёд -->
-          <button
-            on:click={() => goToPage(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            class="w-10 h-10 md:w-auto md:h-auto md:px-4 md:py-2 rounded-xl flex items-center justify-center btn btn-secondary disabled:opacity-40"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-            </svg>
-          </button>
-        </div>
-      {/if}
-    {/if}
-
-  </div>
+  {#if activeTags.length}<div class="active-tags" aria-label={ui('activeFilters')}>{#each activeTags as tag}<button aria-label={`${ui('removeFilter')}: ${tag.name}`} on:click={()=>removeTag(tag)}>{tag.name}<UiIcon name="close" size={12}/></button>{/each}</div>{/if}
+  <div class="results-heading" id="catalog-results"><p role="status" aria-live="polite">{loading?$t('loading'):$t('techniques_count',totalCards)}</p>{#if hasActiveFilters}<button on:click={()=>clearFilters()}>{$t('reset_all')}</button>{/if}</div>
+  {#if loading}<div class="technique-grid" aria-hidden="true">{#each Array(6) as _}<div class="card-skeleton"><span></span><div></div><p></p><p></p></div>{/each}</div>
+  {:else if error}<div class="empty-state"><UiIcon name="search" size={32}/><h2>{$t('error_msg','')}</h2><p>{$t('retry')}</p><button class="btn btn-primary" on:click={loadCards}>{$t('retry')}</button></div>
+  {:else if !cards.length}<div class="empty-state"><UiIcon name="search" size={32}/><h2>{$t('not_found')}</h2><button class="btn btn-secondary" on:click={()=>clearFilters()}>{$t('reset_filters_btn')}</button></div>
+  {:else}<div class="technique-grid">{#each cards as card (card.id)}<CardItem {card} returnTo={catalogUrl}/>{/each}</div>
+   {#if totalPages>1}<nav class="pagination" aria-label={ui('page')}><button aria-label={$t('btn_back')} disabled={currentPage===1} on:click={()=>goToPage(currentPage-1)}><UiIcon name="back" size={18}/></button><span class="page-count">{currentPage} <span>/ {totalPages}</span></span><div class="page-numbers">{#each Array(totalPages) as _,i}{#if i===0||i===totalPages-1||Math.abs(i+1-currentPage)<=1}<button aria-label={`${ui('page')} ${i+1}`} aria-current={currentPage===i+1?'page':undefined} class:current={currentPage===i+1} on:click={()=>goToPage(i+1)}>{i+1}</button>{:else if i===1&&currentPage>3||i===totalPages-2&&currentPage<totalPages-2}<span>…</span>{/if}{/each}</div><button aria-label={$t('btn_next')} disabled={currentPage===totalPages} on:click={()=>goToPage(currentPage+1)}><UiIcon name="arrow" size={18}/></button></nav>{/if}
+  {/if}
+  <a href="/constructor" class="lesson-link"><span class="lesson-link-icon"><UiIcon name="lesson" size={24}/></span><div><b>{ui('newLesson')}</b><p>{ui('newLessonHint')}</p></div><UiIcon name="arrow" size={20}/></a>
+ </div>
 </div>
+{#if filtersExpanded}<div class="filter-overlay" use:lockBodyScroll><button class="filter-backdrop" aria-label={$t('close_filters')} on:click={()=>filtersExpanded=false}></button><div role="dialog" aria-modal="true" aria-labelledby="filters-title" use:dialogFocus={()=>filtersExpanded=false} class="filter-sheet"><div class="sheet-handle"></div><header><div><h2 id="filters-title">{$t('filters')}</h2><p>{ui('filterHint')}</p></div><button aria-label={$t('close_filters')} on:click={()=>filtersExpanded=false}><UiIcon name="close"/></button></header><div class="filter-scroll"><FilterPanel {ageGroups} {skills} {stages} {types} {timeRanges} instance="mobile" bind:selectedAgeGroups bind:selectedSkills bind:selectedStages bind:selectedTypes bind:selectedTimeRange/></div><footer><button class="btn btn-secondary" on:click={()=>clearFilters()}>{$t('reset_all')}</button><button class="btn btn-primary" on:click={()=>filtersExpanded=false}>{ui('show')}{!loading?' · '+totalCards:''}</button></footer></div></div>{/if}
+<style>
+ .catalog-layout{display:grid;grid-template-columns:230px minmax(0,1fr);gap:28px;align-items:start;}.filter-sidebar{position:sticky;top:100px;background:#ffffffd9;border:1px solid #e8e0f1;border-radius:22px;padding:21px;max-height:calc(100dvh - 120px);overflow:auto;scrollbar-width:thin;}.sidebar-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px;}.sidebar-head h2{display:flex;align-items:center;gap:7px;font-size:16px;font-weight:750;color:#3e245d;}.sidebar-head button{font-size:10px;color:#8243d3;}.filter-sidebar>p{font-size:10px;line-height:1.7;color:#96849f;margin-bottom:22px;}.catalog-main{min-width:0;}.search-row{display:flex;gap:9px;}.search-row form{display:flex;align-items:center;gap:11px;min-width:0;flex:1;background:white;border:1px solid #ded0f3;box-shadow:0 2px 5px #60348c07;border-radius:15px;padding:0 16px;color:#8c66b5;}.search-row form:focus-within{border-color:#a070e4;box-shadow:0 0 0 3px #a875ef12;}.search-row input{min-width:0;width:100%;height:52px;padding:0;border:0;background:transparent;font-size:14px;color:#413051;outline:none;box-shadow:none;}.search-row input::placeholder{color:#a28eb4;}.search-row input::-webkit-search-cancel-button{display:none;}.clear-search{display:flex;align-items:center;justify-content:center;width:32px;min-height:44px;flex-shrink:0;}.filters-trigger{display:none;align-items:center;justify-content:center;gap:6px;border:1px solid #ddd0f0;border-radius:13px;background:white;color:#7d43be;padding:0 13px;font-size:12px;font-weight:600;position:relative;}.filters-trigger b{font-size:10px;min-width:17px;height:17px;border-radius:50%;background:#8242dc;color:white;display:grid;place-items:center;}.quick-filters{display:flex;gap:7px;margin-top:14px;overflow:auto;scrollbar-width:none;padding:1px 1px 4px;}.quick-filters::-webkit-scrollbar{display:none;}.quick-filters button{display:flex;align-items:center;gap:6px;white-space:nowrap;min-height:37px;padding:8px 13px;border:1px solid #e5d9f3;border-radius:25px;background:#ffffffb0;font-size:11px;font-weight:500;color:#7c638e;}.quick-filters button.active{background:#8840ec;border-color:#8840ec;color:white;}.quick-filters button:hover:not(.active){background:#f0e5ff;}.active-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:13px;}.active-tags button{display:flex;align-items:center;gap:8px;min-height:30px;padding:4px 9px;border-radius:8px;background:#efe6f9;color:#865ca4;font-size:10px;}.results-heading{display:flex;align-items:center;justify-content:space-between;gap:15px;margin:22px 0 15px;scroll-margin-top:95px;min-height:24px;}.results-heading p{font-size:12px;font-weight:650;color:#6f5c80;}.results-heading button{font-size:11px;color:#8d56bc;}.technique-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;}.card-skeleton{height:263px;border:1px solid #e7dff0;border-radius:20px;background:#fff;padding:22px;}.card-skeleton>span{display:block;width:60px;height:60px;background:#f0e9f8;border-radius:18px;margin-bottom:18px;}.card-skeleton>div,.card-skeleton p{height:12px;border-radius:10px;background:#f2edf8;margin:14px 0;}.card-skeleton p:last-child{width:75%;}.empty-state{padding:55px 20px;background:#fff;border:1px solid #e8e0f2;border-radius:20px;text-align:center;color:#aa8ec2;}.empty-state :global(svg){margin:auto;}.empty-state h2{font-size:17px;font-weight:650;color:#77508f;margin:20px 0;}.empty-state .btn{margin-top:16px;}.pagination{display:flex;align-items:center;justify-content:center;gap:8px;margin:28px 0;}.pagination button{display:flex;align-items:center;justify-content:center;min-width:40px;min-height:42px;border-radius:11px;background:white;border:1px solid #e8ddf4;font-size:12px;color:#9268b3;}.pagination button:disabled{opacity:.4;}.page-numbers{display:flex;align-items:center;gap:6px;}.page-numbers>span{font-size:12px;color:#a68ab8;}.pagination .current{background:#8641e7;border-color:#8641e7;color:white;}.page-count{display:none;font-size:13px;font-weight:600;}.page-count>span{color:#a28cb0;margin-left:5px;font-weight:400;}.lesson-link{margin-top:30px;display:flex;align-items:center;gap:13px;padding:17px 20px;border:1px solid #e7daf7;border-radius:17px;background:#f0e8fc;color:#8553b0;}.lesson-link-icon{width:44px;height:44px;border-radius:13px;background:#ffffffa0;display:grid;place-items:center;flex-shrink:0;}.lesson-link>div{flex:1;}.lesson-link b{font-size:13px;font-weight:650;color:#684186;}.lesson-link p{font-size:11px;line-height:1.6;margin-top:3px;color:#9475aa;}.filter-overlay{position:fixed;inset:0;z-index:110;}.filter-backdrop{position:absolute;inset:0;width:100%;height:100%;background:#25133755;backdrop-filter:blur(3px);}.filter-sheet{position:absolute;bottom:0;left:0;right:0;max-height:88dvh;background:#fff;border-radius:26px 26px 0 0;display:flex;flex-direction:column;padding:10px 0 0;}.sheet-handle{width:34px;height:4px;background:#ded4e9;border-radius:8px;margin:0 auto 10px;flex-shrink:0;}.filter-sheet header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 22px 18px;border-bottom:1px solid #eee7f5;}.filter-sheet h2{font-size:20px;font-weight:750;color:#46245f;}.filter-sheet header p{font-size:11px;color:#a28ab0;margin-top:5px;}.filter-sheet header button{display:flex;align-items:center;justify-content:center;width:44px;height:44px;background:#f6f0fa;border-radius:50%;color:#9975b1;}.filter-scroll{flex:1;min-height:0;overflow:auto;padding:22px;overscroll-behavior:contain;}.filter-sheet footer{display:flex;gap:9px;border-top:1px solid #eee7f5;padding:14px 20px calc(14px + env(safe-area-inset-bottom));}.filter-sheet footer .btn{font-size:12px;}.filter-sheet footer .btn-primary{flex:1;}
+ @media(max-width:1199px){.catalog-layout{grid-template-columns:215px minmax(0,1fr);gap:22px;}.technique-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+ @media(max-width:1023px){.catalog-layout{display:block;}.filter-sidebar{display:none;}.filters-trigger{display:flex;}.technique-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+ @media(max-width:767px){.search-row{gap:8px;}.search-row form{padding:0 12px;gap:9px;border-radius:13px;}.search-row input{height:49px;}.filters-trigger{padding:0 12px;min-width:49px;}.filters-trigger>span{display:none;}.filters-trigger b{position:absolute;right:-4px;top:-5px;border:2px solid #f7f6fb;box-sizing:content-box;min-width:16px;height:16px;}.quick-filters{margin-top:12px;gap:7px;margin-right:-16px;padding-right:16px;}.quick-filters button{min-height:44px;font-size:11px;padding:8px 12px;}.quick-filters :global(svg){width:14px;height:14px;}.results-heading{margin:18px 0 12px;}.results-heading p{font-size:11px;}.technique-grid{grid-template-columns:1fr;gap:12px;}.page-numbers{display:none;}.page-count{display:block;padding:0 16px;}.pagination{margin:24px 0;}.pagination button{min-width:44px;min-height:44px;}.lesson-link{padding:15px;gap:10px;}.lesson-link p{font-size:10px;}.lesson-link b{font-size:12px;}.active-tags button{min-height:34px;}.filter-sheet footer .btn{padding:10px 12px;}}
+ @media(min-width:600px) and (max-width:767px){.technique-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
 
+ .catalog-hero{position:relative;isolation:isolate;overflow:hidden;display:flex;align-items:center;min-height:280px;margin-bottom:22px;padding:28px 30px;border:1px solid #e8dcff;border-radius:24px;background:radial-gradient(ellipse at 75% 0%,#c7c6ff 0%,transparent 54%),linear-gradient(115deg,#f3ebff 0%,#e8e1ff 53%,#e0d5ff 100%);}
+ .catalog-hero::before{content:'';position:absolute;z-index:-1;width:75%;height:90px;right:-12%;bottom:-59px;border-radius:50%;background:#faf6ffad;transform:rotate(-7deg);box-shadow:-180px -12px 0 10px #ffffff35;}
+ .hero-copy{position:relative;z-index:2;width:66%;min-width:0;padding:0 0 8px;}
+ .catalog-hero h1{font-size:clamp(28px,2.1vw,34px);font-weight:850;line-height:1.15;letter-spacing:-1.1px;color:#2c1253;margin:0 0 17px;}
+ .hero-lead{display:block;}.hero-highlight{position:relative;white-space:nowrap;z-index:0;}
+ .hero-highlight::after{content:'';position:absolute;z-index:-1;left:-2px;right:-3px;height:6px;bottom:-2px;background:#ffcf54;border-radius:65% 40% 55% 35%;transform:rotate(-1deg);}
+ .catalog-hero p{font-size:15px;line-height:1.6;color:#51416f;max-width:570px;}
+ .hero-art{position:absolute;z-index:1;right:-9px;bottom:0;width:40%;height:100%;pointer-events:none;}
+ .hero-art img{width:100%;height:100%;object-fit:contain;object-position:right bottom;}
+ .hero-spark{position:absolute;right:17px;top:20px;color:#fff9dc;font-size:24px;}
+ @media(min-width:1600px){.catalog-hero{min-height:290px;}.hero-copy{width:68%;}.catalog-hero h1{font-size:39px;}.hero-art{width:37%;}}
+ @media(min-width:768px) and (max-width:1199px){.catalog-hero{padding:26px 24px;min-height:265px;}.hero-copy{width:67%;}.catalog-hero h1{font-size:29px;}.catalog-hero p{font-size:14px;}.hero-art{width:38%;right:-12px;}}
+ @media(max-width:767px){.catalog-hero{min-height:0;display:block;padding:23px 16px 126px;margin-bottom:18px;border-radius:21px;}.hero-copy{width:100%;padding:0;}.catalog-hero h1{font-size:25px;line-height:1.16;letter-spacing:-.8px;margin:0 0 15px;}.catalog-hero p{font-size:14px;line-height:1.55;max-width:440px;}.hero-art{height:116px;width:174px;right:1px;}.hero-spark{font-size:18px;right:155px;top:37px;}.hero-highlight::after{height:5px;}.catalog-hero::before{height:90px;bottom:-48px;width:110%;}}
+ @media(max-width:359px){.catalog-hero{padding:20px 14px 112px;}.catalog-hero h1{font-size:22px;letter-spacing:-.7px;}.catalog-hero p{font-size:13px;}.hero-art{height:102px;width:153px;}}
+</style>

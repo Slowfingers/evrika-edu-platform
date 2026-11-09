@@ -1,15 +1,21 @@
 <script>
+  import { page } from '$app/state';
+  let catalogReturn=$derived(page.url.searchParams.get('catalog'));
+  let returnTo=$derived(catalogReturn==='/'||catalogReturn?.startsWith('/?')?catalogReturn:'/');
+  import TechniqueMedia from '#lib/components/TechniqueMedia.svelte';
+  import TechniqueIcon from '#lib/components/TechniqueIcon.svelte';
+  import { displayCardTitle, designLabel } from '#lib/utils/design-labels.js';
   import { onMount } from 'svelte';
-  import { formatTimeDisplay } from '$lib/utils/time-intervals.js';
-  import { cardsApi } from '$lib/api/cards.api.js';
-  import { t, lang } from '$lib/stores/lang.js';
-  import { localizeCard } from '$lib/utils/localization.js';
+  import { formatTimeDisplay } from '#lib/utils/time-intervals.js';
+  import { cardsApi } from '#lib/api/cards.api.js';
+  import { t, lang } from '#lib/stores/lang.js';
+  import { localizeCard } from '#lib/utils/localization.js';
 
-  export let data;
+  let { data } = $props();
 
-  let card = null;
-  let loading = true;
-  let notFound = false;
+  let card = $state(null);
+  let loading = $state(true);
+  let notFound = $state(false);
 
   onMount(async () => {
     try {
@@ -22,24 +28,24 @@
     }
   });
 
-  $: lcard = localizeCard(card, $lang);
+  let lcard = $derived(localizeCard(card, $lang));
 
   // Реактивные маппинги ID → переведенные названия
-  $: ageGroupMapping = {
+  let ageGroupMapping = $derived({
     'начальные-классы': $t('age_primary'),
     'старшие-классы': $t('age_secondary'),
     'primary': $t('age_primary'),
     'secondary': $t('age_secondary'),
     'preschool': $t('age_primary'),
     'adult': $t('age_secondary')
-  };
+  });
 
   function getAgeGroupNames(ageGroups) {
     if (!ageGroups || ageGroups.length === 0) return $t('not_specified');
     return ageGroups.map(g => (typeof g === 'object' && g.name) ? g.name : (ageGroupMapping[g] || g)).join(', ');
   }
 
-  $: skillMapping = {
+  let skillMapping = $derived({
     'критическое-мышление': $t('skill_critical'),
     'командная-работа': $t('skill_teamwork'),
     'рефлексия': $t('skill_reflection'),
@@ -52,14 +58,14 @@
     'creative': $t('skill_creative'),
     'systematization': $t('skill_systematization'),
     'communication': $t('skill_communication')
-  };
+  });
 
   function getSkillNames(skills) {
     if (!skills || skills.length === 0) return $t('not_specified');
     return skills.map(s => (typeof s === 'object' && s.name) ? s.name : (skillMapping[s] || s)).join(', ');
   }
 
-  $: stageMapping = {
+  let stageMapping = $derived({
     'начало-урока': $t('stage_start'),
     'объяснение-нового-материала': $t('stage_explanation'),
     'закрепление': $t('stage_practice'),
@@ -72,14 +78,14 @@
     'explanation': $t('stage_explain_t'),
     'practice': $t('stage_practice_t'),
     'reflection': $t('skill_reflection')
-  };
+  });
 
   function getStageNames(stages) {
     if (!stages || stages.length === 0) return $t('not_specified');
     return stages.map(s => (typeof s === 'object' && s.name) ? s.name : (stageMapping[s] || s)).join(', ');
   }
 
-  $: typeMapping = {
+  let typeMapping = $derived({
     'индивидуальная': $t('type_individual'),
     'парная': $t('type_pair'),
     'командная': $t('type_team'),
@@ -88,7 +94,7 @@
     'pair': $t('type_pair'),
     'team': $t('type_team'),
     'frontal': $t('type_frontal')
-  };
+  });
 
   function getTypeNames(types) {
     if (!types || types.length === 0) return $t('not_specified');
@@ -123,34 +129,27 @@
   <div class="max-w-3xl mx-auto text-center py-16">
     <div class="glass-card inline-block">
       <p class="text-gray-700 font-medium mb-4">{$t('card_not_found')}</p>
-      <a href="/" class="btn btn-secondary">{$t('card_back')}</a>
+      <a href={returnTo} class="btn btn-secondary">{$t('card_back').replace(/^←\s*/,'')}</a>
     </div>
   </div>
 {:else if card}
 <div class="max-w-3xl mx-auto pb-24 md:pb-8">
 
   <!-- Кнопка назад -->
-  <a href="/" class="inline-flex items-center gap-2 text-purple-700 hover:text-purple-900 font-medium mb-4 transition-colors group">
+  <a href={returnTo} class="inline-flex items-center gap-2 text-purple-700 hover:text-purple-900 font-medium mb-4 transition-colors group">
     <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
     </svg>
-    {$t('card_back')}
+    {$t('card_back').replace(/^←\s*/,'')}
   </a>
 
   <!-- Заголовок и бейдж времени -->
   <div class="glass-card mb-4">
-    <div class="flex items-start justify-between gap-4 mb-4">
-      <h1 class="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">{lcard.title}</h1>
-      <span class="glass-badge flex-shrink-0 mt-1">
-        <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-        </svg>
-        {formatTimeDisplay(card.time_minutes)}
-      </span>
-    </div>
+    <div class="detail-heading"><TechniqueIcon id={card.id} size={78} eager/><div><h1>{displayCardTitle(lcard.title)}</h1><span class="glass-badge"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>{formatTimeDisplay(card.time_minutes,$lang)}</span></div></div>
     <p class="text-gray-600 leading-relaxed text-base">{lcard.description}</p>
   </div>
 
+  <details class="technique-facts"><summary>{designLabel($lang,'facts')}<span>⌄</span></summary>
   <!-- Метаданные — glassmorphism карточки -->
   <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
     <!-- Возраст -->
@@ -203,6 +202,8 @@
     </div>
   </div>
 
+  </details>
+  {#key card.id}<TechniqueMedia id={card.id} language={$lang}/>{/key}
   <!-- Содержание приёма -->
   <div class="glass-card overflow-hidden">
     <div class="flex items-center gap-3 mb-5">
@@ -238,23 +239,27 @@
 {/if}
 
 <style>
+  .technique-facts{border:1px solid #e7ddf1;background:#fff;border-radius:16px;margin:18px 0;padding:0 16px;}.technique-facts>summary{display:flex;align-items:center;justify-content:space-between;gap:10px;list-style:none;font-size:13px;color:#76538f;font-weight:600;min-height:52px;cursor:pointer;}.technique-facts>summary::-webkit-details-marker{display:none;}.technique-facts[open]>summary{margin-bottom:12px;}
+  .detail-heading{display:flex;align-items:center;gap:18px;margin-bottom:18px;}.detail-heading>div{min-width:0;}.detail-heading h1{font-size:27px;line-height:1.3;font-weight:750;letter-spacing:-.6px;color:#321a4f;overflow-wrap:anywhere;}.detail-heading .glass-badge{font-size:11px;padding:4px 9px;margin-top:10px;}
+  @media(max-width:767px){.detail-heading{gap:12px;}.detail-heading h1{font-size:22px;}.glass-card{padding:20px!important;}.detail-heading :global(img){width:65px;height:65px;}}
+
   .glass-card {
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: #fff;
+
+
     border-radius: 1.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    box-shadow: 0 8px 32px rgba(200, 168, 233, 0.15);
+    border: 1px solid #e7ddf1;
+    box-shadow: 0 3px 14px #39205a05;
     padding: 1.5rem;
   }
 
   .glass-card-sm {
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    background: #fbf9ff;
+
+
     border-radius: 1.25rem;
-    border: 1px solid rgba(255, 255, 255, 0.7);
-    box-shadow: 0 4px 20px rgba(200, 168, 233, 0.1);
+    border: 1px solid #e7ddf1;
+    box-shadow: none;
     padding: 1rem;
   }
 
@@ -262,7 +267,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    background: rgba(255, 255, 255, 0.7);
+    background: #fff;
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-radius: 1rem;

@@ -1,3 +1,4 @@
+import { translateLabel } from './export-labels.js';
 // Централизованные маппинги для локализации
 
 // Возрастные группы
@@ -96,68 +97,68 @@ export const PREDEFINED_DATA = {
 };
 
 // Функции для получения локализованных названий
-export function getAgeGroupName(id) {
-  return AGE_GROUP_MAPPINGS[id] || id;
+export function getAgeGroupName(id, language = "ru") {
+  return translateLabel(AGE_GROUP_MAPPINGS[id] || id, language);
 }
 
-export function getSkillName(id) {
-  return SKILL_MAPPINGS[id] || id;
+export function getSkillName(id, language = "ru") {
+  return translateLabel(SKILL_MAPPINGS[id] || id, language);
 }
 
-export function getStageName(id) {
-  return STAGE_MAPPINGS[id] || id;
+export function getStageName(id, language = "ru") {
+  return translateLabel(STAGE_MAPPINGS[id] || id, language);
 }
 
-export function getTypeName(id) {
-  return TYPE_MAPPINGS[id] || id;
+export function getTypeName(id, language = "ru") {
+  return translateLabel(TYPE_MAPPINGS[id] || id, language);
 }
 
 // Функции для получения списков названий
-export function getAgeGroupNames(ageGroups) {
-  if (!ageGroups || ageGroups.length === 0) return 'Не указано';
+export function getAgeGroupNames(ageGroups, language = "ru") {
+  if (!ageGroups || ageGroups.length === 0) return translateLabel('Не указано', language);
   return ageGroups.map(group => {
     // Если group - это объект с полем name, используем его
     if (typeof group === 'object' && group.name) {
       return group.name;
     }
     // Если group - это строка (ID), переводим через маппинг
-    return getAgeGroupName(group);
+    return getAgeGroupName(group, language);
   }).join(', ');
 }
 
-export function getSkillNames(skills) {
-  if (!skills || skills.length === 0) return 'Не указано';
+export function getSkillNames(skills, language = "ru") {
+  if (!skills || skills.length === 0) return translateLabel('Не указано', language);
   return skills.map(skill => {
     // Если skill - это объект с полем name, используем его
     if (typeof skill === 'object' && skill.name) {
       return skill.name;
     }
     // Если skill - это строка (ID), переводим через маппинг
-    return getSkillName(skill);
+    return getSkillName(skill, language);
   }).join(', ');
 }
 
-export function getStageNames(stages) {
-  if (!stages || stages.length === 0) return 'Не указано';
+export function getStageNames(stages, language = "ru") {
+  if (!stages || stages.length === 0) return translateLabel('Не указано', language);
   return stages.map(stage => {
     // Если stage - это объект с полем name, используем его
     if (typeof stage === 'object' && stage.name) {
       return stage.name;
     }
     // Если stage - это строка (ID), переводим через маппинг
-    return getStageName(stage);
+    return getStageName(stage, language);
   }).join(', ');
 }
 
-export function getTypeNames(types) {
-  if (!types || types.length === 0) return 'Не указано';
+export function getTypeNames(types, language = "ru") {
+  if (!types || types.length === 0) return translateLabel('Не указано', language);
   return types.map(type => {
     // Если type - это объект с полем name, используем его
     if (typeof type === 'object' && type.name) {
       return type.name;
     }
     // Если type - это строка (ID), переводим через маппинг
-    return getTypeName(type);
+    return getTypeName(type, language);
   }).join(', ');
 }
 

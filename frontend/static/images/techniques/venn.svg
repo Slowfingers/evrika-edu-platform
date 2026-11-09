@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400">
+<g fill="#FFF">
+<circle cx="200" cy="137.5" r="137.5"/>
+<circle cx="137.5" cy="262.5" r="137.5"/>
+<circle cx="262.5" cy="262.5" r="137.5"/>
+</g><g stroke-width="10" stroke="#606060" fill="none">
+<circle cx="200" cy="137.5" r="132.5"/>
+<circle cx="137.5" cy="262.5" r="132.5"/>
+<circle cx="262.5" cy="262.5" r="132.5"/>
+</g>
+<g font-weight="bold" fill="#888" font-family="Times New Roman">
+<text font-size="72px">
+<tspan x="176" y="100">A</tspan>
+<tspan x="46" y="300">B</tspan>
+<tspan x="300">C</tspan></text>
+<text font-size="48px">
+<tspan x="148" y="241">ABC</tspan>
+<tspan x="168" y="333">BC</tspan>
+<tspan x="83" y="185">AB</tspan>
+<tspan x="250">AC</tspan></text>
+</g></svg>

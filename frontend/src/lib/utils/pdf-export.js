@@ -1,75 +1,88 @@
+import { lessonHasContent, stageHasContent } from './lesson-state.js';
+import { stageLabel } from './lesson-labels.js';
+import { stageNotesHTML, escapeHTML, lessonText } from './lesson-export.js';
+import { translateLabel } from './export-labels.js';
 import { formatTimeDisplay } from './time-intervals.js';
 import { getAgeGroupNames, getSkillNames, getStageNames, getTypeNames } from './localization.js';
 
-/**
- * Экспорт урока в PDF через браузерную печать или прямое скачивание HTML
- */
-export function exportLessonToPDF(lessonData, directDownload = false) {
+/** Download a real, paginated PDF on desktop and mobile. */
+export async function exportLessonToPDF(lessonData) {
+  if (!lessonHasContent(lessonData) && !lessonData?.cards?.length) throw new Error('План урока пуст');
+  const [{ default: html2canvas }, { jsPDF }] = await Promise.all([import('html2canvas'), import('jspdf')]);
+  const escape = value => String(value ?? '').replace(/[&<>"']/g, char => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[char]));
+  const safe = { ...lessonData };
+  for (const key of ['subject', 'topic', 'grade', 'description', 'goals']) safe[key] = escape(safe[key]);
+  safe.cards = (lessonData.cards || []).map(card => ({ ...card,
+    title: escape(card.title), description: escape(card.description), content: escape(card.content)
+  }));
+  if(lessonData.lessonStages)safe.lessonStages=Object.fromEntries(Object.entries(lessonData.lessonStages).map(([id,stage])=>[id,{...stage,cards:(stage.cards||[]).map(card=>({...card,title:escape(card.title),description:escape(card.description),content:escape(card.content)}))}]));
+  const frame = document.createElement('iframe');
+  frame.setAttribute('aria-hidden', 'true');
+  frame.style.cssText = 'position:fixed;left:-10000px;top:0;width:800px;height:1200px;border:0;';
+  document.body.appendChild(frame);
   try {
-    // Проверяем, что данные урока корректны
-    if (!lessonData) {
-      throw new Error('Данные урока отсутствуют');
+    const loaded = new Promise(resolve => { frame.onload = resolve; });
+    frame.srcdoc = createFullHTMLDocument(safe, createPrintableContent(safe));
+    await loaded;
+    const doc = frame.contentDocument;
+    if (['uz','en'].includes(lessonData.language)) {
+      const language=lessonData.language;
+      for (const element of doc.querySelectorAll('h1,h2,h3,.info-label,.summary strong,.technique-content strong')) {
+        element.textContent = translateLabel(element.textContent, language);
+      }
+      doc.querySelector('.header p').textContent = language==='uz'?'Evrika platformasi yordamida yaratildi':'Created with EvrikaEdu';
+      for (const element of doc.querySelectorAll('.summary p,.info-value')) {
+        for (const node of element.childNodes) if (node.nodeType === 3) {
+          node.textContent = translateLabel(node.textContent, language).replace(/(\d+) минут/g, language==='uz'?'$1 daqiqa':'$1 min');
+        }
+      }
+      const heading = doc.querySelector('.techniques-section h2');
+      if (heading) heading.textContent = language==='uz'?'Dars jarayoni':'Lesson flow';
     }
-    
-    if (!lessonData.cards || lessonData.cards.length === 0) {
-      throw new Error('В уроке нет выбранных приёмов');
+    await doc.fonts.ready;
+    const pdf = new jsPDF({ unit: 'mm', format: 'a4', compress: true });
+    let pageY = 12;
+    // Render one section at a time to avoid mobile canvas size limits.
+    const blocks = [...doc.body.children].flatMap(node => node.classList.contains('techniques-section') ? [...node.children] : [node]);
+    for (const block of blocks) {
+      const canvas = await html2canvas(block, { scale: 1.5, backgroundColor: '#ffffff', windowWidth: 800 });
+      const mmPerPixel = 186 / canvas.width;
+      const rootTop = block.getBoundingClientRect().top;
+      const textRects = [];
+      const walker = doc.createTreeWalker(block, 4);
+      while (walker.nextNode()) {
+        if (!walker.currentNode.textContent.trim()) continue;
+        const range = doc.createRange();
+        range.selectNodeContents(walker.currentNode);
+        for (const rect of range.getClientRects()) textRects.push({ top: (rect.top - rootTop) * 1.5, bottom: (rect.bottom - rootTop) * 1.5 });
+      }
+      if (canvas.height * mmPerPixel <= 273 && canvas.height * mmPerPixel > 285 - pageY) {
+        pdf.addPage(); pageY = 12;
+      }
+      let offset = 0;
+      while (offset < canvas.height) {
+        let height = Math.min(canvas.height - offset, Math.floor((285 - pageY) / mmPerPixel));
+        if (height <= 0) { pdf.addPage(); pageY = 12; continue; }
+        if (offset + height < canvas.height) {
+          const boundary = offset + height;
+          const crossing = textRects.filter(rect => rect.top < boundary && rect.bottom > boundary);
+          if (crossing.length) height = Math.floor(Math.min(...crossing.map(rect => rect.top)) - offset);
+          if (height <= 0) { pdf.addPage(); pageY = 12; continue; }
+        }
+        const slice = document.createElement('canvas');
+        slice.width = canvas.width; slice.height = height;
+        slice.getContext('2d').drawImage(canvas, 0, offset, canvas.width, height, 0, 0, canvas.width, height);
+        pdf.addImage(slice, 'PNG', 12, pageY, 186, height * mmPerPixel);
+        offset += height;
+        pageY += height * mmPerPixel;
+        if (offset < canvas.height) { pdf.addPage(); pageY = 12; }
+      }
+      pageY += 5;
     }
-    
-    // Создаем HTML контент для PDF
-    const printContent = createPrintableContent(lessonData);
-    
-    // Создаем полный HTML документ
-    const fullHTML = createFullHTMLDocument(lessonData, printContent);
-    
-    // Проверяем, мобильное ли устройство или запрошено прямое скачивание
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    
-    if (directDownload || isMobile) {
-      // На мобильных или при прямом скачивании - сразу скачиваем HTML файл
-      downloadAsHTMLFile(fullHTML, lessonData.topic);
-      return;
-    }
-    
-    // На десктопе - открываем окно печати
-    const printWindow = window.open('', '_blank');
-    if (!printWindow) {
-      // Если всплывающие окна заблокированы, скачиваем как HTML файл
-      downloadAsHTMLFile(fullHTML, lessonData.topic);
-      return;
-    }
-    
-    // Записываем HTML в новое окно
-    printWindow.document.write(fullHTML);
-    printWindow.document.close();
-    
-    // Ждем загрузки и открываем диалог печати
-    printWindow.onload = function() {
-      setTimeout(() => {
-        printWindow.print();
-      }, 500);
-    };
-    
-  } catch (error) {
-    console.error('📄 PDF Export: Error during export:', error);
-    alert('Произошла ошибка при экспорте в PDF: ' + error.message);
-  }
-}
-
-/**
- * Скачивает HTML файл как резервный вариант
- */
-function downloadAsHTMLFile(htmlContent, topicName) {
-  const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = `план-урока-${sanitizeFileName(topicName || 'без-названия')}.html`;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  
-  URL.revokeObjectURL(url);
+    await pdf.save(`план-урока-${sanitizeFileName(lessonData.topic || 'без-названия')}.pdf`, { returnPromise: true });
+  } finally { frame.remove(); }
 }
 
 /**
@@ -91,6 +104,8 @@ function createFullHTMLDocument(lessonData, printContent) {
       <title>План урока - ${lessonData.topic || 'Без названия'}</title>
       <style>
         body {
+          overflow-wrap: anywhere;
+          letter-spacing: 0.1px;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
           line-height: 1.6;
           color: #333;
@@ -144,7 +159,7 @@ function createFullHTMLDocument(lessonData, printContent) {
         }
         .technique-header {
           display: flex;
-          justify-content: between;
+          justify-content: space-between;
           align-items: flex-start;
           margin-bottom: 10px;
         }
@@ -264,17 +279,18 @@ function createPrintableContent(lessonData) {
       ` : ''}
     </div>
 
-    ${cards && cards.length > 0 ? `
+    ${(cards?.length || lessonHasContent(lessonData)) ? `
       <div class="techniques-section">
-        <h2>Приёмы урока (${cards.length})</h2>
-        ${cards.map((card, index) => createTechniqueHTML(card, index + 1)).join('')}
+        <h2>${lessonData.language==='uz'?'Dars jarayoni':lessonData.language==='en'?'Lesson flow':'Ход урока'}</h2>
+        ${lessonData.lessonStages ? Object.entries(lessonData.lessonStages).map(([id, stage]) => (stageHasContent(stage) || stage.duration>0) ?
+          `<h3>${escapeHTML(stageLabel(id, lessonData.language))} · ${stage.totalTime} ${lessonData.language==='uz'?'daqiqa':lessonData.language==='en'?'min':'мин'}</h3>${stageNotesHTML(stage,lessonData.language)}${stage.cards.map(card => createTechniqueHTML(cards.find(item => item.id === card.id) || card, cards.findIndex(item => item.id === card.id) + 1, lessonData.language)).join('')}` : '').join('') : cards.map((card, index) => createTechniqueHTML(card, index + 1, lessonData.language)).join('')}
       </div>
 
       <div class="summary">
         <h3>Сводка урока</h3>
         <p><strong>Количество приёмов:</strong> ${cards.length}</p>
         <p><strong>Общее время:</strong> ${totalTime} минут</p>
-        <p><strong>Средняя продолжительность приёма:</strong> ${Math.round(totalTime / cards.length)} минут</p>
+        ${cards.length ? `<p><strong>Средняя продолжительность приёма:</strong> ${Math.round(cards.reduce((sum, card) => sum + (card.timeMinutes ?? card.time_minutes ?? 0), 0) / cards.length)} минут</p>` : ''}
       </div>
     ` : '<p style="text-align: center; color: #6b7280; margin: 40px 0;">Приёмы не добавлены</p>'}
   `;
@@ -283,22 +299,22 @@ function createPrintableContent(lessonData) {
 /**
  * Создает HTML для отдельного приёма
  */
-function createTechniqueHTML(card, index) {
+function createTechniqueHTML(card, index, language = "ru") {
   try {
     // Правильно извлекаем данные из карточки с учетом реальной структуры
     const timeMinutes = card.timeMinutes || card.time_minutes || 0;
     
     // Безопасная обработка всех метаданных (все функции возвращают строки)
-    const stagesText = (card.stageIds && Array.isArray(card.stageIds)) ? getStageNames(card.stageIds) : '';
-    const typesText = (card.typeIds && Array.isArray(card.typeIds)) ? getTypeNames(card.typeIds) : '';
-    const skillsText = (card.skillIds && Array.isArray(card.skillIds)) ? getSkillNames(card.skillIds) : '';
+    const stagesText = (card.stageIds && Array.isArray(card.stageIds)) ? getStageNames(card.stageIds, language) : '';
+    const typesText = (card.typeIds && Array.isArray(card.typeIds)) ? getTypeNames(card.typeIds, language) : '';
+    const skillsText = (card.skillIds && Array.isArray(card.skillIds)) ? getSkillNames(card.skillIds, language) : '';
     
     // Безопасная обработка ageGroups - getAgeGroupNames возвращает строку, не массив
     let ageGroupsText = '';
     if (card.ageGroups) {
       if (Array.isArray(card.ageGroups)) {
         // Если это массив ID, получаем строку с названиями
-        ageGroupsText = getAgeGroupNames(card.ageGroups);
+        ageGroupsText = getAgeGroupNames(card.ageGroups, language);
       } else if (typeof card.ageGroups === 'string') {
         // Если это уже строка с названием, используем как есть
         ageGroupsText = card.ageGroups;
@@ -309,7 +325,7 @@ function createTechniqueHTML(card, index) {
       <div class="technique">
         <div class="technique-header">
           <h3 class="technique-title">${index}. ${card.title || 'Без названия'}</h3>
-          <span class="technique-time">${formatTimeDisplay(timeMinutes)}</span>
+          <span class="technique-time">${formatTimeDisplay(timeMinutes, language)}</span>
         </div>
         
         <p class="technique-description">${card.description || 'Описание отсутствует'}</p>
@@ -356,64 +372,6 @@ export function exportLessonToJSON(lessonData) {
  * Экспорт урока в текстовый файл
  */
 export function exportLessonToText(lessonData) {
-  const { subject, topic, grade, description, cards, totalTime } = lessonData;
-  
-  let content = `ПЛАН УРОКА\n`;
-  content += `${'='.repeat(50)}\n\n`;
-  
-  content += `Предмет: ${subject || 'Не указан'}\n`;
-  content += `Класс: ${grade || 'Не указан'}\n`;
-  content += `Тема: ${topic || 'Не указана'}\n`;
-  content += `Общее время: ${totalTime} минут\n`;
-  
-  if (description) {
-    content += `\nОписание: ${description}\n`;
-  }
-  
-  if (cards && cards.length > 0) {
-    content += `\nПРИЁМЫ УРОКА (${cards.length})\n`;
-    content += `${'-'.repeat(30)}\n\n`;
-    
-    cards.forEach((card, index) => {
-      content += `${index + 1}. ${card.title}\n`;
-      content += `   Время: ${formatTimeDisplay(card.timeMinutes)}\n`;
-      content += `   Описание: ${card.description}\n`;
-      
-      if (card.content) {
-        content += `   Содержание: ${card.content}\n`;
-      }
-      
-      const stages = card.stageIds ? getStageNames(card.stageIds) : [];
-      const types = card.typeIds ? getTypeNames(card.typeIds) : [];
-      const skills = card.skills ? getSkillNames(card.skills) : [];
-      
-      if (stages.length > 0) {
-        content += `   Этапы: ${stages.join(', ')}\n`;
-      }
-      if (types.length > 0) {
-        content += `   Типы работы: ${types.join(', ')}\n`;
-      }
-      if (skills.length > 0) {
-        content += `   Навыки: ${skills.join(', ')}\n`;
-      }
-      
-      content += '\n';
-    });
-    
-    content += `\nСВОДКА\n`;
-    content += `${'-'.repeat(20)}\n`;
-    content += `Количество приёмов: ${cards.length}\n`;
-    content += `Общее время: ${totalTime} минут\n`;
-    content += `Средняя продолжительность: ${Math.round(totalTime / cards.length)} минут\n`;
-  }
-  
-  const dataBlob = new Blob([content], { type: 'text/plain; charset=utf-8' });
-  const url = URL.createObjectURL(dataBlob);
-  
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = `урок_${lessonData.topic || 'без_названия'}_${new Date().toISOString().split('T')[0]}.txt`;
-  link.click();
-  
-  URL.revokeObjectURL(url);
+ const url=URL.createObjectURL(new Blob([lessonText(lessonData)],{type:'text/plain;charset=utf-8'}));
+ const link=document.createElement('a');link.href=url;link.download=`lesson-${sanitizeFileName(lessonData.topic||'lesson')}.txt`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }

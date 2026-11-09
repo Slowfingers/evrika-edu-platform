@@ -1,8 +1,9 @@
 /// <reference types="@sveltejs/kit" />
-import { build, files, version } from '$service-worker';
+import {immutable,assets,prerendered} from '$app/manifest';
+import {version} from '$app/env';
 
 const CACHE_NAME = `evrika-cache-${version}`;
-const ASSETS = [...build, ...files];
+const ASSETS = [...immutable,...assets,...prerendered].map(({path})=>new URL(path,self.location.origin+'/').pathname);
 
 // Установка Service Worker
 self.addEventListener('install', (event) => {
@@ -11,7 +12,7 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       console.log('[SW] Caching app shell');
-      return cache.addAll(ASSETS);
+      return cache.addAll([...ASSETS, '/']);
     }).then(() => {
       console.log('[SW] Service worker installed');
       return self.skipWaiting();
@@ -27,7 +28,7 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames
-          .filter((name) => name !== CACHE_NAME)
+          .filter((name) => name.startsWith('evrika-cache-') && name !== CACHE_NAME)
           .map((name) => {
             console.log('[SW] Deleting old cache:', name);
             return caches.delete(name);
@@ -50,7 +51,7 @@ async function networkFirst(request) {
     
     // Кэшируем успешный ответ
     if (response.ok) {
-      cache.put(request, response.clone());
+      cache.put(request, response.clone()).catch(() => {});
     }
     
     return response;
@@ -79,15 +80,16 @@ async function networkFirst(request) {
 async function apiNetworkFirst(request) {
   const cache = await caches.open(CACHE_NAME);
   
+  let timeoutId;
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 секунд timeout
+    timeoutId = setTimeout(() => controller.abort(), 5000); // 5 секунд timeout
     
     const response = await fetch(request, { signal: controller.signal });
     clearTimeout(timeoutId);
     
     if (response.ok) {
-      cache.put(request, response.clone());
+      cache.put(request, response.clone()).catch(() => {});
     }
     
     return response;
@@ -100,6 +102,8 @@ async function apiNetworkFirst(request) {
     }
     
     throw error;
+  } finally {
+    clearTimeout(timeoutId);
   }
 }
 
@@ -107,6 +111,7 @@ async function apiNetworkFirst(request) {
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
+  if (request.method !== 'GET' || url.origin !== self.location.origin) return;
   
   // Игнорируем chrome extensions и другие протоколы
   if (url.protocol !== 'http:' && url.protocol !== 'https:') {

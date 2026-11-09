@@ -1,135 +1,14 @@
 <script>
-  import { t } from '$lib/stores/lang.js';
-
-  export let ageGroups = [];
-  export let skills = [];
-  export let stages = [];
-  export let types = [];
-  export let timeRanges = [];
-
-  export let selectedAgeGroups = [];
-  export let selectedSkills = [];
-  export let selectedStages = [];
-  export let selectedTypes = [];
-  export let selectedTimeRange = '';
+ import {t} from '#lib/stores/lang.js';
+ export let ageGroups=[],skills=[],stages=[],types=[],timeRanges=[];
+ export let selectedAgeGroups=[],selectedSkills=[],selectedStages=[],selectedTypes=[],selectedTimeRange='';export let instance='catalog';
+ $: sections=[{key:'age',label:$t('filter_age'),items:ageGroups,selected:selectedAgeGroups},{key:'skills',label:$t('filter_skills'),items:skills,selected:selectedSkills},{key:'stages',label:$t('filter_stage'),items:stages,selected:selectedStages},{key:'types',label:$t('filter_type'),items:types,selected:selectedTypes}];
+ function toggle(key,id){const update=values=>values.includes(id)?values.filter(v=>v!==id):[...values,id];if(key==='age')selectedAgeGroups=update(selectedAgeGroups);if(key==='skills')selectedSkills=update(selectedSkills);if(key==='stages')selectedStages=update(selectedStages);if(key==='types')selectedTypes=update(selectedTypes);}
 </script>
-
-<!-- Возрастные группы -->
-<div>
-  <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">{$t('filter_age')}</p>
-  <div class="space-y-2.5">
-    {#each ageGroups as group}
-      <label class="flex items-center gap-2.5 cursor-pointer">
-        <input
-          type="checkbox"
-          value={group.id}
-          checked={selectedAgeGroups.includes(group.id)}
-          on:change={(e) => {
-            selectedAgeGroups = e.target.checked
-              ? [...selectedAgeGroups, group.id]
-              : selectedAgeGroups.filter(id => id !== group.id);
-          }}
-          class="w-4 h-4 rounded border-gray-300 accent-gray-800"
-        />
-        <span class="text-sm text-gray-700">{group.name}</span>
-      </label>
-    {/each}
-  </div>
+<div class="filter-sections">
+{#each sections as section}<details open><summary>{section.label}<span>{section.selected.length||''}</span></summary><fieldset><legend class="sr-only">{section.label}</legend>{#each section.items as item}<label><input type="checkbox" checked={section.selected.includes(item.id)} on:change={()=>toggle(section.key,item.id)}/><span>{item.name}</span></label>{/each}</fieldset></details>{/each}
+<details open><summary>{$t('filter_time')}<span>{selectedTimeRange?'1':''}</span></summary><fieldset><legend class="sr-only">{$t('filter_time')}</legend>{#each timeRanges as range}<label><input type="radio" name={`${instance}-time`} value={range.id} checked={selectedTimeRange===range.id} on:change={()=>selectedTimeRange=range.id}/><span>{range.name}</span></label>{/each}</fieldset>{#if selectedTimeRange}<button class="deselect" on:click={()=>selectedTimeRange=''}>{$t('deselect')}</button>{/if}</details>
 </div>
-
-<!-- Навыки -->
-<div>
-  <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">{$t('filter_skills')}</p>
-  <div class="space-y-2.5">
-    {#each skills as skill}
-      <label class="flex items-center gap-2.5 cursor-pointer">
-        <input
-          type="checkbox"
-          value={skill.id}
-          checked={selectedSkills.includes(skill.id)}
-          on:change={(e) => {
-            selectedSkills = e.target.checked
-              ? [...selectedSkills, skill.id]
-              : selectedSkills.filter(id => id !== skill.id);
-          }}
-          class="w-4 h-4 rounded border-gray-300 accent-gray-800"
-        />
-        <span class="text-sm text-gray-700">{skill.name}</span>
-      </label>
-    {/each}
-  </div>
-</div>
-
-<!-- Этапы урока -->
-<div>
-  <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">{$t('filter_stage')}</p>
-  <div class="space-y-2.5">
-    {#each stages as stage}
-      <label class="flex items-center gap-2.5 cursor-pointer">
-        <input
-          type="checkbox"
-          value={stage.id}
-          checked={selectedStages.includes(stage.id)}
-          on:change={(e) => {
-            selectedStages = e.target.checked
-              ? [...selectedStages, stage.id]
-              : selectedStages.filter(id => id !== stage.id);
-          }}
-          class="w-4 h-4 rounded border-gray-300 accent-gray-800"
-        />
-        <span class="text-sm text-gray-700">{stage.name}</span>
-      </label>
-    {/each}
-  </div>
-</div>
-
-<!-- Тип работы -->
-<div>
-  <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">{$t('filter_type')}</p>
-  <div class="space-y-2.5">
-    {#each types as type}
-      <label class="flex items-center gap-2.5 cursor-pointer">
-        <input
-          type="checkbox"
-          value={type.id}
-          checked={selectedTypes.includes(type.id)}
-          on:change={(e) => {
-            selectedTypes = e.target.checked
-              ? [...selectedTypes, type.id]
-              : selectedTypes.filter(id => id !== type.id);
-          }}
-          class="w-4 h-4 rounded border-gray-300 accent-gray-800"
-        />
-        <span class="text-sm text-gray-700">{type.name}</span>
-      </label>
-    {/each}
-  </div>
-</div>
-
-<!-- Время -->
-<div>
-  <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">{$t('filter_time')}</p>
-  <div class="space-y-2.5">
-    {#each timeRanges as range}
-      <label class="flex items-center gap-2.5 cursor-pointer">
-        <input
-          type="radio"
-          name="timeRange"
-          value={range.id}
-          checked={selectedTimeRange === range.id}
-          on:change={() => selectedTimeRange = range.id}
-          class="w-4 h-4 border-gray-300 accent-gray-800"
-        />
-        <span class="text-sm text-gray-700">{range.name}</span>
-      </label>
-    {/each}
-    {#if selectedTimeRange}
-      <button
-        on:click={() => selectedTimeRange = ''}
-        class="text-xs text-gray-400 hover:text-gray-700 mt-1 block"
-      >
-        {$t('deselect')}
-      </button>
-    {/if}
-  </div>
-</div>
+<style>
+ details{border-bottom:1px solid #eee7f6;padding:13px 0;}details:first-child{padding-top:0;}details:last-child{border:0;padding-bottom:0;}summary{display:flex;align-items:center;justify-content:space-between;gap:6px;font-size:12px;font-weight:700;color:#4a3268;list-style:none;cursor:pointer;min-height:24px;}summary::-webkit-details-marker{display:none;}summary::after{content:'⌄';font-size:17px;font-weight:400;color:#a28ab8;transform:rotate(-90deg);}details[open]>summary::after{transform:none;}summary>span{font-size:10px;color:#9764cd;margin-left:auto;}fieldset{padding:8px 0 0;}label{display:flex;align-items:center;gap:9px;min-height:33px;font-size:12px;color:#776383;cursor:pointer;line-height:1.5;}input{color:#8344dd;--tw-ring-color:#a779e2;width:16px;height:16px;flex-shrink:0;border:1px solid #cdbbdf;border-radius:4px;}input[type='radio']{border-radius:50%;}.deselect{font-size:11px;color:#8550ba;margin-top:4px;min-height:32px;}@media(max-width:1023px){label{min-height:44px;font-size:14px;}summary{font-size:14px;min-height:32px;}input{width:19px;height:19px;}details{padding:14px 0;}}
+</style>

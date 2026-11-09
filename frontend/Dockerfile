@@ -1,21 +1,16 @@
-FROM node:18-alpine
-
-WORKDIR /app
-
-# Копируем package.json и package-lock.json
-COPY package*.json ./
-
-# Устанавливаем зависимости
-RUN npm ci
-
-# Копируем исходный код
-COPY . .
-
-# Собираем приложение
+FROM node:22-alpine AS builder
+WORKDIR /app/frontend
+COPY frontend/package*.json ./
+RUN npm ci --include=dev
+COPY frontend/ .
+COPY backend/src/data/ /app/backend/src/data/
 RUN npm run build
 
-# Открываем порт
+FROM node:22-alpine AS runtime
+WORKDIR /app/frontend
+ENV NODE_ENV=production
+COPY frontend/package*.json ./
+RUN npm ci --omit=dev
+COPY --from=builder /app/frontend/build ./build
 EXPOSE 3000
-
-# Запускаем приложение в режиме preview
-CMD ["npm", "run", "preview", "--", "--host", "0.0.0.0", "--port", "3000"]
+CMD ["npm", "start"]

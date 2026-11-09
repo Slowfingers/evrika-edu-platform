@@ -1,7 +1,11 @@
 <script>
-  import { onMount, onDestroy } from 'svelte';
+  import {useUnsavedChanges} from '#lib/utils/unsaved.js';
+  import {darkSurface} from '#lib/utils/color.js';
+  import { lockBodyScroll } from '#lib/utils/scroll-lock.js';
+  import { onDestroy } from 'svelte';
+  import { advanceTimer, editTimerStage, removeTimerStage } from '#lib/utils/timer-state.js';
   import { get } from 'svelte/store';
-  import { t, lang } from '$lib/stores/lang.js';
+  import { t, lang } from '#lib/stores/lang.js';
   
   const STAGE_BASE = [
     { id: 1, key: 'stage_intro',       duration: 3,  color: '#4ade80' },
@@ -32,35 +36,35 @@
   let currentStageIndex = 0;
   let timeRemaining = STAGE_BASE[0].duration * 60;
   let isRunning = false;
+  useUnsavedChanges(()=>isRunning,()=>$lang,()=>({title:$t('timer_leave_title'),message:$t('timer_leave_message')}));
   let isFinished = false;
   let interval = null;
   let isEditing = false;
-  let backgroundColor = '#4ade80';
+  let backgroundColor = darkSurface('#4ade80');
   let isFullscreen = false;
   let showMobileStages = false;
   
-  function toggleFullscreen() {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen();
-      isFullscreen = true;
-    } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-        isFullscreen = false;
-      }
-    }
+  let fullscreenError='';
+  async function toggleFullscreen() {
+    fullscreenError='';
+    try {
+      if(document.fullscreenElement)await document.exitFullscreen();
+      else if(document.documentElement.requestFullscreen)await document.documentElement.requestFullscreen();
+      else fullscreenError=$lang==='uz'?'Brauzer to‘liq ekran rejimini qo‘llamaydi.':$lang==='en'?'Fullscreen is not available in this browser.':'Этот браузер не поддерживает полноэкранный режим.';
+      isFullscreen=!!document.fullscreenElement;
+    } catch {fullscreenError=$lang==='uz'?'To‘liq ekran ochilmadi.':$lang==='en'?'Could not enter fullscreen.':'Не удалось открыть полноэкранный режим.';}
   }
-  
+
   $: currentStage = stages[currentStageIndex] || stages[0];
   $: nextStage = stages[currentStageIndex + 1];
   
   // Фон всегда соответствует цвету текущего этапа
-  $: backgroundColor = currentStage?.color || '#4ade80';
+  $: backgroundColor = darkSurface(currentStage?.color || '#4ade80');
   
   $: totalDuration = stages.reduce((sum, stage) => sum + stage.duration, 0) * 60;
   $: elapsedTotal = stages.slice(0, currentStageIndex).reduce((sum, stage) => sum + stage.duration, 0) * 60 + (currentStage.duration * 60 - timeRemaining);
-  $: progressPercent = (elapsedTotal / totalDuration) * 100;
-  $: stageProgressPercent = ((currentStage.duration * 60 - timeRemaining) / (currentStage.duration * 60)) * 100;
+  $: progressPercent = Math.max(0, Math.min(100, (elapsedTotal / totalDuration) * 100));
+  $: stageProgressPercent = Math.max(0,Math.min(100,((currentStage.duration * 60 - timeRemaining) / (currentStage.duration * 60)) * 100));
   
   function formatTime(seconds) {
     const mins = Math.floor(seconds / 60);
@@ -72,25 +76,18 @@
   function startTimer() {
     if (interval) clearInterval(interval);
     
+    let lastTick = Date.now();
     interval = setInterval(() => {
-      if (timeRemaining <= 0) {
-        const nextIndex = currentStageIndex + 1;
-        if (nextIndex < stages.length) {
-          currentStageIndex = nextIndex;
-          timeRemaining = stages[nextIndex].duration * 60;
-        } else {
-          timeRemaining = 0;
-          isRunning = false;
-          isFinished = true;
-          if (interval) {
-            clearInterval(interval);
-            interval = null;
-          }
-        }
-      } else {
-        timeRemaining--;
-      }
-    }, 1000);
+      const now = Date.now();
+      const elapsed = Math.floor((now - lastTick) / 1000);
+      if (elapsed < 1) return;
+      lastTick += elapsed * 1000;
+      const state = advanceTimer(stages, currentStageIndex, timeRemaining, elapsed);
+      currentStageIndex = state.index;
+      timeRemaining = state.remaining;
+      isFinished = state.finished;
+      if (isFinished) isRunning = false;
+    }, 100);
   }
   
   function stopTimer() {
@@ -142,20 +139,19 @@
   }
   
   function updateStage(index, updatedStage) {
-    stages[index] = updatedStage;
-    stages = [...stages];
+    if (updatedStage.name !== stages[index].name) updatedStage = { ...updatedStage, key: null };
+    const state = editTimerStage(stages, currentStageIndex, timeRemaining, index, updatedStage);
+    stages = state.stages;
+    timeRemaining = state.remaining;
   }
-  
+
   function removeStage(index) {
-    if (stages.length <= 1) return;
-    stages = stages.filter((_, i) => i !== index);
-    if (currentStageIndex >= stages.length) {
-      currentStageIndex = 0;
-      timeRemaining = stages[0].duration * 60;
-      isRunning = false;
-    }
+    const state = removeTimerStage(stages, currentStageIndex, timeRemaining, index);
+    stages = state.stages;
+    currentStageIndex = state.index;
+    timeRemaining = state.remaining;
   }
-  
+
   function addStage() {
     const newStage = {
       id: Date.now(),
@@ -168,6 +164,7 @@
   
   function toggleEditMode() {
     isEditing = !isEditing;
+    if(window.innerWidth<768)showMobileStages=isEditing;
   }
   
   onDestroy(() => {
@@ -176,6 +173,8 @@
   });
 </script>
 
+<svelte:window on:fullscreenchange={()=>isFullscreen=!!document.fullscreenElement} />
+{#if fullscreenError}<p class="relative z-10 p-3 bg-white/90 rounded-xl text-sm" role="status">{fullscreenError}</p>{/if}
 <svelte:head>
   <title>{$t('title_timer')}</title>
   <meta name="description" content={$t('timer_title')} />
@@ -191,7 +190,7 @@
       <p class="text-lg md:text-xl text-white text-opacity-80 mb-8">{$t('timer_great_job')}</p>
       <button 
         on:click={resetStage}
-        class="bg-white text-rose-500 px-8 py-3 rounded-full font-bold text-base md:text-lg hover:bg-rose-50 transition-colors shadow-lg"
+        class="bg-white text-violet-600 px-8 py-3 rounded-full font-bold text-base md:text-lg hover:bg-violet-50 transition-colors shadow-lg"
       >
         {$t('timer_new_lesson')}
       </button>
@@ -203,11 +202,11 @@
   <div class="fixed inset-0 z-0 bg-gradient-to-br from-transparent to-black/20 pointer-events-none"></div>
 
   <!-- ========== МОБИЛЬНЫЙ ТАЙМЕР (полноэкранный) ========== -->
-  <div class="md:hidden h-[calc(100vh-3.5rem-4rem)] flex flex-col items-center justify-between font-sans text-white overflow-hidden px-4 py-4 relative z-10">
+  <div class="md:hidden min-h-[calc(100dvh-10rem)] flex flex-col gap-4 items-center justify-between font-sans text-white px-4 py-4 relative z-10">
     
     <!-- Верхняя панель: настройки + заголовок + полноэкран -->
     <div class="w-full flex items-center justify-between flex-shrink-0">
-      <button on:click={toggleEditMode} class="p-2 rounded-full hover:bg-white hover:bg-opacity-10 text-white text-opacity-80 transition-colors">
+      <button aria-label={$t('settings')==='settings'?($lang==='uz'?'Bosqichlarni sozlash':$lang==='en'?'Edit stages':'Настроить этапы'):$t('settings')} on:click={toggleEditMode} class="p-2 rounded-full hover:bg-white hover:bg-opacity-10 text-white text-opacity-80 transition-colors">
         {#if isEditing}
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
         {:else}
@@ -216,7 +215,7 @@
       </button>
       <div class="text-center">
         <h1 class="text-lg font-bold tracking-tight">{$t('timer_title')}</h1>
-        <p class="text-white text-opacity-50 text-[10px]">{$t('evrika_edu')}</p>
+        <p class="text-white text-opacity-70 text-[10px]">EvrikaEdu</p>
       </div>
       <button on:click={toggleFullscreen} class="p-2 rounded-full hover:bg-white hover:bg-opacity-10 text-white text-opacity-80 transition-colors" title={$t('timer_fullscreen')}>
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
@@ -226,9 +225,9 @@
     <!-- Круговой таймер (большой, по центру) -->
     <div class="flex-1 flex items-center justify-center">
       <div class="relative flex items-center justify-center">
-        <svg class="transform -rotate-90 drop-shadow-2xl w-[280px] h-[280px]" viewBox="0 0 340 340">
+        <svg class="transform -rotate-90 drop-shadow-2xl w-[min(72vw,280px)] h-[min(72vw,280px)]" viewBox="0 0 340 340">
           <circle stroke="rgba(255,255,255,0.1)" stroke-width="12" fill="transparent" r="120" cx="170" cy="170" />
-          <circle stroke={backgroundColor} stroke-width="12" stroke-linecap="round" fill="transparent" r="120" cx="170" cy="170"
+          <circle stroke={currentStage?.color||'#a78bfa'} stroke-width="12" stroke-linecap="round" fill="transparent" r="120" cx="170" cy="170"
             style="stroke-dasharray: {2 * Math.PI * 120}; stroke-dashoffset: {2 * Math.PI * 120 * (1 - stageProgressPercent / 100)}; transition: stroke-dashoffset 0.5s linear;" />
           <circle stroke="rgba(255,255,255,0.05)" stroke-width="6" fill="transparent" r="162" cx="170" cy="170" />
           <circle stroke="white" stroke-width="6" stroke-linecap="round" fill="transparent" r="162" cx="170" cy="170" opacity="0.6"
@@ -241,7 +240,7 @@
             <span class="text-white font-semibold text-sm">{currentStage.name}</span>
           </div>
           {#if nextStage}
-            <div class="mt-2 flex items-center gap-1.5 text-white text-opacity-60 text-xs">
+            <div class="mt-2 flex items-center gap-1.5 text-white text-opacity-70 text-xs">
               <span>{$t('timer_next')}</span>
               <span class="font-semibold text-white">{nextStage.name}</span>
             </div>
@@ -257,7 +256,7 @@
         <button on:click={resetStage} class="w-12 h-12 flex items-center justify-center rounded-full bg-white bg-opacity-10 text-white active:scale-95 transition-all" title={$t('timer_restart')}>
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
         </button>
-        <button on:click={togglePlay} class="w-16 h-16 flex items-center justify-center rounded-full bg-white text-rose-500 shadow-xl active:scale-95 transition-all">
+        <button aria-label={isRunning?($lang==='uz'?'Pauza':$lang==='en'?'Pause':'Пауза'):($lang==='uz'?'Boshlash':$lang==='en'?'Start':'Старт')} on:click={togglePlay} class="w-16 h-16 flex items-center justify-center rounded-full bg-white text-violet-600 shadow-xl active:scale-95 transition-all">
           {#if isRunning}
             <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/></svg>
           {:else}
@@ -286,8 +285,8 @@
 
     <!-- Мобильный bottom sheet: этапы -->
     {#if showMobileStages}
-      <div class="modal-overlay flex flex-col justify-end" on:click={() => showMobileStages = false}>
-        <div class="modal-content bg-black bg-opacity-80 backdrop-blur-2xl rounded-t-3xl max-h-[75vh] flex flex-col overflow-hidden" on:click|stopPropagation>
+      <div role="presentation" tabindex="-1" on:keydown={(e) => { if (e.key === "Escape") e.currentTarget.click(); }} use:lockBodyScroll class="modal-overlay flex flex-col justify-end" on:click|self={() => showMobileStages = false}>
+        <div class="modal-content bg-black bg-opacity-80 backdrop-blur-2xl rounded-t-3xl max-h-[75vh] flex flex-col overflow-hidden" >
           <!-- Handle -->
           <div class="flex items-center justify-center py-2 flex-shrink-0">
             <div class="w-10 h-1 rounded-full bg-white bg-opacity-30"></div>
@@ -296,9 +295,9 @@
             <h2 class="text-base font-semibold text-white">{$t('timer_lesson_plan')}</h2>
             <div class="flex items-center gap-2">
               {#if isEditing}
-                <button on:click={addStage} class="text-xs bg-white text-rose-500 px-3 py-1 rounded-full font-bold">{$t('timer_add_stage')}</button>
+                <button on:click={addStage} class="text-xs bg-white text-violet-600 px-3 py-1 rounded-full font-bold">{$t('timer_add_stage')}</button>
               {/if}
-              <button on:click={() => showMobileStages = false} class="p-1 rounded-full text-white text-opacity-60 hover:text-white">
+              <button aria-label={$t('close')} on:click={() => showMobileStages = false} class="p-1 rounded-full text-white text-opacity-70 hover:text-white">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
               </button>
             </div>
@@ -312,7 +311,7 @@
                   <div class="flex items-center gap-2">
                     <input value={stage.name} on:input={(e) => updateStage(index, { ...stage, name: e.target.value })}
                       class="flex-1 bg-transparent border-b border-white border-opacity-30 text-white placeholder-white placeholder-opacity-50 focus:outline-none focus:border-white px-1 py-0.5" placeholder={$t('timer_name_placeholder')} />
-                    <button on:click={() => removeStage(index)} class="text-white text-opacity-60 hover:text-white"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
+                    <button aria-label={`${$t('wiz_remove')}: ${stage.name}`} on:click={() => removeStage(index)} class="text-white text-opacity-70 hover:text-white"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
                   </div>
                   <div class="flex items-center gap-3 pl-2">
                     <div class="flex items-center gap-1 bg-white rounded-lg px-2 py-1 shadow-sm">
@@ -324,24 +323,24 @@
                         <button on:click={() => updateStage(index, { ...stage, color: c.value })}
                           class="w-5 h-5 rounded-full border-2 transition-transform flex-shrink-0"
                           class:border-white={stage.color === c.value} class:border-transparent={stage.color !== c.value}
-                          style="background-color: {c.value};" title={c.label} />
+                          style="background-color: {c.value};" title={c.label} ></button>
                       {/each}
                     </div>
                   </div>
                 </div>
               {:else}
-                <div class="relative p-3 rounded-xl border transition-all duration-300 {isActive ? 'bg-white text-gray-800 border-white shadow-lg' : isPast ? 'bg-white bg-opacity-5 border-transparent text-white text-opacity-50' : 'bg-white bg-opacity-10 border-white border-opacity-10 text-white'}">
+                <div class="relative p-3 rounded-xl border transition-all duration-300 {isActive ? 'bg-white text-gray-800 border-white shadow-lg' : isPast ? 'bg-white bg-opacity-5 border-transparent text-white text-opacity-70' : 'bg-white bg-opacity-10 border-white border-opacity-10 text-white'}">
                   {#if isActive}
                     <div class="absolute bottom-0 left-0 h-1 bg-gray-100 w-full rounded-b-xl overflow-hidden">
-                      <div class="h-full transition-all duration-1000 ease-linear" style="width: 100%; background-color: {stage.color}; animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;" />
+                      <div class="h-full transition-all duration-1000 ease-linear" style="width: 100%; background-color: {stage.color}; animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;" ></div>
                     </div>
                   {/if}
                   <div class="flex items-center justify-between">
                     <div class="flex items-center gap-3">
-                      <div class="w-2.5 h-10 rounded-full" class:opacity-80={!isActive} style="background-color: {stage.color};" />
+                      <div class="w-2.5 h-10 rounded-full" class:opacity-80={!isActive} style="background-color: {stage.color};" ></div>
                       <div>
                         <h3 class="font-bold leading-tight text-sm" class:text-base={isActive}>{stage.name}</h3>
-                        <p class="text-xs mt-0.5 {isActive ? 'text-gray-500' : 'text-white text-opacity-60'}">{stage.duration} {$t('timer_min')}</p>
+                        <p class="text-xs mt-0.5 {isActive ? 'text-gray-500' : 'text-white text-opacity-70'}">{stage.duration} {$t('timer_min')}</p>
                       </div>
                     </div>
                     {#if isActive}
@@ -354,8 +353,8 @@
           </div>
           <!-- Прогресс -->
           <div class="px-4 pb-4 pt-2 border-t border-white border-opacity-10 flex-shrink-0">
-            <div class="flex justify-between text-xs mb-1 text-white text-opacity-60"><span>{$t('timer_progress')}</span><span>{Math.round(progressPercent)}%</span></div>
-            <div class="h-1.5 bg-white bg-opacity-10 rounded-full overflow-hidden"><div class="h-full bg-white transition-all duration-1000 ease-out" style="width: {progressPercent}%;" /></div>
+            <div class="flex justify-between text-xs mb-1 text-white text-opacity-70"><span>{$t('timer_progress')}</span><span>{Math.round(progressPercent)}%</span></div>
+            <div class="h-1.5 bg-white bg-opacity-10 rounded-full overflow-hidden"><div class="h-full bg-white transition-all duration-1000 ease-out" style="width: {progressPercent}%;" ></div></div>
           </div>
         </div>
       </div>
@@ -367,7 +366,7 @@
     <div class="w-full max-w-5xl bg-white bg-opacity-10 backdrop-blur-3xl rounded-[3rem] border border-white border-opacity-20 shadow-2xl overflow-hidden flex flex-row max-h-full relative">
       
       <!-- Кнопки -->
-      <button on:click={toggleEditMode} class="absolute top-4 left-4 z-20 p-2 rounded-full hover:bg-white hover:bg-opacity-10 text-white text-opacity-80 transition-colors">
+      <button aria-label={$t('settings')==='settings'?($lang==='uz'?'Bosqichlarni sozlash':$lang==='en'?'Edit stages':'Настроить этапы'):$t('settings')} on:click={toggleEditMode} class="absolute top-4 left-4 z-20 p-2 rounded-full hover:bg-white hover:bg-opacity-10 text-white text-opacity-80 transition-colors">
         {#if isEditing}
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
         {:else}
@@ -382,13 +381,13 @@
       <div class="flex-1 p-8 flex flex-col items-center justify-between relative">
         <div class="w-full text-center md:text-left pl-10">
           <h1 class="text-xl font-bold tracking-tight">{$t('timer_title')}</h1>
-          <p class="text-white text-opacity-60 text-xs">EvrikaEdu</p>
+          <p class="text-white text-opacity-70 text-xs">EvrikaEdu</p>
         </div>
         <div class="my-4">
           <div class="relative flex items-center justify-center">
             <svg class="transform -rotate-90 drop-shadow-2xl w-[340px] h-[340px]" viewBox="0 0 340 340">
               <circle stroke="rgba(255,255,255,0.1)" stroke-width="12" fill="transparent" r="125" cx="170" cy="170" />
-              <circle stroke={backgroundColor} stroke-width="12" stroke-linecap="round" fill="transparent" r="125" cx="170" cy="170"
+              <circle stroke={currentStage?.color||'#a78bfa'} stroke-width="12" stroke-linecap="round" fill="transparent" r="125" cx="170" cy="170"
                 style="stroke-dasharray: {2 * Math.PI * 125}; stroke-dashoffset: {2 * Math.PI * 125 * (1 - stageProgressPercent / 100)}; transition: stroke-dashoffset 0.5s linear;" />
               <circle stroke="rgba(255,255,255,0.05)" stroke-width="6" fill="transparent" r="165" cx="170" cy="170" />
               <circle stroke="white" stroke-width="6" stroke-linecap="round" fill="transparent" r="165" cx="170" cy="170" opacity="0.6"
@@ -401,7 +400,7 @@
                 <span class="text-white font-semibold text-base">{currentStage.name}</span>
               </div>
               {#if nextStage}
-                <div class="mt-3 flex items-center space-x-2 text-white text-opacity-60 text-xs">
+                <div class="mt-3 flex items-center space-x-2 text-white text-opacity-70 text-xs">
                   <span>{$t('timer_next')}</span><span class="font-medium text-white">{nextStage.name}</span>
                 </div>
               {/if}
@@ -411,7 +410,7 @@
         <div class="flex flex-col gap-4 w-full">
           <div class="flex items-center justify-center gap-6">
             <button on:click={resetStage} class="w-12 h-12 flex items-center justify-center rounded-full bg-white bg-opacity-10 hover:bg-white hover:bg-opacity-20 text-white transition-all active:scale-95" title={$t('timer_restart')}><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg></button>
-            <button on:click={togglePlay} class="w-20 h-20 flex items-center justify-center rounded-full bg-white text-rose-500 shadow-xl hover:scale-105 active:scale-95 transition-all">
+            <button aria-label={isRunning?($lang==='uz'?'Pauza':$lang==='en'?'Pause':'Пауза'):($lang==='uz'?'Boshlash':$lang==='en'?'Start':'Старт')} on:click={togglePlay} class="w-20 h-20 flex items-center justify-center rounded-full bg-white text-violet-600 shadow-xl hover:scale-105 active:scale-95 transition-all">
               {#if isRunning}<svg class="w-9 h-9" fill="currentColor" viewBox="0 0 24 24"><path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/></svg>{:else}<svg class="w-9 h-9 ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>{/if}
             </button>
             <button on:click={skipStage} class="w-12 h-12 flex items-center justify-center rounded-full bg-white bg-opacity-10 hover:bg-white hover:bg-opacity-20 text-white transition-all active:scale-95" title={$t('timer_skip')}><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg></button>
@@ -428,7 +427,7 @@
         <div class="flex items-center justify-between mb-3">
           <h2 class="text-lg font-semibold text-white">{$t('timer_lesson_plan')}</h2>
           {#if isEditing}
-            <button on:click={addStage} class="text-xs bg-white text-rose-500 px-3 py-1 rounded-full font-bold hover:bg-rose-50 transition-colors shadow-sm">{$t('timer_add_stage')}</button>
+            <button on:click={addStage} class="text-xs bg-white text-violet-600 px-3 py-1 rounded-full font-bold hover:bg-violet-50 transition-colors shadow-sm">{$t('timer_add_stage')}</button>
           {/if}
         </div>
         <div class="flex-1 overflow-y-auto pr-2 space-y-2" style="scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.2) transparent;">
@@ -440,7 +439,7 @@
                 <div class="flex items-center gap-2">
                   <svg class="w-4 h-4 text-white text-opacity-40 cursor-move" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"></path></svg>
                   <input value={stage.name} on:input={(e) => updateStage(index, { ...stage, name: e.target.value })} class="flex-1 bg-transparent border-b border-white border-opacity-30 text-white placeholder-white placeholder-opacity-50 focus:outline-none focus:border-white px-1 py-0.5" placeholder={$t('timer_stage_placeholder')} />
-                  <button on:click={() => removeStage(index)} class="text-white text-opacity-60 hover:text-white transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
+                  <button aria-label={`${$t('wiz_remove')}: ${stage.name}`} on:click={() => removeStage(index)} class="text-white text-opacity-70 hover:text-white transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
                 </div>
                 <div class="flex items-center gap-4 pl-6">
                   <div class="flex items-center gap-1 bg-white rounded-lg px-2 py-1 shadow-sm">
@@ -450,16 +449,16 @@
                   </div>
                   <div class="flex gap-1 flex-1 overflow-x-auto pb-1">
                     {#each COLORS as c}
-                      <button on:click={() => updateStage(index, { ...stage, color: c.value })} class="w-5 h-5 rounded-full border-2 transition-transform hover:scale-110 flex-shrink-0" class:border-white={stage.color === c.value} class:scale-110={stage.color === c.value} class:border-transparent={stage.color !== c.value} style="background-color: {c.value};" title={c.label} />
+                      <button on:click={() => updateStage(index, { ...stage, color: c.value })} class="w-5 h-5 rounded-full border-2 transition-transform hover:scale-110 flex-shrink-0" class:border-white={stage.color === c.value} class:scale-110={stage.color === c.value} class:border-transparent={stage.color !== c.value} style="background-color: {c.value};" title={c.label} ></button>
                     {/each}
                   </div>
                 </div>
               </div>
             {:else}
-              <div class="relative p-3 rounded-xl border transition-all duration-300 {isActive ? 'bg-white text-gray-800 border-white shadow-lg scale-[1.02]' : isPast ? 'bg-black bg-opacity-10 border-transparent text-white text-opacity-50' : 'bg-white bg-opacity-10 border-white border-opacity-10 text-white'}">
-                {#if isActive}<div class="absolute bottom-0 left-0 h-1 bg-gray-100 w-full rounded-b-xl overflow-hidden"><div class="h-full transition-all duration-1000 ease-linear" style="width: 100%; background-color: {stage.color}; animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;" /></div>{/if}
+              <div class="relative p-3 rounded-xl border transition-all duration-300 {isActive ? 'bg-white text-gray-800 border-white shadow-lg scale-[1.02]' : isPast ? 'bg-black bg-opacity-10 border-transparent text-white text-opacity-70' : 'bg-white bg-opacity-10 border-white border-opacity-10 text-white'}">
+                {#if isActive}<div class="absolute bottom-0 left-0 h-1 bg-gray-100 w-full rounded-b-xl overflow-hidden"><div class="h-full transition-all duration-1000 ease-linear" style="width: 100%; background-color: {stage.color}; animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;" ></div></div>{/if}
                 <div class="flex items-center justify-between">
-                  <div class="flex items-center gap-3"><div class="w-2.5 h-10 rounded-full" class:opacity-80={!isActive} style="background-color: {stage.color};" /><div><h3 class="font-bold leading-tight" class:text-base={isActive} class:text-sm={!isActive}>{stage.name}</h3><p class="text-xs mt-1 {isActive ? 'text-gray-500' : 'text-white text-opacity-60'}">{stage.duration} {$t('timer_min')}</p></div></div>
+                  <div class="flex items-center gap-3"><div class="w-2.5 h-10 rounded-full" class:opacity-80={!isActive} style="background-color: {stage.color};" ></div><div><h3 class="font-bold leading-tight" class:text-base={isActive} class:text-sm={!isActive}>{stage.name}</h3><p class="text-xs mt-1 {isActive ? 'text-gray-500' : 'text-white text-opacity-70'}">{stage.duration} {$t('timer_min')}</p></div></div>
                   {#if isActive}<div class="bg-gray-100 rounded-full px-3 py-1"><span class="text-xs font-bold text-gray-600 uppercase tracking-wider">{$t('timer_now')}</span></div>{/if}
                 </div>
               </div>
@@ -467,10 +466,12 @@
           {/each}
         </div>
         <div class="mt-4 pt-4 border-t border-white border-opacity-10">
-          <div class="flex justify-between text-sm mb-2 text-white text-opacity-60"><span>{$t('timer_total_progress')}</span><span>{Math.round(progressPercent)}%</span></div>
-          <div class="h-2 bg-white bg-opacity-10 rounded-full overflow-hidden"><div class="h-full bg-white transition-all duration-1000 ease-out" style="width: {progressPercent}%;" /></div>
+          <div class="flex justify-between text-sm mb-2 text-white text-opacity-70"><span>{$t('timer_total_progress')}</span><span>{Math.round(progressPercent)}%</span></div>
+          <div class="h-2 bg-white bg-opacity-10 rounded-full overflow-hidden"><div class="h-full bg-white transition-all duration-1000 ease-out" style="width: {progressPercent}%;" ></div></div>
         </div>
       </div>
     </div>
   </div>
 {/if}
+
+<style>button{min-width:44px;min-height:44px;}</style>

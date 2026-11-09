@@ -1,0 +1,121 @@
+{
+  "8": {
+    "src": "/images/techniques/think-pair-share.webp",
+    "width": 1600,
+    "height": 960,
+    "author": "Putukas01",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "source": "https://commons.wikimedia.org/wiki/File:ThinkPairShare.png",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/d/d3/ThinkPairShare.png",
+    "imageLanguage": "en",
+    "caption": {
+      "ru": "Три шага обсуждения: сначала подумать самостоятельно, затем обсудить в паре и поделиться с группой. На рисунке — вариант для онлайн-занятия.",
+      "uz": "Muhokamaning uch bosqichi: avval mustaqil o‘ylash, so‘ng juftlikda muhokama qilish va guruh bilan bo‘lishish. Rasmda onlayn dars varianti ko‘rsatilgan.",
+      "en": "Three stages: think independently, discuss with a partner, then share with the group. This illustration shows an online version."
+    },
+    "changes": "WebP compression and resizing only"
+  },
+  "15": {
+    "src": "/images/techniques/fishbone.svg",
+    "width": 1200,
+    "height": 840,
+    "author": "Jake Choules",
+    "license": "Public domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+    "source": "https://commons.wikimedia.org/wiki/File:Fishbone.svg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a8/Fishbone.svg",
+    "imageLanguage": "en",
+    "caption": {
+      "ru": "Схема причин и следствий. В «голове» формулируют проблему, на крупных ветвях — причины, на мелких — подтверждающие факты.",
+      "uz": "Sabab va oqibat sxemasi. «Bosh» qismida muammo, katta shoxlarda sabablar, kichik shoxlarda ularni tasdiqlovchi dalillar yoziladi.",
+      "en": "A cause-and-effect diagram. Put the problem at the head, causes on major branches and supporting evidence on smaller branches."
+    },
+    "changes": "Unmodified SVG"
+  },
+  "24": {
+    "src": "/images/techniques/jigsaw.webp",
+    "width": 1425,
+    "height": 1377,
+    "author": "Wendrock",
+    "license": "CC BY 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0/",
+    "source": "https://commons.wikimedia.org/wiki/File:Gruppenpuzzle.png",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/5/50/Gruppenpuzzle.png",
+    "imageLanguage": "de",
+    "caption": {
+      "ru": "Переход из исходных групп в экспертные и обратно. Ученики изучают свою часть темы, затем объясняют её своей группе.",
+      "uz": "Dastlabki guruhlardan ekspert guruhlariga va yana ortga o‘tish. O‘quvchilar mavzuning o‘z qismini o‘rganib, uni o‘z guruhiga tushuntiradilar.",
+      "en": "Students move from home groups to expert groups and back. Each learns one part of the topic, then teaches it to their home group."
+    },
+    "changes": "WebP compression and resizing only"
+  },
+  "59": {
+    "src": "/images/techniques/jigsaw.webp",
+    "width": 1425,
+    "height": 1377,
+    "author": "Wendrock",
+    "license": "CC BY 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0/",
+    "source": "https://commons.wikimedia.org/wiki/File:Gruppenpuzzle.png",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/5/50/Gruppenpuzzle.png",
+    "imageLanguage": "de",
+    "caption": {
+      "ru": "Переход из исходных групп в экспертные и обратно. Ученики изучают свою часть темы, затем объясняют её своей группе.",
+      "uz": "Dastlabki guruhlardan ekspert guruhlariga va yana ortga o‘tish. O‘quvchilar mavzuning o‘z qismini o‘rganib, uni o‘z guruhiga tushuntiradilar.",
+      "en": "Students move from home groups to expert groups and back. Each learns one part of the topic, then teaches it to their home group."
+    },
+    "changes": "WebP compression and resizing only"
+  },
+  "37": {
+    "src": "/images/techniques/venn.svg",
+    "width": 1200,
+    "height": 1200,
+    "author": "Elecbullet; SVG simplified by Sarang",
+    "license": "Public domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+    "source": "https://commons.wikimedia.org/wiki/File:ABC_Venn_Diagram.svg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/8/8c/ABC_Venn_Diagram.svg",
+    "imageLanguage": "symbols",
+    "caption": {
+      "ru": "Пример сравнения трёх объектов. Отдельные части кругов — отличия, пересечения — общие признаки. Для двух объектов достаточно двух кругов.",
+      "uz": "Uch obyektni taqqoslash namunasi. Doiralarning alohida qismlari — farqlar, kesishgan qismlari — umumiy belgilar. Ikki obyekt uchun ikkita doira yetarli.",
+      "en": "An example comparing three subjects. Separate regions show differences; overlaps show shared features. Use two circles when comparing two subjects."
+    },
+    "changes": "Unmodified SVG"
+  },
+  "14": {
+    "src": "/images/techniques/bloom-ru.svg",
+    "width": 1200,
+    "height": 1200,
+    "author": "Kirill Borisenko, based on Bloom taxonomy.svg",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "source": "https://commons.wikimedia.org/wiki/File:Bloom%60s_taxonomy-ru.svg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/5/51/Bloom%60s_taxonomy-ru.svg",
+    "imageLanguage": "ru",
+    "caption": {
+      "ru": "Основа приёма — уровни познавательных задач по Блуму. Это справочная схема уровней, а не шаблон ромашки или кубика. Вопросы для занятия сформулируйте по инструкции приёма.",
+      "uz": "Usulning asosi — Blum bo‘yicha bilish vazifalarining darajalari. Bu darajalar haqida ma’lumot sxemasi, moychechak yoki kubik shabloni emas. Dars savollarini usul yo‘riqnomasiga ko‘ra tuzing.",
+      "en": "Background: Bloom’s levels of cognitive tasks. This is a reference diagram, not a flower or cube template. Create classroom questions using the technique instructions."
+    },
+    "changes": "Unmodified SVG"
+  },
+  "36": {
+    "src": "/images/techniques/bloom-ru.svg",
+    "width": 1200,
+    "height": 1200,
+    "author": "Kirill Borisenko, based on Bloom taxonomy.svg",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "source": "https://commons.wikimedia.org/wiki/File:Bloom%60s_taxonomy-ru.svg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/5/51/Bloom%60s_taxonomy-ru.svg",
+    "imageLanguage": "ru",
+    "caption": {
+      "ru": "Основа приёма — уровни познавательных задач по Блуму. Это справочная схема уровней, а не шаблон ромашки или кубика. Вопросы для занятия сформулируйте по инструкции приёма.",
+      "uz": "Usulning asosi — Blum bo‘yicha bilish vazifalarining darajalari. Bu darajalar haqida ma’lumot sxemasi, moychechak yoki kubik shabloni emas. Dars savollarini usul yo‘riqnomasiga ko‘ra tuzing.",
+      "en": "Background: Bloom’s levels of cognitive tasks. This is a reference diagram, not a flower or cube template. Create classroom questions using the technique instructions."
+    },
+    "changes": "Unmodified SVG"
+  }
+}

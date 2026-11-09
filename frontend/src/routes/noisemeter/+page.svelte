@@ -1,6 +1,7 @@
 <script>
+  import {darkSurface} from '#lib/utils/color.js';
   import { onMount, onDestroy } from 'svelte';
-  import { t } from '$lib/stores/lang.js';
+  import { t, lang } from '#lib/stores/lang.js';
 
   // --- State ---
   let noiseLevel = 0;       // 0-100
@@ -43,13 +44,22 @@
       const mix = (level - 0.75) / 0.25;
       return `linear-gradient(135deg, #f97316 0%, #ef4444 ${mix * 50}%, #dc2626 100%)`;
     }
-  })();
+  })().replace(/#[0-9a-f]{6}/gi,darkSurface);
 
+  let microphoneRequest = 0;
   async function startMicrophone() {
+    const request = ++microphoneRequest;
     try {
       status = 'active';
-      localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      if (request !== microphoneRequest) {
+        stream.getTracks().forEach(track => track.stop());
+        return;
+      }
+      localStream = stream;
       audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      if(audioContext.state==='suspended')await audioContext.resume();
+      if(request!==microphoneRequest)return;
       const source = audioContext.createMediaStreamSource(localStream);
       analyser = audioContext.createAnalyser();
       analyser.fftSize = 256;
@@ -70,15 +80,18 @@
       }
       tick();
     } catch (e) {
+      if (request !== microphoneRequest) return;
+      stopMicrophone();
       status = 'error';
       errorMsg = $t('noise_error_mic');
     }
   }
 
   function stopMicrophone() {
+    microphoneRequest++;
     if (localAnimFrame) cancelAnimationFrame(localAnimFrame);
     if (localStream) localStream.getTracks().forEach(t => t.stop());
-    if (audioContext) audioContext.close();
+    if (audioContext && audioContext.state!=='closed') audioContext.close().catch(()=>{});
     localStream = null;
     audioContext = null;
     analyser = null;
@@ -104,7 +117,7 @@
 
 {#if status === 'idle'}
   <!-- Начальный экран -->
-  <div class="h-[calc(100vh-3.5rem-4rem)] md:h-[calc(100vh-4rem)] flex items-center justify-center p-4 overflow-hidden">
+  <div class="min-h-[calc(100dvh-11rem)] md:min-h-[calc(100dvh-8rem)] flex items-center justify-center p-4">
     <div class="max-w-md w-full text-center">
       <div class="w-20 h-20 mx-auto mb-6 rounded-3xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shadow-xl">
         <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -135,7 +148,7 @@
 
 {:else if status === 'error'}
   <!-- Ошибка -->
-  <div class="h-[calc(100vh-3.5rem-4rem)] md:h-[calc(100vh-4rem)] flex items-center justify-center p-4 overflow-hidden">
+  <div class="min-h-[calc(100dvh-11rem)] md:min-h-[calc(100dvh-8rem)] flex items-center justify-center p-4">
     <div class="max-w-md w-full text-center">
       <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-red-50 flex items-center justify-center">
         <svg class="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -159,7 +172,7 @@
     
     <!-- Кнопка остановки -->
     <button
-      on:click={stopMicrophone}
+      aria-label={$t('noise_back')} on:click={stopMicrophone}
       class="fixed top-20 md:top-6 right-4 md:right-6 z-10 p-3 rounded-2xl bg-white bg-opacity-20 backdrop-blur-md text-white hover:bg-opacity-30 transition-all border border-white border-opacity-30"
     >
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -207,7 +220,7 @@
 
       <!-- Подсказка -->
       <p class="text-white text-opacity-80 text-sm md:text-base mt-6 font-medium">
-        {$t('noise_level_label')}: {noiseRaw} dB
+        {$t('noise_level_label')}: {noiseLevel}/100
       </p>
     </div>
   </div>

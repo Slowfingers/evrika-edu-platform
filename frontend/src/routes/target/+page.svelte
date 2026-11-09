@@ -1,6 +1,6 @@
 <script>
-  import InteractiveTarget from '$lib/components/InteractiveTarget.svelte';
-  import { t } from '$lib/stores/lang.js';
+  import InteractiveTarget from '#lib/components/InteractiveTarget.svelte';
+  import { t } from '#lib/stores/lang.js';
 </script>
 
 <svelte:head>

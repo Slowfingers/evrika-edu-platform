@@ -95,19 +95,15 @@ class DatabaseService {
       { id: 'systematization', name: 'Систематизация', description: 'Структурирование материала' }
     ];
 
-    ageGroups.forEach(group => {
-      this.db.run(
-        `INSERT OR IGNORE INTO age_groups (id, name, description) VALUES (?, ?, ?)`,
-        [group.id, group.name, group.description]
-      );
-    });
+    for (const [table, entries] of [['age_groups', ageGroups], ['skills', skills]]) {
+      for (const entry of entries) {
+        await new Promise((resolve,reject)=>this.db.run(
+          `INSERT OR IGNORE INTO ${table} (id, name, description) VALUES (?, ?, ?)`,
+          [entry.id,entry.name,entry.description],error=>error?reject(error):resolve()
+        ));
+      }
+    }
 
-    skills.forEach(skill => {
-      this.db.run(
-        `INSERT OR IGNORE INTO skills (id, name, description) VALUES (?, ?, ?)`,
-        [skill.id, skill.name, skill.description]
-      );
-    });
 
 
   }

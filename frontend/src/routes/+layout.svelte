@@ -1,103 +1,29 @@
 <script>
-  import '../app.css';
-  import { page } from '$app/stores';
-  import Header from '$lib/components/Header.svelte';
-  import TelegramPopup from '$lib/components/TelegramPopup.svelte';
-  import { t } from '$lib/stores/lang.js';
+ import '../app.css';import {page} from '$app/state';import {afterNavigate} from '$app/navigation';import {t,lang} from '#lib/stores/lang.js';
+ import {designLabel} from '#lib/utils/design-labels.js';import {lockBodyScroll} from '#lib/utils/scroll-lock.js';import {dialogFocus} from '#lib/utils/dialog-focus.js';
+ import Header from '#lib/components/Header.svelte';import UiIcon from '#lib/components/UiIcon.svelte';import UnsavedPrompt from '#lib/components/UnsavedPrompt.svelte';
+	/**
+	 * @typedef {Object} Props
+	 * @property {import('svelte').Snippet} [children]
+	 */
 
-  $: currentPath = $page.url.pathname;
-  
-  let toolsOpen = false;
-  
-  const toolRoutes = ['/timer', '/noisemeter', '/target', '/classroom'];
-  $: isToolPage = toolRoutes.includes(currentPath);
+	/** @type {Props} */
+	let { children } = $props();
+ let toolsOpen=$state(false);
+ let path=$derived(page.url.pathname);
+ let ui=$derived(key=>designLabel($lang,key));
+ let primary=$derived([{href:'/',key:'catalog',icon:'grid'},{href:'/constructor',key:'lesson',icon:'lesson'},{href:'/worksheets',key:'sheets',icon:'sheet'},{href:'/timer',key:'timer',icon:'clock'}]);
+ let tools=$derived([{href:'/target',label:$t('nav_target'),icon:'target'},{href:'/classroom',label:$t('nav_class'),icon:'room'},{href:'/noisemeter',label:$t('nav_noise'),icon:'mic'}]);
+ afterNavigate(()=>toolsOpen=false);
 </script>
-
-<div class="min-h-screen md:pb-0 relative z-0">
-  <!-- Фоновые blobs -->
-  <div class="bg-blobs">
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
-    <div class="blob blob-3"></div>
-  </div>
-
-  <Header />
-  
-  <main class="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-8">
-    <slot />
-  </main>
-</div>
-
-<!-- Popup меню инструментов -->
-{#if toolsOpen}
-  <div class="modal-overlay md:hidden" on:click={() => toolsOpen = false}>
-    <div class="absolute bottom-16 left-3 right-3 modal-content bg-white/90 backdrop-blur-xl rounded-2xl shadow-xl border border-white/60 overflow-hidden" on:click|stopPropagation>
-      <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200/50">
-        <span class="text-sm font-bold text-gray-800">{$t('nav_menu')}</span>
-        <button on:click={() => toolsOpen = false} class="text-xs font-bold text-rose-500 bg-rose-50 px-3 py-1.5 rounded-xl">✕ {$t('close')}</button>
-      </div>
-      <div class="p-2">
-        <a href="/noisemeter" class="flex items-center gap-3 p-3 rounded-xl hover:bg-white/80 transition-colors bg-white/50" on:click={() => toolsOpen = false}>
-          <div class="w-12 h-12 rounded-xl bg-emerald-500 flex items-center justify-center flex-shrink-0">
-            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
-          </div>
-          <div class="flex-1 min-w-0">
-            <div class="font-bold text-gray-900 text-base">{$t('noise_title')}</div>
-            <div class="text-xs text-gray-600 font-medium">{$t('noise_desc')}</div>
-          </div>
-          <div class="w-7 h-7 rounded-full bg-white flex items-center justify-center flex-shrink-0">
-            <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
-          </div>
-        </a>
-      </div>
-    </div>
-  </div>
-{/if}
-
-<TelegramPopup />
-
-<!-- Мобильная нижняя навигация (PWA) -->
-<nav class="mobile-nav">
-  <!-- Каталог -->
-  <a href="/" class="flex items-center justify-center flex-1 {currentPath === '/' ? 'text-purple-700' : 'text-gray-500'} transition-colors duration-200">
-    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="{currentPath === '/' ? 2.5 : 2}">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
-    </svg>
-  </a>
-  
-  <!-- Таймер -->
-  <a href="/timer" class="flex items-center justify-center flex-1 {currentPath === '/timer' ? 'text-purple-700' : 'text-gray-500'} transition-colors duration-200">
-    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="{currentPath === '/timer' ? 2.5 : 2}">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-    </svg>
-  </a>
-  
-  <!-- Центральная кнопка Конструктор -->
-  <a href="/constructor" class="flex items-center justify-center flex-1 -mt-3 relative z-10">
-    <div class="w-14 h-14 rounded-full flex items-center justify-center transition-all duration-200 active:scale-95" style="background: #b794d6; box-shadow: 0 4px 12px rgba(183, 148, 214, 0.4);">
-      <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
-      </svg>
-    </div>
-  </a>
-  
-  <!-- Мишень -->
-  <a href="/target" class="flex items-center justify-center flex-1 {currentPath === '/target' ? 'text-purple-700' : 'text-gray-500'} transition-colors duration-200">
-    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="{currentPath === '/target' ? 2.5 : 2}">
-      <circle cx="12" cy="12" r="10" stroke-linecap="round" stroke-linejoin="round"/>
-      <circle cx="12" cy="12" r="6" stroke-linecap="round" stroke-linejoin="round"/>
-      <circle cx="12" cy="12" r="2" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </a>
-  
-  <!-- Меню -->
-  <button on:click={() => toolsOpen = !toolsOpen} class="flex items-center justify-center flex-1 {toolsOpen ? 'text-purple-700' : 'text-gray-500'} transition-colors duration-200">
-    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="{toolsOpen ? 2.5 : 2}">
-      {#if toolsOpen}
-        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-      {:else}
-        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
-      {/if}
-    </svg>
-  </button>
+<Header/>
+<main class="app-main max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-8">{@render children?.()}</main>
+<nav class="mobile-nav" aria-label={$t('nav_menu')}>
+ {#each primary as item}<a href={item.href} class:active={path===item.href} aria-current={path===item.href?'page':undefined} aria-label={ui(item.key)}><span class="nav-icon"><UiIcon name={item.icon} size={21}/></span><span>{ui(item.key)}</span></a>{/each}
+ <button class:active={toolsOpen||tools.some(item=>item.href===path)} aria-label={ui('tools')} aria-expanded={toolsOpen} onclick={()=>toolsOpen=!toolsOpen}><span class="nav-icon"><UiIcon name="menu" size={21}/></span><span>{ui('more')}</span></button>
 </nav>
+{#if toolsOpen}<div class="tools-overlay" use:lockBodyScroll><button class="tools-backdrop" aria-label={$t('close')} onclick={()=>toolsOpen=false}></button><div role="dialog" aria-modal="true" aria-labelledby="tools-title" use:dialogFocus={()=>toolsOpen=false} class="tools-sheet"><div class="sheet-handle"></div><header><h2 id="tools-title">{ui('tools')}</h2><button class="close-tool" aria-label={$t('close')} onclick={()=>toolsOpen=false}><UiIcon name="close"/></button></header><div class="tool-links">{#each tools as item}<a href={item.href}><span><UiIcon name={item.icon} size={23}/></span><b>{item.label}</b><UiIcon name="chevron" size={17}/></a>{/each}</div></div></div>{/if}
+<UnsavedPrompt/>
+<style>
+ .mobile-nav{display:none;}.tools-overlay{position:fixed;inset:0;z-index:110;}.tools-backdrop{position:absolute;inset:0;background:#25133755;backdrop-filter:blur(3px);width:100%;height:100%;}.tools-sheet{position:absolute;bottom:0;left:0;right:0;background:#fff;border-radius:26px 26px 0 0;padding:10px 20px calc(24px + env(safe-area-inset-bottom));box-shadow:0 -10px 40px #3b1a6315;max-height:85dvh;overflow:auto;}.sheet-handle{width:34px;height:4px;background:#ded4e9;border-radius:6px;margin:0 auto 15px;}.tools-sheet header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:15px;}.tools-sheet h2{font-size:19px;font-weight:750;color:#392052;}.close-tool{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:#f5effa;color:#856599;}.tool-links{display:flex;flex-direction:column;gap:8px;}.tool-links a{display:flex;gap:14px;align-items:center;border:1px solid #eae2f3;border-radius:15px;padding:12px;color:#593d76;}.tool-links a>span{width:45px;height:45px;display:grid;place-items:center;background:#f0e5ff;border-radius:12px;color:#8b4ed5;}.tool-links b{font-size:14px;font-weight:600;flex:1;}@media(min-width:768px){.tools-overlay{display:none;}}@media(max-width:767px){.mobile-nav{position:fixed;inset:auto 0 0;display:flex;align-items:flex-start;justify-content:space-around;background:#fffffffa;border-top:1px solid #e8e0f1;z-index:60;padding:7px 5px calc(7px + env(safe-area-inset-bottom));backdrop-filter:blur(12px);}.mobile-nav>a,.mobile-nav>button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;flex:1;min-width:0;color:#93829f;font-size:10px;font-weight:500;line-height:1.4;min-height:49px;}.nav-icon{width:42px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:10px;}.mobile-nav .active{color:#7733d7;}.active .nav-icon{background:#f0e5ff;}}
+</style>

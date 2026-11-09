@@ -1,32 +1,34 @@
 <script>
+  import { lockBodyScroll } from '#lib/utils/scroll-lock.js';
   import { onMount } from 'svelte';
 
   let visible = false;
 
   onMount(() => {
-    const dismissed = localStorage.getItem('tg_popup_dismissed');
-    if (!dismissed) {
-      setTimeout(() => (visible = true), 1500);
+    let dismissed;
+    try { dismissed = localStorage.getItem('tg_popup_dismissed'); } catch {};
+    if (!dismissed && window.location.pathname==='/') {
+      const timeout = setTimeout(() => {if(window.location.pathname==='/')visible=true;}, 20000);
+      return () => clearTimeout(timeout);
     }
   });
 
   function close() {
     visible = false;
-    localStorage.setItem('tg_popup_dismissed', '1');
+    try { localStorage.setItem('tg_popup_dismissed', '1'); } catch {}
   }
 </script>
 
 {#if visible}
-  <!-- svelte-ignore a11y-click-events-have-key-events -->
-  <div
-    class="popup-overlay"
-    on:click={close}
-    role="dialog"
-    aria-modal="true"
+  <div tabindex="-1" on:keydown={(e) => { if (e.key === "Escape") e.currentTarget.click(); }}
+    use:lockBodyScroll class="popup-overlay"
+    on:click|self={close}
+    role="presentation"
+
   >
     <div
-      class="popup-card"
-      on:click|stopPropagation
+      class="popup-card" role="dialog" aria-modal="true" aria-label="Telegram"
+
     >
       <button class="popup-close" on:click={close} aria-label="Закрыть">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">

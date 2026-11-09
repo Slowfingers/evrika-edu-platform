@@ -1,0 +1,17 @@
+{
+  "extends": "$app/tsconfig",
+  "include": [
+    "src",
+    "tests",
+    "*.js"
+  ],
+  "exclude": [
+    "src/service-worker"
+  ],
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": false,
+    "resolveJsonModule": true,
+    "esModuleInterop": true
+  }
+}

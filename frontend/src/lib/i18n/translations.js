@@ -11,6 +11,9 @@ export const translations = {
     nav_target: 'Мишень',
     nav_back: 'Назад',
     nav_menu: 'Меню',
+    settings: 'Настройки',
+    timer_leave_title: 'Остановить таймер и выйти?',
+    timer_leave_message: 'При выходе таймер остановится, а его прогресс сбросится.',
 
     // Заголовки страниц (title)
     title_catalog: 'Каталог педагогических приёмов — EvrikaEdu',
@@ -34,7 +37,7 @@ export const translations = {
     reset_all: 'Сбросить всё',
     apply: 'Применить',
     loading: 'Загрузка...',
-    techniques_count: (n) => `${n} приёмов`,
+    techniques_count: (n) => `${n} ${n%10===1&&n%100!==11?'приём':n%10>=2&&n%10<=4&&(n%100<12||n%100>14)?'приёма':'приёмов'}`,
     not_found: 'Ничего не найдено',
     reset_filters_btn: 'Сбросить фильтры',
     retry: 'Повторить',
@@ -292,7 +295,6 @@ export const translations = {
     target_reset: 'Сбросить',
     target_stats: 'Статистика',
     target_back_setup: 'Назад к настройкам',
-    target_class_ph: 'Название класса (для отчёта)',
     target_download: 'Скачать отчёт',
     target_total: 'Всего отметок',
     target_avg: 'Средний балл',
@@ -317,7 +319,6 @@ export const translations = {
     target_add_criteria: '+ Добавить тему',
     target_remove_criteria: 'Удалить',
     target_instructions: 'Нажмите на любой сектор мишени, чтобы поставить отметку',
-    target_tap_hint: 'Коснитесь сектора мишени для отметки',
 
     // Псевдонимы этапов/навыков для LessonWizard
     stage_explain: 'Объяснение нового материала',
@@ -482,6 +483,9 @@ export const translations = {
     nav_target: 'Nishon',
     nav_back: 'Orqaga',
     nav_menu: 'Menyu',
+    settings: 'Sozlamalar',
+    timer_leave_title: 'Taymerni to‘xtatib chiqasizmi?',
+    timer_leave_message: 'Chiqishda taymer to‘xtaydi va uning jarayoni qayta boshlanadi.',
 
     // Заголовки страниц
     title_catalog: 'Pedagogik usullar katalogi — EvrikaEdu',
@@ -763,7 +767,6 @@ export const translations = {
     target_reset: 'Tozalash',
     target_stats: 'Statistika',
     target_back_setup: 'Sozlamalarga qaytish',
-    target_class_ph: 'Sinf nomi (hisobot uchun)',
     target_download: 'Hisobotni yuklash',
     target_total: 'Jami belgilar',
     target_avg: 'O\'rtacha ball',
@@ -788,7 +791,6 @@ export const translations = {
     target_add_criteria: '+ Mavzu qo\'shish',
     target_remove_criteria: 'O\'chirish',
     target_instructions: 'Belgi qo\'yish uchun nishon sektoriga bosing',
-    target_tap_hint: 'Belgi qo\'yish uchun sektorgа teging',
 
     // Псевдонимы
     stage_explain: 'Yangi mavzuni tushuntirish',
@@ -953,6 +955,9 @@ export const translations = {
     nav_target: 'Target',
     nav_back: 'Back',
     nav_menu: 'Menu',
+    settings: 'Settings',
+    timer_leave_title: 'Stop the timer and leave?',
+    timer_leave_message: 'Leaving stops the timer and resets its progress.',
 
     // Заголовки страниц
     title_catalog: 'Teaching Techniques Catalogue — EvrikaEdu',
@@ -1234,7 +1239,6 @@ export const translations = {
     target_reset: 'Reset',
     target_stats: 'Statistics',
     target_back_setup: 'Back to Setup',
-    target_class_ph: 'Class name (for report)',
     target_download: 'Download Report',
     target_total: 'Total Marks',
     target_avg: 'Average Score',
@@ -1259,7 +1263,6 @@ export const translations = {
     target_add_criteria: '+ Add topic',
     target_remove_criteria: 'Remove',
     target_instructions: 'Click any sector to place a mark',
-    target_tap_hint: 'Tap a sector to place a mark',
 
     // Aliases
     stage_explain: 'New Material',

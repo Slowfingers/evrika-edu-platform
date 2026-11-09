@@ -2,8 +2,8 @@
 <html lang="ru">
 	<head>
 		<meta charset="utf-8" />
-		<link rel="icon" href="%sveltekit.assets%/favicon.ico" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+		<link rel="icon" type="image/svg+xml" href="%sveltekit.assets%/brand-mark.svg" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 		<title>EvrikaEdu - Каталог педагогических приёмов</title>
 
 		<!-- Preload критических ресурсов -->
@@ -12,7 +12,7 @@
 
 		<!-- PWA -->
 		<link rel="manifest" href="%sveltekit.assets%/manifest.json" />
-		<meta name="theme-color" content="#c8a8e9" />
+		<meta name="theme-color" content="#f7f6fb" />
 		<meta name="description" content="Каталог педагогических приёмов и конструктор уроков для учителей" />
 
 		<!-- Apple PWA -->
@@ -22,33 +22,16 @@
 		<link rel="apple-touch-icon" href="%sveltekit.assets%/icon-192.png" />
 
 		<!-- Microsoft PWA -->
-		<meta name="msapplication-TileColor" content="#c8a8e9" />
+		<meta name="msapplication-TileColor" content="#f7f6fb" />
 		<meta name="msapplication-TileImage" content="%sveltekit.assets%/icon-192.png" />
 
-		<!-- Предотвращение FOUC -->
-		<style>
-			body { 
-				opacity: 0;
-				background: linear-gradient(160deg, #c8a8e9 0%, #c8a8e9 40%, #d5b8e8 60%, #e5c8e8 80%, #f6bcba 100%);
-				background-attachment: fixed;
-				min-height: 100vh;
-				font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-			}
-			body.loaded { 
-				opacity: 1;
-				transition: opacity 0.2s ease-in;
-			}
-		</style>
-		<script>
-			window.addEventListener('DOMContentLoaded', function() {
-				document.body.classList.add('loaded');
-			});
-		</script>
+		<style>body { margin: 0; background: #f7f6fb; }</style>
 
 		%sveltekit.head%
 
 		<!-- Yandex.Metrika counter -->
 		<script type="text/javascript">
+			if (!['localhost', '127.0.0.1', '::1', '[::1]'].includes(location.hostname)) {
 			(function(m,e,t,r,i,k,a){
 				m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
 				m[i].l=1*new Date();
@@ -56,11 +39,12 @@
 				k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
 			})(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=103669141', 'ym');
 			ym(103669141, 'init', {ssr:true, webvisor:true, trackHash:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+			}
 		</script>
 		<noscript><div><img src="https://mc.yandex.ru/watch/103669141" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 		<!-- /Yandex.Metrika counter -->
 	</head>
-	<body data-sveltekit-preload-data="hover" class="bg-gray-50">
+	<body data-sveltekit-preload-data="hover">
 		<div style="display: contents">%sveltekit.body%</div>
 	</body>
 </html>

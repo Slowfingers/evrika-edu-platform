@@ -1,13 +1,14 @@
 import { writable, derived } from 'svelte/store';
-import { browser } from '$app/environment';
-import { translations } from '$lib/i18n/translations.js';
+import { browser } from '$app/env';
+import { translations } from '#lib/i18n/translations.js';
 
 const SUPPORTED = ['ru', 'uz', 'en'];
 const DEFAULT_LANG = 'ru';
 
 function getInitialLang() {
   if (!browser) return DEFAULT_LANG;
-  const stored = localStorage.getItem('evrika_lang');
+  let stored;
+  try { stored = localStorage.getItem('evrika_lang'); } catch {};
   if (stored && SUPPORTED.includes(stored)) return stored;
   return DEFAULT_LANG;
 }
@@ -15,7 +16,10 @@ function getInitialLang() {
 export const lang = writable(getInitialLang());
 
 if (browser) {
-  lang.subscribe(value => localStorage.setItem('evrika_lang', value));
+  lang.subscribe(value => {
+    try { localStorage.setItem('evrika_lang', value); } catch {}
+    document.documentElement.lang = value;
+  });
 }
 
 // Реактивная функция перевода

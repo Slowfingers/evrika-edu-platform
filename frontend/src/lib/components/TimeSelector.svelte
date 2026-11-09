@@ -1,5 +1,5 @@
 <script>
-  import { TIME_INTERVALS, getIntervalByMinutes } from '$lib/utils/time-intervals.js';
+  import { TIME_INTERVALS, getIntervalByMinutes } from '#lib/utils/time-intervals.js';
   
   export let selectedMinutes = 5;
   export let onChange = () => {};
